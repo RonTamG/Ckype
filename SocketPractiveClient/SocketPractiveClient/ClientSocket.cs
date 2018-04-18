@@ -10,6 +10,7 @@ namespace SocketsPractice
 {
     public class ClientSocket
     {
+        public Socket serverSocket;
         private Socket _socket;
         private byte[] _buffer;
 
@@ -52,9 +53,14 @@ namespace SocketsPractice
             Array.Copy(_buffer, packet, packet.Length);
 
             // Handle Packet
+//            string statusUpdate;
+//            statusUpdate = PacketHandler.Handle(this, packet, serverSocket);
 
             _buffer = new byte[1024]; // kb Length
-            _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
+//            if (!(statusUpdate == "closed client"))
+            if (_socket.Connected)
+                _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
+            else return;
         }
 
         public void Send(byte[] data)
@@ -62,13 +68,13 @@ namespace SocketsPractice
             _socket.Send(data);
         }
 
-        //not checked still need to add everything to server too.
-        public void Disconnect()
+        /// <summary>
+        /// Close socket
+        /// </summary>
+        public void Close()
         {
-            // Release the socket.
             _socket.Shutdown(SocketShutdown.Both);
-
-            _socket.Disconnect(true);
+            _socket.Close();
         }
     }
 }

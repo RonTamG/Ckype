@@ -9,7 +9,7 @@ namespace SocketsPractice
 {
     public static class PacketHandler
     {
-        public static void Handle(byte[] packet, Socket clientSocket)
+        public static string Handle(ServerSocket serverSocket, byte[] packet, Socket clientSocket)
         {
             ushort packetLength = BitConverter.ToUInt16(packet, 0);
             ushort packetType = BitConverter.ToUInt16(packet, 2);
@@ -21,10 +21,37 @@ namespace SocketsPractice
                 case 2000:
                     MessagePacket msg = new MessagePacket(packet);
                     Console.WriteLine(msg.Text);
-                    if (msg.Text == "exit")
-                        Console.WriteLine("Disconnected");
+
+                    string response = string.Empty;
+
+                    if (msg.Text.ToLower() == "exit")
+                    {
+                        // Always Shutdown before closing
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Close();
+                        serverSocket.clientSockets.Remove(clientSocket);
+                        Console.WriteLine("Client disconnected");
+                        return "closed client";
+                    }
+                    if (msg.Text.ToLower() != "get time")
+                    {
+                        response = "Invalid Request";
+                    }
+                    else
+                    {
+                        response = DateTime.Now.ToLongTimeString();
+                    }
+
+                    MessagePacket ToSend = new MessagePacket(response);
+                    clientSocket.Send(ToSend.Data);
+                    Console.WriteLine("Sent" + response);
                     break;
             }
+            return "OK";
         }
+        /*public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
+        {
+            return "";
+        }*/
     }
 }

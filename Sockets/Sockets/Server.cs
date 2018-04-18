@@ -11,8 +11,9 @@ namespace SocketsPractice
     // Socket checks
     public class ServerSocket
     {
+        public  List<Socket> clientSockets = new List<Socket>(); 
         private Socket _socket;
-        private byte[] _buffer = new byte[1024]; //kb LENGTH
+        private byte[] _buffer = new byte[1024]; // 1 kb LENGTH
 
         public ServerSocket()
         {
@@ -36,31 +37,103 @@ namespace SocketsPractice
 
         private void AcceptedCallback(IAsyncResult ar)
         {
-            Socket clientSocket = _socket.EndAccept(ar);
-            if (clientSocket != null)
+            Socket clientSocket;
+            try
             {
-                _buffer = new byte[1024]; // kb LENGTH
-                Accept();
-                clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket); //0 is the begnning
+                clientSocket = _socket.EndAccept(ar);
             }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
+
+            clientSockets.Add(clientSocket);
+            _buffer = new byte[1024]; // 1 kb LENGTH
+            Accept();
+            clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket); //0 is the begnning
+
         }
 
         private void ReceivedCallback(IAsyncResult ar)
         {
             Socket clientSocket = ar.AsyncState as Socket;
-            SocketError SE;
-            int bufferSize = clientSocket.EndReceive(ar, out SE);
-            //if (SE != SocketError.Success)
-                
+            int bufferSize;
+            try
+            {
+                bufferSize = clientSocket.EndReceive(ar);
+            }
+            catch (SocketException)
+            {
+                Console.WriteLine("Client forcefully disconnected");
+                clientSocket.Close();
+                clientSockets.Remove(clientSocket);
+                return;
+            }
+
             byte[] packet = new byte[bufferSize];
-            Array.Copy(_buffer, packet, packet.Length);
+            Array.Copy(_buffer, packet, bufferSize);
 
             // Handle the packet.
-            PacketHandler.Handle(packet, clientSocket);
+             string statusUpdate;
+             statusUpdate = PacketHandler.Handle(this, packet, clientSocket);
 
-            _buffer = new byte[1024]; // kb LENGTH
-            clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket); //0 is the begnning
-            
+
+             _buffer = new byte[1024]; // kb LENGTH
+             if (!(statusUpdate == "closed client"))
+                 clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket); //0 is the beginning
+             else return;
+             /*
+            string text = Encoding.ASCII.GetString(packet);
+            text = text.Substring(4);
+            Console.WriteLine("Received Text: " + text);
+
+            if (text.ToLower() == "get time") // Client requested time
+            {
+                Console.WriteLine("Text is a get time request");
+                byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
+                clientSocket.Send(data);
+                Console.WriteLine("Time sent to client");
+            }
+            else if (text.ToLower() == "exit") // Client wants to exit gracefully
+            {
+                // Always Shutdown before closing
+                clientSocket.Shutdown(SocketShutdown.Both);
+                clientSocket.Close();
+                clientSockets.Remove(clientSocket);
+                Console.WriteLine("Client disconnected");
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Text is an invalid request");
+                byte[] data = Encoding.ASCII.GetBytes("Invalid request");
+                clientSocket.Send(data);
+                Console.WriteLine("Warning Sent");
+            }
+
+            clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket);
+            */
+        }
+
+        private static void SendCallBack(IAsyncResult ar)
+        {
+            Socket clientSocket = ar.AsyncState as Socket;
+            clientSocket.EndSend(ar);
+        }
+
+        /// <summary>
+        /// Close all connected client (we do not need to shutdown the server socket as its connections
+        /// are already closed with the clients).
+        /// </summary>
+        public void CloseAllSockets()
+        {
+            foreach (Socket clientSocket in clientSockets)
+            {
+                clientSocket.Shutdown(SocketShutdown.Both);
+                clientSocket.Close();
+            }
+
+            _socket.Close();
         }
     }
 
