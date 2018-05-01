@@ -1,11 +1,11 @@
-﻿using SocketsPractice;
+﻿using PacketLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocketsPractice
+namespace Client
 {
 
     class Program
@@ -24,6 +24,7 @@ namespace SocketsPractice
             while (true)
             {
                 string msg = Console.ReadLine();
+                Console.WriteLine("Sending: " + msg);
                 MessagePacket packet = new MessagePacket(msg);
                 clientSocket.Send(packet.Data);
                 if (msg.ToLower() == "exit")

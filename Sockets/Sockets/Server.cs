@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PacketLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocketsPractice
+namespace Server
 {
     // Socket checks
     public class ServerSocket
@@ -77,12 +78,12 @@ namespace SocketsPractice
              string statusUpdate;
              statusUpdate = PacketHandler.Handle(this, packet, clientSocket);
 
-
-             _buffer = new byte[1024]; // kb LENGTH
+            
+//             _buffer = new byte[1024]; // kb LENGTH ruined multi client
              if (!(statusUpdate == "closed client"))
                  clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket); //0 is the beginning
              else return;
-             /*
+/*
             string text = Encoding.ASCII.GetString(packet);
             text = text.Substring(4);
             Console.WriteLine("Received Text: " + text);
@@ -112,7 +113,49 @@ namespace SocketsPractice
             }
 
             clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket);
-            */
+              */                  
+            /*
+            ushort packetLength = BitConverter.ToUInt16(packet, 0);
+            ushort packetType = BitConverter.ToUInt16(packet, 2);
+
+            Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
+
+            switch (packetType)
+            {
+                case 2000:
+                    MessagePacket msg = new MessagePacket(packet);
+                    Console.WriteLine(msg.Text);
+
+                    string response = string.Empty;
+
+                    if (msg.Text.ToLower() == "exit")
+                    {
+                        // Always Shutdown before closing
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Close();
+                        this.clientSockets.Remove(clientSocket);
+                        Console.WriteLine("Client disconnected");
+                        statusUpdate = "closed client";
+                        //return "closed client";
+                    }
+                    if (msg.Text.ToLower() != "get time")
+                    {
+                        response = "Invalid Request";
+                    }
+                    else
+                    {
+                        response = DateTime.Now.ToLongTimeString();
+                    }
+
+                    MessagePacket ToSend = new MessagePacket(response);
+                    clientSocket.Send(ToSend.Data);
+                    Console.WriteLine("Sent" + response);
+                    break;
+            }
+            //_buffer = new byte[1024]; // kb LENGTH
+            if (!(statusUpdate == "closed client"))
+                clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket); //0 is the beginning
+            else return;*/
         }
 
         private static void SendCallBack(IAsyncResult ar)

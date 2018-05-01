@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocketsPractice
+namespace PacketLibrary
 {
     public class MessagePacket : PacketStructure
     {
         private string _message;
 
         public MessagePacket(string message)
-            :base((ushort)(4 + message.Length), 2000) // 4 = 2length + 2type // packet type 2000 = message/string
+            : base((ushort)(4 + message.Length), 2000) // 4 = 2length + 2type // packet type 2000 = message/string
         {
             Text = message;
         }

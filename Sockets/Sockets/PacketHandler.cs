@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using SocketsPractice;
 
-namespace SocketsPractice
+
+namespace Server
 {
     public static class PacketHandler
     {
@@ -16,7 +18,7 @@ namespace SocketsPractice
 
             Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
 
-            switch(packetType)
+            switch (packetType)
             {
                 case 2000:
                     MessagePacket msg = new MessagePacket(packet);
@@ -49,9 +51,5 @@ namespace SocketsPractice
             }
             return "OK";
         }
-        /*public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
-        {
-            return "";
-        }*/
     }
 }
