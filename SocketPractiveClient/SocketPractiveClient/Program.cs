@@ -24,11 +24,19 @@ namespace Client
             while (true)
             {
                 string msg = Console.ReadLine();
-                Console.WriteLine("Sending: " + msg);
-                MessagePacket packet = new MessagePacket(msg);
-                clientSocket.Send(packet.Data);
+//                Console.WriteLine("Sending: " + msg);
+ //               MessagePacket packet = new MessagePacket(msg);
+ //               clientSocket.Send(packet.Data);
                 if (msg.ToLower() == "exit")
                     Exit();
+                if (msg.ToLower() == "send file")
+                {
+                    Console.WriteLine("please enter the file name");
+                    string filename = Console.ReadLine();
+                    FilePacket fpacket = new FilePacket(filename);
+                    Console.WriteLine(fpacket.FileContents);
+                    clientSocket.Send(fpacket.Data);
+                }
             }
         }
 

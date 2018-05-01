@@ -4,8 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using SocketsPractice;
-
+using PacketLibrary;
 
 namespace Server
 {
@@ -47,6 +46,10 @@ namespace Server
                     MessagePacket ToSend = new MessagePacket(response);
                     clientSocket.Send(ToSend.Data);
                     Console.WriteLine("Sent" + response);
+                    break;
+                case 3000:
+                    FilePacket file = new FilePacket(packet);
+                    Console.WriteLine(file.FileContents);
                     break;
             }
             return "OK";

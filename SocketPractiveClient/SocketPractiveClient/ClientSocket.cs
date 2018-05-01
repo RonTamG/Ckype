@@ -53,10 +53,10 @@ namespace Client
             Array.Copy(_buffer, packet, packet.Length);
 
             // Handle Packet
-//            string statusUpdate;
-//            statusUpdate = PacketHandler.Handle(this, packet, serverSocket);
+            string statusUpdate;
+            statusUpdate = PacketHandler.Handle(this, packet, serverSocket);
 
-            _buffer = new byte[1024]; // kb Length
+//            _buffer = new byte[1024]; // kb Length
 //            if (!(statusUpdate == "closed client"))
             if (_socket.Connected)
                 _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
