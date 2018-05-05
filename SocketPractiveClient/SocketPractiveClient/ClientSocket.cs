@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PacketLibrary;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -62,10 +64,20 @@ namespace Client
                 _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
             else return;
         }
-
+        
         public void Send(byte[] data)
         {
             _socket.Send(data);
+        }
+
+        public void SendFile(string filename)
+        {
+            FilePacket myfile = new FilePacket(filename);
+            while(myfile.status)
+            {
+                _socket.Send(myfile.Data);
+                myfile.ReadFileChunk();
+            }
         }
 
         /// <summary>

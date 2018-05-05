@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,16 @@ namespace PacketLibrary
     public abstract class PacketStructure
     {
         private byte[] _buffer;
+
+        public PacketStructure(ushort length, ushort type, string ipAddress, ushort port)
+        {
+            _buffer = new byte[length];           
+            WriteUShort(length, 0);
+            WriteUShort(type, 2);
+            WriteUShort(port, 4);
+            WriteUShort((ushort)ipAddress.Length, 6);
+            WriteString(ipAddress, 8);
+        }
 
         public PacketStructure(ushort length, ushort type)
         {

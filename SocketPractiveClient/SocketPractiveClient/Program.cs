@@ -31,12 +31,13 @@ namespace Client
                     Exit();
                 if (msg.ToLower() == "send file")
                 {
-                    Console.WriteLine("please enter the file name");
                     string filename = Console.ReadLine();
-                    FilePacket fpacket = new FilePacket(filename);
-                    Console.WriteLine(fpacket.FileContents);
-                    clientSocket.Send(fpacket.Data);
+                    clientSocket.SendFile(filename);
                 }
+                else
+                    Console.WriteLine("Sending: " + msg);
+                    MessagePacket packet = new MessagePacket(msg, );
+                    clientSocket.Send(packet.Data);
             }
         }
 
