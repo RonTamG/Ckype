@@ -27,8 +27,12 @@ namespace Ckype.ViewModels
         }
         public void Play()
         {
-            if(Player == null)
-                Player = new AudioFile(RecordFile);
+            if (Player == null)
+            {
+                Player = new AudioFile(MusicFile);
+                Player.PlaybackEnded += PlaybackStopped;
+            }
+
             Player.PlayFile();
             CanPlay = false;
             CanPause = Player.IsFilePlaying;
@@ -43,5 +47,11 @@ namespace Ckype.ViewModels
 
         public bool CanPause { get; set; } = false;
         public bool CanPlay { get; set; } = true;
+
+        private void PlaybackStopped()
+        {
+            CanPlay = true;
+            CanPause = false;
+        }
     }
 }

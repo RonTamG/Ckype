@@ -10,6 +10,7 @@ using NAudio.Wave;
 
 namespace AudioLibrary
 {
+    public delegate void EndOfPlaybackEvent();
     /// <summary>
     /// Class for manipulating Audio Files
     /// </summary>
@@ -29,6 +30,7 @@ namespace AudioLibrary
         public bool IsFilePlaying { get; private set; }
         public bool IsFileClosed { get; private set; }
         public string Filename { get; private set; }
+        public event EndOfPlaybackEvent PlaybackEnded;
 
         #endregion
 
@@ -93,6 +95,7 @@ namespace AudioLibrary
 
         private void PlaybackStopped(object sender, StoppedEventArgs e)
         {
+            this.PlaybackEnded();
             this.CloseFile();
         }
         #endregion
