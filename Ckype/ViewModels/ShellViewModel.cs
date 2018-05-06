@@ -8,19 +8,40 @@ using AudioLibrary;
 
 namespace Ckype.ViewModels
 {
-    public class ShellViewModel
+    public class ShellViewModel : BaseViewModel
     {
+        private AudioFile Player = null;
+        private AudioFile Recorder = null;
+
+        private string RecordFile = @"C:\Users\Owner\Desktop\AudioTestFile.wav";
+        private string MusicFile = @"C:\Users\Owner\Music\Nightcore Man I Think I Love Her w-lyrics on screen.mp3";
+
         public void record()
         {
-            AudioFile.Record(@"C:\Users\Owner\Desktop\AudioTestFile.wav");
+            Recorder = new AudioFile(RecordFile);
+            Recorder.Record();
         }
         public void StopRecord()
         {
-            AudioFile.StopRecording();
+            Recorder.StopRecording();   
         }
-        public void play()
+        public void Play()
         {
-            AudioFile.PlayFile(@"C:\Users\Owner\Desktop\AudioTestFile.wav");
+            if(Player == null)
+                Player = new AudioFile(RecordFile);
+            Player.PlayFile();
+            CanPlay = false;
+            CanPause = Player.IsFilePlaying;
+            
         }
+        public void Pause()
+        {
+            Player?.PauseFile();
+            CanPlay = true;
+            CanPause = false;
+        }
+
+        public bool CanPause { get; set; } = false;
+        public bool CanPlay { get; set; } = true;
     }
 }

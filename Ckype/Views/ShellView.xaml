@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ckype.Views"
         mc:Ignorable="d"
+        
+        WindowStyle="None"
         Title="ShellView" Height="300" Width="300">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -21,6 +23,7 @@
         </Grid.RowDefinitions>
         <Button x:Name="record" Grid.Row="0" Grid.Column="0"  Content="Record"/>
         <Button x:Name="StopRecord" Grid.Row="1" Grid.Column="0"  Content="Stop Recording"/>
-        <Button x:Name="play" Grid.Row="0" Grid.Column="1"  Content="Play"/>
+        <Button x:Name="Play" Grid.Row="0" Grid.Column="1"  Content="Play"/>
+        <Button x:Name="Pause" Grid.Row="1" Grid.Column="1" Content="Pause"/>
     </Grid>
 </Window>
