@@ -11,12 +11,15 @@ namespace Client
     class Program
     {
 
-        private static ClientSocket clientSocket = new ClientSocket();
+        private static ClientSocket clientSocket;
 
         static void Main(string[] args)
         {
             Console.Title = "Client";
             Console.WriteLine("Client started!");
+            Console.WriteLine("Enter nickname");
+            string nickname = Console.ReadLine();
+            clientSocket = new ClientSocket(nickname);
 
             clientSocket.Connect("127.0.0.1", 6556);
 
@@ -25,10 +28,11 @@ namespace Client
             {
                 string msg = Console.ReadLine();
 //                Console.WriteLine("Sending: " + msg);
- //               MessagePacket packet = new MessagePacket(msg);
- //               clientSocket.Send(packet.Data);
+//                MessagePacket packet = new MessagePacket(msg);
+//                clientSocket.Send(packet.Data);
                 if (msg.ToLower() == "exit")
                     Exit();
+                
                 if (msg.ToLower() == "send file")
                 {
                     string filename = Console.ReadLine();
@@ -36,7 +40,7 @@ namespace Client
                 }
                 else
                     Console.WriteLine("Sending: " + msg);
-                    MessagePacket packet = new MessagePacket(msg, );
+                    MessagePacket packet = new MessagePacket(msg);
                     clientSocket.Send(packet.Data);
             }
         }
@@ -46,6 +50,8 @@ namespace Client
         /// </summary>
         private static void Exit()
         {
+            MessagePacket packet = new MessagePacket("exit");
+            clientSocket.Send(packet.Data);
             clientSocket.Close();
             Environment.Exit(0);
         }

@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using PacketLibrary;
+using System.Net;
 
 namespace Server
 {
@@ -14,15 +15,17 @@ namespace Server
         {
             ushort packetLength = BitConverter.ToUInt16(packet, 0);
             ushort packetType = BitConverter.ToUInt16(packet, 2);
-            ushort packetPort = BitConverter.ToUInt16(packet, 4);
-            string packetIpAddress = Encoding.UTF8.GetString(packet, 8, BitConverter.ToUInt16(packet, 6));
 
-            Console.WriteLine("Received packet: Length: {0} | Type: {1} | Sending to: {2}:{3}", packetLength, packetType, packetIpAddress, packetPort);
+            Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
 
             switch (packetType)
             {
                 case 1000:
                     //Send all connected client's information to the newly connected one.
+                    IPPacket person = new IPPacket(packet);
+                    person.ownSocket = clientSocket;
+                    serverSocket.connected.Add(person);
+                    serverSocket.ConnectedSockets();
                     break;
                 case 2000:
                     MessagePacket msg = new MessagePacket(packet);
@@ -35,7 +38,8 @@ namespace Server
                         // Always Shutdown before closing
                         clientSocket.Shutdown(SocketShutdown.Both);
                         clientSocket.Close();
-                        serverSocket.clientSockets.Remove(clientSocket);
+                        serverSocket.connected.Remove(serverSocket.FindPersonBySocket(clientSocket));
+                        serverSocket.ConnectedSockets();
                         Console.WriteLine("Client disconnected");
                         return "closed client";
                     }

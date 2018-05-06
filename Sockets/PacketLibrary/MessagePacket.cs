@@ -10,16 +10,11 @@ namespace PacketLibrary
     {
         private string _message;
 
-        public MessagePacket(string message, string ipAddress, ushort port)
-            : base((ushort)(10 + ipAddress.Length + message.Length), 2000, ipAddress, port) // 4 = 2length + 2type // packet type 2000 = message/string
-        {
-            Text = message;
-        }
-/*        public MessagePacket(string message)
+        public MessagePacket(string message)
             : base((ushort)(4 + message.Length), 2000) // 4 = 2length + 2type // packet type 2000 = message/string
         {
             Text = message;
-        }*/
+        }
 
         public MessagePacket(byte[] packet)
             : base(packet)
@@ -29,11 +24,11 @@ namespace PacketLibrary
 
         public string Text
         {
-            get { return ReadString(10 + ReadUShort(6), Data.Length - 10 + ReadUShort(6)); }
+            get { return ReadString(4, Data.Length - 4); }
             set
             {
                 _message = value;
-                WriteString(value, 10 + ReadUShort(6));
+                WriteString(value, 4);
             }
         }
     }

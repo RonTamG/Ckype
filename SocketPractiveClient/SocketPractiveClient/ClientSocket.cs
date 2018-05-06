@@ -1,6 +1,7 @@
 ﻿using PacketLibrary;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,10 +16,12 @@ namespace Client
         public Socket serverSocket;
         private Socket _socket;
         private byte[] _buffer;
+        public string nickname;
 
-        public ClientSocket()
+        public ClientSocket(string nickname)
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            this.nickname = nickname;
         }
 
         public void Connect(string ipAddress, int port)
@@ -33,24 +36,40 @@ namespace Client
                 Console.WriteLine("Connected to the server!");
                 _buffer = new byte[1024];
                 _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
-
+/*
                 #region Initial Packet
 
                 byte[] packet = new byte[4];
                 byte[] packetLength = BitConverter.GetBytes((ushort) packet.Length);
+                Random rnd = new Random();
                 byte[] packetType = BitConverter.GetBytes((ushort) 1000);
                 Array.Copy(packetLength, packet, 2);
                 Array.Copy(packetType, 0, packet, 2, 2);
                 _socket.Send(packet);
 
+
                 #endregion
+*/
+                IPPacket packet2 = new IPPacket(_socket, nickname);
+                _socket.Send(packet2.Data);
+
             }
             else Console.WriteLine("Could not connect");
         }
         
         private void ReceivedCallback(IAsyncResult ar)
         {
-            int bufferLength = _socket.EndReceive(ar);
+            int bufferLength;
+            try
+            {
+                bufferLength = _socket.EndReceive(ar);
+            }
+            catch (ObjectDisposedException)
+            {
+                Console.WriteLine("Server disconnected");
+                serverSocket.Close();
+                return;
+            }          
             byte[] packet = new byte[bufferLength];
             Array.Copy(_buffer, packet, packet.Length);
 
@@ -58,8 +77,6 @@ namespace Client
             string statusUpdate;
             statusUpdate = PacketHandler.Handle(this, packet, serverSocket);
 
-//            _buffer = new byte[1024]; // kb Length
-//            if (!(statusUpdate == "closed client"))
             if (_socket.Connected)
                 _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
             else return;
