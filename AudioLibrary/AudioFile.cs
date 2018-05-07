@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 
 
 namespace AudioLibrary
 {
+    /// <summary>
+    /// Used for and event that signals end of playback
+    /// </summary>
     public delegate void EndOfPlaybackEvent();
     /// <summary>
     /// Class for manipulating Audio Files

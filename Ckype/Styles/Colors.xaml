@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Ckype">
+
+
+    <Color x:Key="LightBlue">#3ABFD2</Color>
+    <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlue}"/>
+
+    <Color x:Key="DarkBlue">#013564</Color>
+    <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlue}"/>
+
+    <Color x:Key="NormalBlue">#2d7ac0</Color>
+    <SolidColorBrush x:Key="NormalBlueBrush" Color="{StaticResource NormalBlue}"/>
+
+    <Color x:Key="Turquoise">#06b6b6</Color>
+    <SolidColorBrush x:Key="TurquoiseBrush" Color="{StaticResource Turquoise}"/>
+
+    <Color x:Key="DarkGrayBlue">#345368</Color>
+    <SolidColorBrush x:Key="DarkGrayBlueBrush" Color="{StaticResource DarkGrayBlue}"/>
+
+    <Color x:Key="ReallyLightBlue">#7df7ff</Color>
+    <SolidColorBrush x:Key="ReallyLightBlueBrush" Color="{StaticResource ReallyLightBlue}"/>
+
+</ResourceDictionary>
