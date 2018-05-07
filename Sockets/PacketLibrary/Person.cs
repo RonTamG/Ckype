@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PacketLibrary
 {
-    public class IPPacket : PacketStructure
+    public class Person : PacketStructure
     {
         private Socket _socket;
-       public IPPacket(Socket s, string name) //string name, maybe add name too.
-            : base((ushort)(18 + name.Length + 20), 1000) // +=name.Length
+       public Person(Socket s, string name)
+            : base((ushort)(18 + name.Length + 20), 1000)
         {
             string _ip = ((IPEndPoint)s.LocalEndPoint).Address.ToString();
             int _port = ((IPEndPoint)s.LocalEndPoint).Port;
@@ -24,7 +24,7 @@ namespace PacketLibrary
             _socket = s;
         }
 
-        public IPPacket(byte[] packet)
+        public Person(byte[] packet)
             : base(packet)
         {
 

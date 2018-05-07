@@ -21,8 +21,8 @@ namespace Server
             switch (packetType)
             {
                 case 1000:
-                    //Send all connected client's information to the newly connected one.
-                    IPPacket person = new IPPacket(packet);
+                    //Send all connected clients information of the newly connected one.
+                    Person person = new Person(packet);
                     person.ownSocket = clientSocket;
                     serverSocket.connected.Add(person);
                     serverSocket.ConnectedSockets();
