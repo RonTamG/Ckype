@@ -1,23 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 
 
 namespace AudioLibrary
 {
-    public static class AudioFile
+    /// <summary>
+    /// Used for and event that signals end of playback
+    /// </summary>
+    public delegate void EndOfPlaybackEvent();
+    /// <summary>
+    /// Class for manipulating Audio Files
+    /// </summary>
+    public class AudioFile
     {
         #region Private Variables
 
-        private static AudioFileReader audioReader = null;
-        private static DirectSoundOut soundOut = null;
-        private static WaveInEvent soundIn;
-        private static WaveFileWriter waveWriter = null;
+        private AudioFileReader audioReader = null;
+        private DirectSoundOut soundOut = null;
+        private WaveInEvent soundIn;
+        private WaveFileWriter waveWriter = null;
+
+        #endregion
+
+        #region Public Variables
+
+        public bool IsFilePlaying { get; private set; }
+        public bool IsFileClosed { get; private set; }
+        public string Filename { get; private set; }
+        public event EndOfPlaybackEvent PlaybackEnded;
+
+        #endregion
+
+        #region Constructor
+
+        public AudioFile(string filename)
+        {
+            this.Filename = filename;
+
+            IsFileClosed = true;
+            IsFilePlaying = false;
+
+        }
 
         #endregion
 
@@ -29,43 +51,48 @@ namespace AudioLibrary
         /// If you input a filename then the file will open and start playing
         /// Otherwise it plays the currently open file
         /// </summary>
-        /// <param name="filename">The path of the file to play, DEFAULT = NULL</param>
-        public static void PlayFile(string filename = null)
+        public void PlayFile()
         {
-            if (filename != null)
+            if (IsFileClosed)
             {
                 soundOut = new DirectSoundOut();
                 soundOut.PlaybackStopped += PlaybackStopped;
-                audioReader = new AudioFileReader(filename);
+                audioReader = new AudioFileReader(this.Filename);
                 soundOut.Init(audioReader);
+                IsFileClosed = false;
             }
             soundOut.Play();
+
+            IsFilePlaying = true;
         }
 
         /// <summary>
         /// Pauses the currently open audio file, if it exists
         /// </summary>
-        public static void PauseFile()
+        public void PauseFile()
         {
             soundOut?.Pause();
+            IsFilePlaying = false;
         }
 
         /// <summary>
         /// Disposes of all current active file resources
         /// </summary>
-        public static void CloseFile()
+        public void CloseFile()
         {
             soundOut?.Pause();
             soundOut.PlaybackStopped -= PlaybackStopped;
             soundOut?.Dispose();
             audioReader?.Dispose();
+
+            IsFilePlaying = false;
+            IsFileClosed = true;
         }
 
-        private static void PlaybackStopped(object sender, StoppedEventArgs e)
+        private void PlaybackStopped(object sender, StoppedEventArgs e)
         {
-            // clear output device
-            soundOut.Dispose();
-            soundOut = null;
+            this.PlaybackEnded();
+            this.CloseFile();
         }
         #endregion
 
@@ -74,29 +101,34 @@ namespace AudioLibrary
         /// <summary>
         /// Record audio to file
         /// </summary>
-        /// <param name="outputFilePath">Path to recorded file</param>
-        public static void Record(string outputFilePath)
+        public void Record()
         {
-            soundIn = new WaveInEvent();
-            waveWriter = new WaveFileWriter(outputFilePath, soundIn.WaveFormat);
+            if (IsFileClosed)
+            {
+                soundIn = new WaveInEvent();
+                waveWriter = new WaveFileWriter(this.Filename, soundIn.WaveFormat);
 
-            soundIn.StartRecording();
-            soundIn.DataAvailable += DataAvailable;
+                soundIn.StartRecording();
+                soundIn.DataAvailable += DataAvailable;
+                IsFileClosed = false;
+            }
         }
 
         /// <summary>
         /// Stop recording if the sound in variable exists
         /// </summary>
-        public static void StopRecording()
+        public void StopRecording()
         {
             soundIn?.StopRecording();
             soundIn.DataAvailable -= DataAvailable;
             waveWriter?.Dispose();
             waveWriter = null;
             soundIn.Dispose();
+
+            IsFileClosed = true;
         }
 
-        private static void DataAvailable(object sender, WaveInEventArgs e)
+        private void DataAvailable(object sender, WaveInEventArgs e)
         {
             waveWriter.Write(e.Buffer, 0, e.BytesRecorded);
         }

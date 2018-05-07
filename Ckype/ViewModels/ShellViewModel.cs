@@ -1,26 +1,63 @@
 ﻿using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AudioLibrary;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Ckype.ViewModels
 {
-    public class ShellViewModel
+    public class ShellViewModel : BaseViewModel, IViewAware
     {
-        public void record()
+        public StartPageViewModel PageViewModel { get; set; } 
+
+        public ShellViewModel()
         {
-            AudioFile.Record(@"C:\Users\Owner\Desktop\AudioTestFile.wav");
+            PageViewModel = new StartPageViewModel();
         }
-        public void StopRecord()
+
+        #region Public Methods
+
+        /// <summary>
+        /// Maximize the shell window
+        /// </summary>
+        public void Maximize()
         {
-            AudioFile.StopRecording();
+            window.WindowState = window.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         }
-        public void play()
+
+        /// <summary>
+        /// Minimize the shell window
+        /// </summary>
+        public void Minimize()
         {
-            AudioFile.PlayFile(@"C:\Users\Owner\Desktop\AudioTestFile.wav");
+            window.WindowState = WindowState.Minimized;
         }
+
+        /// <summary>
+        /// Close the shell window
+        /// </summary>
+        public void Close()
+        {
+            window.Close();
+        }
+
+        #endregion
+
+        #region IViewAware Implementation
+
+        public event EventHandler<ViewAttachedEventArgs> ViewAttached;
+        private Window window;
+        public void AttachView(object view, object context = null)
+        {
+            window = view as Window;
+            if (ViewAttached != null)
+                ViewAttached(this, new ViewAttachedEventArgs() { Context = context, View = view });
+        }
+
+        public object GetView(object context = null)
+        {
+            return window;
+        } 
+
+        #endregion
     }
 }

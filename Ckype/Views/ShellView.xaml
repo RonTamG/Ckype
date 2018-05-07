@@ -3,24 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Ckype.Views"
+        xmlns:local="clr-namespace:Ckype"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
-        Title="ShellView" Height="300" Width="300">
+        WindowStyle="None"
+        AllowsTransparency="True"     
+        >
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome 
+            CaptionHeight="20"
+            />
+    </WindowChrome.WindowChrome>
+
+
+
+    <!-- Shell Grid-->
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Images/BlueWallpaper.png"/>
+        </Grid.Background>
+
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <!-- Toolbar -->
+            <RowDefinition Height="25"/>
+            <!-- Content -->
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button x:Name="record" Grid.Row="0" Grid.Column="0"  Content="Record"/>
-        <Button x:Name="StopRecord" Grid.Row="1" Grid.Column="0"  Content="Stop Recording"/>
-        <Button x:Name="play" Grid.Row="0" Grid.Column="1"  Content="Play"/>
+
+        <!-- Toolbar grid -->
+        <Grid Grid.Row="0" Background="{StaticResource LightBlueBrush}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" WindowChrome.IsHitTestVisibleInChrome="True">
+                <Button Content="_"  x:Name="Minimize" Width="25" Style="{StaticResource SystemIconButton}"/>
+                <Button Content="[ ]" x:Name="Maximize" Width="25" Style="{StaticResource SystemIconButton}"/>
+                <Button Content="X" x:Name="Close" Width="25" Style="{StaticResource SystemIconButton}"/>
+            </StackPanel>
+        </Grid>
+
+
+        <Frame Padding="40" Grid.Row="1" x:Name="PageViewModel"/>
     </Grid>
+
 </Window>
