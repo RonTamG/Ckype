@@ -33,6 +33,13 @@ namespace Client
                         Console.WriteLine(msg.Text);
                     }
                     break;
+                case 1000:
+                    IPPacket addr = new IPPacket(packet);
+                    Console.WriteLine("name: " + addr.name + " Connected from: " + addr.ip + ":" + addr.port);
+                    break;
+                default:
+                    Console.WriteLine(Encoding.UTF8.GetString(packet));
+                    break;
             }
             return "OK";
         }

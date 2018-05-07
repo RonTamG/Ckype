@@ -14,32 +14,32 @@ namespace PacketLibrary
         public bool status;
         const int bufferCapacity = 1024;
 
-        public FilePacket(string filename, string ipAddress, ushort port)
-            : base((ushort)(bufferCapacity), 3000, ipAddress, port) // 4 = 2length + 2type // packet type 3000 = file
+        public FilePacket(string filename)
+            : base((ushort)(bufferCapacity), 3000) // 4 = 2length + 2type // packet type 3000 = file
         {
             _filename = filename;
             fs = new FileStream(_filename, FileMode.Open, FileAccess.Read);
             status = true;
-            WriteUShort((ushort)filename.Length, 8 + ReadUShort(6));
-            WriteString(filename, 10 + ReadUShort(6));
+            WriteUShort((ushort)filename.Length, 4);
+            WriteString(filename, 6);
             ReadFileChunk();
         }
 
         public FilePacket(byte[] packet)
             : base(packet)
         {
-            _filename = ReadString(10 + ReadUShort(6), ReadUShort(8));
+            _filename = ReadString(6, ReadUShort(4));
         }
 
         public string FileContents
         {
-            get { return ReadString(10 + _filename.Length + ReadUShort(6), bufferCapacity - (10 + _filename.Length + ReadUShort(6))); } // return ReadString(4 + _filename.Length, Data.Length - (4 + _filename.Length))
+            get { return ReadString(4 + _filename.Length, bufferCapacity - (4 + _filename.Length)); } // return ReadString(4 + _filename.Length, Data.Length - (4 + _filename.Length))
         }
 
         public void ReadFileChunk()
         {
             if (!(fs.Position == fs.Length))
-                fs.Read(Data, 10 + _filename.Length + ReadUShort(6), bufferCapacity - (10 + _filename.Length + ReadUShort(6)));
+                fs.Read(Data, 4 + _filename.Length, bufferCapacity - 4 - _filename.Length);
             else
             {                
                 fs.Close();
