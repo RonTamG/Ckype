@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Ckype.Views.ChatListPersonControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ckype.Views"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             Height="60"
+             Cursor="Hand"
+             d:DesignHeight="60" d:DesignWidth="300"
+             cal:Message.Attach="[Event MouseLeftButtonUp] = [Action OpenMessageBox]">
+
+
+    <Grid x:Name="container">
+        <TextBlock x:Name="Nickname" FontFamily="{StaticResource LatoRegular}" TextAlignment="Center" FontSize="24" Background="{StaticResource NormalBlueBrush}"/>
+    </Grid>
+
+</UserControl>
