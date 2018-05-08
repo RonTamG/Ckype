@@ -59,14 +59,19 @@ namespace Server
             int bufferSize;
             try
             {
-                bufferSize = clientSocket.EndReceive(ar);
+                if (clientSocket.Connected)
+                    bufferSize = clientSocket.EndReceive(ar);
+                else
+                    throw new SocketException();
             }
             catch (SocketException)
             {
                 Console.WriteLine("Client forcefully disconnected");
                 clientSocket.Close();
-                connected.Remove(FindPersonBySocket(clientSocket));
-                this.ConnectedSockets();
+                Person disconnected = FindPersonBySocket(clientSocket);
+                disconnected.SetDisconnectedType();
+                NewPersonOnlineOffline(disconnected);
+                connected.Remove(disconnected);               
                 return;
             }
 
@@ -90,16 +95,17 @@ namespace Server
             clientSocket.EndSend(ar);
         }
 
-        public void ConnectedSockets()
+        public void ConnectedSockets(Person newPerson)
         {
-            for (int i =0;i<this.connected.Count;i++)
-            {
-                for (int j =0; j<this.connected.Count;j++)
-                {
-                    if (!(connected[i] == connected[j]))
-                        this.connected[j].ownSocket.Send(connected[i].Data);
-                }
-            }
+            for (int i =0;i<this.connected.Count;i++)           
+                 newPerson.ownSocket.Send(connected[i].Data);            
+        }
+
+        public void NewPersonOnlineOffline(Person newPerson)
+        {
+            for (int i = 0; i < this.connected.Count; i++)
+                if(this.connected[i].ownSocket.Connected)
+                    this.connected[i].ownSocket.Send(newPerson.Data);
         }
 
         public Person FindPersonBySocket(Socket clientS)
@@ -119,12 +125,14 @@ namespace Server
         {
             foreach (Person person in connected)
             {
-//                person.ownSocket.Send();
+                MessagePacket packet = new MessagePacket("SecretDisconnectedServerMessage");
+                person.ownSocket.Send(packet.Data);
                 person.ownSocket.Shutdown(SocketShutdown.Both);
                 person.ownSocket.Close();
             }
 
             _socket.Close();
+            Environment.Exit(0);
         }
     }
 

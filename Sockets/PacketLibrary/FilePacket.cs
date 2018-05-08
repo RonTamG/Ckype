@@ -24,12 +24,26 @@ namespace PacketLibrary
             WriteString(filename, 10);
         }
 
+        public FilePacket(string filename, ushort length, ushort startingPos, Person dest)
+            : base((ushort)(length), 3000) // 4 = 2length + 2type // packet type 3000 = file
+        {
+            _filename = filename;
+            _startingPos = startingPos;
+            _length = length;
+            WriteUShort(startingPos, 4);
+            WriteUShort(length, 6);
+            WriteUShort((ushort)dest.Data.Length, 8);
+            WriteByteArray(dest.Data, 10);
+            WriteUShort((ushort)filename.Length, 10 + dest.Data.Length);
+            WriteString(filename, 12 + dest.Data.Length);
+        }
+
         public FilePacket(byte[] packet)
             : base(packet)
         {
             _startingPos = ReadUShort(4);
             _length = ReadUShort(6);
-            _filename = ReadString(6, ReadUShort(4));
+            _filename = ReadString(12 + ReadUShort(8), ReadUShort(10 + ReadUShort(8)));
         }
 
         public string Filename
@@ -40,6 +54,11 @@ namespace PacketLibrary
         public string FileContents
         {
             get { return ReadString(_startingPos, _length - _startingPos); } // return ReadString(4 + _filename.Length, Data.Length - (4 + _filename.Length))
+        }
+
+        public Person destClient
+        {
+            get { return new Person(ReadByteArray(10, ReadUShort(8))); }
         }
     }
 }

@@ -54,5 +54,23 @@ namespace PacketLibrary
             get { return ReadString(10 + ReadUShort(6), ReadUShort(8 + ReadUShort(6))); }
         }
 
+        public void SetDisconnectedType()
+        {
+            WriteUShort(1500, 2);
+        }
+
+        public override string ToString()
+        {
+            return "Name: " + name + " Address: " + ip + ":" + port;
+        }
+
+        public static Person FindPersonByIPandPort(Person p, List<Person> PersonList)
+        {
+            for (int i = 0; i < PersonList.Count; i++)
+                if (PersonList[i].port == p.port && PersonList[i].ip == p.ip)
+                    return PersonList[i];
+            return null;
+        }
+
     }
 }

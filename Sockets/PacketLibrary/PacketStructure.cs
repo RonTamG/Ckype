@@ -44,6 +44,18 @@ namespace PacketLibrary
             Array.Copy(tempBuf, 0, _buffer, offset, value.Length);
         }
 
+        public void WriteByteArray(byte[] arr, int offset)
+        {
+            Array.Copy(arr, 0, _buffer, offset, arr.Length);
+        }
+
+        public byte[] ReadByteArray(int offset, int length)
+        {
+            byte[] result = new byte[length];
+            Array.Copy(_buffer, offset, result, 0, length);
+            return result;
+        }
+
         public ushort ReadUShort(int offset)
         {
             return BitConverter.ToUInt16(_buffer, offset);

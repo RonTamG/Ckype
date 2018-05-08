@@ -17,6 +17,7 @@ namespace Client
         private Socket _socket;
         private byte[] _buffer;
         public string nickname;
+        public List<Person> Friends = new List<Person>();
 
         public ClientSocket(string nickname)
         {
@@ -79,21 +80,37 @@ namespace Client
             _socket.Send(data);
         }
 
-        public void SendFile(string filename)
+        public void SendFile(string filename, Person destClient)
         {
             FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
             while(fs.Position != fs.Length)
             {
                 ushort packetLength;
-                ushort packetStart = (ushort)(filename.Length + 8);
+                ushort packetStart = (ushort)(filename.Length + 12 + destClient.Data.Length);
                 if (fs.Length - fs.Position < 1024 - packetStart)
                     packetLength = (ushort)(packetStart + (fs.Length - fs.Position));
                 else
                     packetLength = 1024;
-                FilePacket packet = new FilePacket(filename, packetLength, packetStart);
+                FilePacket packet = new FilePacket(filename, packetLength, packetStart, destClient);
                 fs.Read(packet.Data, packetStart, packetLength - packetStart);
                 _socket.Send(packet.Data);
             }
+        }
+
+        public Person FindFriendByIPandPort(string ip, int port)
+        {
+            for (int i = 0; i < Friends.Count; i++)
+                if (Friends[i].port == port && Friends[i].ip == ip)
+                    return Friends[i];
+            return null;
+        }
+
+        public Person FindFriendByIPandPort(Person p)
+        {
+            for (int i = 0; i < Friends.Count; i++)
+                if (Friends[i].port == p.port && Friends[i].ip == p.ip)
+                    return Friends[i];
+            return null;
         }
 
         /// <summary>

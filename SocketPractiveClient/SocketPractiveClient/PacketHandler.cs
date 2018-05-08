@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using PacketLibrary;
-
+using System.IO;
 
 namespace Client
 {
@@ -20,31 +20,44 @@ namespace Client
             switch (packetType)
             {
                 case 1000:
-                    Person addr = new Person(packet);
-                    Console.WriteLine("name: " + addr.name + " Connected from: " + addr.ip + ":" + addr.port);
+                    Person person = new Person(packet);
+                    clientSocket.Friends.Add(person);
+                    Console.WriteLine("name: " + person.name + " Connected from: " + person.ip + ":" + person.port);
+                    break;
+                case 1500:
+                    Person disconnected = new Person(packet);
+                    clientSocket.Friends.Remove(clientSocket.FindFriendByIPandPort(disconnected));
+                    Console.WriteLine(disconnected + " Disconnected from the server");
                     break;
                 case 2000:
                     MessagePacket msg = new MessagePacket(packet);
 
                     string response = string.Empty;
-
+                    /*
                     if (msg.Text == "Invalid Request")
                     {
                         Console.WriteLine("Invalid Input please enter a different message -->");
                     }
+                    */
+                    if (msg.Text == "SecretDisconnectedServerMessage")
+                    {
+                        Console.WriteLine("Server has disconnected");
+                        clientSocket.Close();
+                        Console.WriteLine("Program will exit now press any key to continue...");
+                        Environment.Exit(0);
+                    }
                     else
                     {
-                        Console.WriteLine(msg.Text);
+                        Console.WriteLine(msg.destClient + " Sent: " + msg.Text);
                     }
                     break;
-                case 4000: // Not in use yet
-                    Console.WriteLine("Server has disconnected");
-                    serverSocket.Shutdown(SocketShutdown.Both);
-                    serverSocket.Close();
-                    clientSocket.Close();
-                    Console.WriteLine("Program will exit now press any key to continue...");
-                    Console.ReadLine();
-                    break;              
+                case 3000:
+                    FilePacket newFile = new FilePacket(packet);
+                    Console.WriteLine("Received a new file '{0}' from: {1}", newFile.Filename, newFile.destClient);
+                    using (StreamWriter w = File.AppendText(Path.GetFileName(newFile.Filename)))
+                        w.Write(newFile.FileContents);
+                    Console.WriteLine("Saved!");
+                        break;              
                 default:
                     Console.WriteLine(Encoding.UTF8.GetString(packet));
                     break;
