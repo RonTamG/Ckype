@@ -12,7 +12,7 @@ namespace Server
     // Socket checks
     public class ServerSocket
     {
-        public List<IPPacket> connected = new List<IPPacket>();
+        public List<Person> connected = new List<Person>();
         private Socket _socket;
         private byte[] _buffer = new byte[1024]; // 1 kb LENGTH
 
@@ -77,9 +77,11 @@ namespace Server
              string statusUpdate;
              statusUpdate = PacketHandler.Handle(this, packet, clientSocket);
 
-             if (!(statusUpdate == "closed client"))
-                 clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket); //0 is the beginning
-             else return;
+            if (!(statusUpdate == "closed client"))
+            {
+                clientSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, clientSocket);
+            }                                    //0 is the beginning
+            else return;
         }
 
         private static void SendCallBack(IAsyncResult ar)
@@ -100,7 +102,7 @@ namespace Server
             }
         }
 
-        public IPPacket FindPersonBySocket(Socket clientS)
+        public Person FindPersonBySocket(Socket clientS)
         {
             for (int i = 0; i < connected.Count; i++)
             {
@@ -115,8 +117,9 @@ namespace Server
         /// </summary>
         public void CloseAllSockets()
         {
-            foreach (IPPacket person in connected)
+            foreach (Person person in connected)
             {
+//                person.ownSocket.Send();
                 person.ownSocket.Shutdown(SocketShutdown.Both);
                 person.ownSocket.Close();
             }

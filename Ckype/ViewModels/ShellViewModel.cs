@@ -5,17 +5,34 @@ using System.Windows.Controls;
 
 namespace Ckype.ViewModels
 {
-    public class ShellViewModel : BaseViewModel, IViewAware
+    public class ShellViewModel : Conductor<object>, IViewAware
     {
-        public StartPageViewModel PageViewModel { get; set; } 
-
+        #region Constructor
+        /// <summary>
+        /// Default contructor
+        /// </summary>
         public ShellViewModel()
         {
-            PageViewModel = new StartPageViewModel();
+            //ShowStartPage();
+            ShowChatPage();
         }
+
+        #endregion
 
         #region Public Methods
 
+        /// <summary>
+        /// Set active item to a new start page
+        /// </summary>
+        public void ShowStartPage()
+        {
+            ActivateItem(new StartPageViewModel(this));
+        }
+
+        public void ShowChatPage()
+        {
+            ActivateItem(new ChatPageViewModel());
+        }
         /// <summary>
         /// Maximize the shell window
         /// </summary>

@@ -16,7 +16,7 @@
             />
     </WindowChrome.WindowChrome>
 
-
+    
 
     <!-- Shell Grid-->
     <Grid>
@@ -40,8 +40,7 @@
             </StackPanel>
         </Grid>
 
-
-        <Frame Padding="40" Grid.Row="1" x:Name="PageViewModel"/>
+        <Frame Grid.Row="1" x:Name="ActiveItem" NavigationUIVisibility="Hidden"/>
     </Grid>
 
 </Window>

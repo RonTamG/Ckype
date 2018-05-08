@@ -28,11 +28,11 @@
                                    Foreground="White"
                                    FontSize="20"/>
 
-                        <TextBox></TextBox>
-                        <TextBox></TextBox>
-                        <TextBox></TextBox>
+                        <TextBox x:Name="ipTextBox"></TextBox>
+                        <TextBox x:Name="portTextBox"></TextBox>
+                        <TextBox x:Name="nicknameTextBox"></TextBox>
 
-                        <Button Content="Connect"/>
+                        <Button Content="Connect" x:Name="Connect"/>
 
                     </StackPanel>
 

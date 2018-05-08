@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FilePacket.cs" />
-    <Compile Include="IPPacket.cs" />
+    <Compile Include="Person.cs" />
     <Compile Include="MessagePacket.cs" />
     <Compile Include="PacketStructure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

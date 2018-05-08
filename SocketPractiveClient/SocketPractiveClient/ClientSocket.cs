@@ -36,22 +36,14 @@ namespace Client
                 Console.WriteLine("Connected to the server!");
                 _buffer = new byte[1024];
                 _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
-/*
+
                 #region Initial Packet
 
-                byte[] packet = new byte[4];
-                byte[] packetLength = BitConverter.GetBytes((ushort) packet.Length);
-                Random rnd = new Random();
-                byte[] packetType = BitConverter.GetBytes((ushort) 1000);
-                Array.Copy(packetLength, packet, 2);
-                Array.Copy(packetType, 0, packet, 2, 2);
-                _socket.Send(packet);
+                Person packet = new Person(_socket, nickname);
+                _socket.Send(packet.Data);
 
 
                 #endregion
-*/
-                IPPacket packet2 = new IPPacket(_socket, nickname);
-                _socket.Send(packet2.Data);
 
             }
             else Console.WriteLine("Could not connect");
@@ -89,11 +81,18 @@ namespace Client
 
         public void SendFile(string filename)
         {
-            FilePacket myfile = new FilePacket(filename);
-            while(myfile.status)
+            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            while(fs.Position != fs.Length)
             {
-                _socket.Send(myfile.Data);
-                myfile.ReadFileChunk();
+                ushort packetLength;
+                ushort packetStart = (ushort)(filename.Length + 8);
+                if (fs.Length - fs.Position < 1024 - packetStart)
+                    packetLength = (ushort)(packetStart + (fs.Length - fs.Position));
+                else
+                    packetLength = 1024;
+                FilePacket packet = new FilePacket(filename, packetLength, packetStart);
+                fs.Read(packet.Data, packetStart, packetLength - packetStart);
+                _socket.Send(packet.Data);
             }
         }
 

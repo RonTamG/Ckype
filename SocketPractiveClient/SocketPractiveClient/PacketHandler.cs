@@ -19,6 +19,10 @@ namespace Client
             Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
             switch (packetType)
             {
+                case 1000:
+                    Person addr = new Person(packet);
+                    Console.WriteLine("name: " + addr.name + " Connected from: " + addr.ip + ":" + addr.port);
+                    break;
                 case 2000:
                     MessagePacket msg = new MessagePacket(packet);
 
@@ -33,10 +37,14 @@ namespace Client
                         Console.WriteLine(msg.Text);
                     }
                     break;
-                case 1000:
-                    IPPacket addr = new IPPacket(packet);
-                    Console.WriteLine("name: " + addr.name + " Connected from: " + addr.ip + ":" + addr.port);
-                    break;
+                case 4000: // Not in use yet
+                    Console.WriteLine("Server has disconnected");
+                    serverSocket.Shutdown(SocketShutdown.Both);
+                    serverSocket.Close();
+                    clientSocket.Close();
+                    Console.WriteLine("Program will exit now press any key to continue...");
+                    Console.ReadLine();
+                    break;              
                 default:
                     Console.WriteLine(Encoding.UTF8.GetString(packet));
                     break;

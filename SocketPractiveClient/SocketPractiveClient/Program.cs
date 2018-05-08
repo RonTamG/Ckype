@@ -23,25 +23,24 @@ namespace Client
 
             clientSocket.Connect("127.0.0.1", 6556);
 
-
             while (true)
             {
                 string msg = Console.ReadLine();
-//                Console.WriteLine("Sending: " + msg);
-//                MessagePacket packet = new MessagePacket(msg);
-//                clientSocket.Send(packet.Data);
                 if (msg.ToLower() == "exit")
                     Exit();
-                
+
                 if (msg.ToLower() == "send file")
                 {
+                    Console.WriteLine("Enter file path and name please");
                     string filename = Console.ReadLine();
                     clientSocket.SendFile(filename);
                 }
                 else
+                {
                     Console.WriteLine("Sending: " + msg);
                     MessagePacket packet = new MessagePacket(msg);
                     clientSocket.Send(packet.Data);
+                }
             }
         }
 

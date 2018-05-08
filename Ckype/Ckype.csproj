@@ -75,6 +75,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\ChatListControlViewModel.cs" />
+    <Compile Include="ViewModels\ChatListPersonControlViewModel.cs" />
+    <Compile Include="ViewModels\ChatPageViewModel.cs" />
+    <Compile Include="ViewModels\ChatScreenViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -82,6 +86,15 @@
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ViewModels\StartPageViewModel.cs" />
+    <Compile Include="Views\ChatListControlView.xaml.cs">
+      <DependentUpon>ChatListControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChatListPersonControlView.xaml.cs">
+      <DependentUpon>ChatListPersonControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChatPageView.xaml.cs">
+      <DependentUpon>ChatPageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -162,6 +175,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\Windows.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChatListControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChatListPersonControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChatPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -11,7 +11,7 @@ namespace PacketLibrary
     {
         private byte[] _buffer;
 
-        public PacketStructure(ushort length, ushort type) // IPPACKET NEEDS THIS ONE
+        public PacketStructure(ushort length, ushort type) // Person NEEDS THIS ONE
         {
             _buffer = new byte[length];
             WriteUShort(length, 0);
