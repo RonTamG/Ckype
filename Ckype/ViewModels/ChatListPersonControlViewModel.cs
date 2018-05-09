@@ -1,5 +1,7 @@
-﻿using Caliburn.Micro;
+﻿using AudioLibrary;
+using Caliburn.Micro;
 using System.Diagnostics;
+using System.Net;
 
 namespace Ckype.ViewModels
 {
@@ -23,6 +25,12 @@ namespace Ckype.ViewModels
         public void OpenMessageBox()
         {
 
+        }
+
+        public void CallPerson()
+        {
+            var Call = new NetworkAudio(new IPEndPoint(new IPAddress(new byte[4] { 127, 0, 0, 1}), 7000));
+            Call.Start();
         }
 
         #endregion

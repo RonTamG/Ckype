@@ -9,7 +9,7 @@
              Height="60"
              Cursor="Hand"
              d:DesignHeight="60" d:DesignWidth="300"
-             cal:Message.Attach="[Event MouseLeftButtonUp] = [Action OpenMessageBox]">
+             cal:Message.Attach="[Event MouseLeftButtonUp] = [Action OpenMessageBox]; [Event MouseDoubleClick] = [Action CallPerson]">
 
 
     <Grid x:Name="container">
