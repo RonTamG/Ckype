@@ -35,6 +35,7 @@ namespace Client
             if (_socket.Connected)
             {
                 Console.WriteLine("Connected to the server!");
+                serverSocket = _socket;
                 _buffer = new byte[1024];
                 _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
 
@@ -101,14 +102,6 @@ namespace Client
         {
             for (int i = 0; i < Friends.Count; i++)
                 if (Friends[i].port == port && Friends[i].ip == ip)
-                    return Friends[i];
-            return null;
-        }
-
-        public Person FindFriendByIPandPort(Person p)
-        {
-            for (int i = 0; i < Friends.Count; i++)
-                if (Friends[i].port == p.port && Friends[i].ip == p.ip)
                     return Friends[i];
             return null;
         }
