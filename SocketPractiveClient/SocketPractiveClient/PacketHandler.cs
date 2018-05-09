@@ -9,8 +9,12 @@ using System.IO;
 
 namespace Client
 {
+    public delegate void FriendAdded(Person person);
+
     public static class PacketHandler
     {
+        public static FriendAdded FriendAddedEvent;
+
         public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
         {
             ushort packetLength = BitConverter.ToUInt16(packet, 0);
@@ -22,6 +26,7 @@ namespace Client
                 case 1000:
                     Person person = new Person(packet);
                     clientSocket.Friends.Add(person);
+                    FriendAddedEvent(person);
                     Console.WriteLine("name: " + person.name + " Connected from: " + person.ip + ":" + person.port);
                     break;
                 case 1500:

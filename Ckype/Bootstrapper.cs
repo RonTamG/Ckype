@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ckype.ViewModels;
+using Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace Ckype
             _container.Singleton<IWindowManager, WindowManager>();
             _container.Singleton<ShellViewModel, ShellViewModel>();
             _container.Singleton<ChatScreenViewModel, ChatScreenViewModel>();
+            _container.Singleton<ClientSocket>();
         }
 
         public Bootstrapper()

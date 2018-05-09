@@ -14,15 +14,14 @@ namespace Client
     public class ClientSocket
     {
         public Socket serverSocket;
-        private Socket _socket;
+        public Socket _socket { get; private set; }
         private byte[] _buffer;
-        public string nickname;
+        public string nickname { get; set; }
         public List<Person> Friends = new List<Person>();
 
-        public ClientSocket(string nickname)
+        public ClientSocket()
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            this.nickname = nickname;
         }
 
         public void Connect(string ipAddress, int port)

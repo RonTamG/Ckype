@@ -169,6 +169,14 @@
       <Project>{5f6f977f-e7aa-43ac-b2b6-3df2b3d89b31}</Project>
       <Name>AudioLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SocketPractiveClient\SocketPractiveClient\SocketPractiveClient.csproj">
+      <Project>{0433a3b8-2e9c-4815-82c9-0ae052aa490c}</Project>
+      <Name>SocketPractiveClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sockets\PacketLibrary\PacketLibrary.csproj">
+      <Project>{1E393891-8EC8-415D-AC38-5EA2024AD101}</Project>
+      <Name>PacketLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Styles\Colors.xaml">

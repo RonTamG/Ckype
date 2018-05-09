@@ -20,7 +20,8 @@ namespace Client
             Console.WriteLine("Enter nickname"); 
             string nickname = Console.ReadLine();
             Console.Title = nickname;
-            clientSocket = new ClientSocket(nickname);
+            clientSocket = new ClientSocket();
+            clientSocket.nickname = nickname;
 
             clientSocket.Connect("127.0.0.1", 6556);
 

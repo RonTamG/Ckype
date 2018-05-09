@@ -1,5 +1,6 @@
 ﻿using AudioLibrary;
 using Caliburn.Micro;
+using PacketLibrary;
 using System.Diagnostics;
 using System.Net;
 
@@ -13,10 +14,8 @@ namespace Ckype.ViewModels
         /// Nickname for the client
         /// </summary>
         public string Nickname { get; set; }
-        /// <summary>
-        /// Bool value if this client is the selected client
-        /// </summary>
-        public bool Selected { get; set; }
+
+        public Person Person { get; set; }
 
         public MessageListControlViewModel MessagePage { get; set; }
 
@@ -32,10 +31,8 @@ namespace Ckype.ViewModels
 
         public void CallPerson()
         {
-            /* Temporary
-            var Call = new NetworkAudio(new IPEndPoint(new IPAddress(new byte[4] { 192, 168, 1, 20}), 7000));
+            var Call = new NetworkAudio(new IPEndPoint(IPAddress.Parse(Person.ip) , 7000));
             Call.Start();
-            */
         }
 
         #endregion
@@ -52,10 +49,10 @@ namespace Ckype.ViewModels
         /// </summary>
         /// <param name="nickname">Nickname of the client</param>
         /// <param name="selected">If the current client is selected or the not Defaults to false</param>
-        public ChatListPersonControlViewModel(string nickname, bool selected = false)
+        public ChatListPersonControlViewModel(Person person)
         {
-            Nickname = nickname;
-            Selected = selected;
+            Nickname = person.name;
+            Person = person;
             MessagePage = new MessageListControlViewModel();
         } 
         #endregion
