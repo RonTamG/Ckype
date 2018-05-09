@@ -32,13 +32,6 @@ namespace Client
                 case 2000:
                     MessagePacket msg = new MessagePacket(packet);
 
-                    string response = string.Empty;
-                    /*
-                    if (msg.Text == "Invalid Request")
-                    {
-                        Console.WriteLine("Invalid Input please enter a different message -->");
-                    }
-                    */
                     if (msg.Text == "SecretDisconnectedServerMessage")
                     {
                         Console.WriteLine("Server has disconnected");
@@ -54,10 +47,12 @@ namespace Client
                 case 3000:
                     FilePacket newFile = new FilePacket(packet);
                     Console.WriteLine("Received a new file '{0}' from: {1}", newFile.Filename, newFile.destClient);
-                    using (StreamWriter w = File.AppendText(Path.GetFileName(newFile.Filename)))
-                        w.Write(newFile.FileContents);
+                    using (FileStream fs = new FileStream(Path.GetFileName(newFile.Filename), FileMode.Append))
+                    {
+                        fs.Write(newFile.FileContents, 0, newFile.FileContents.Length);
+                    }
                     Console.WriteLine("Saved!");
-                        break;              
+                    break;              
                 default:
                     Console.WriteLine(Encoding.UTF8.GetString(packet));
                     break;
