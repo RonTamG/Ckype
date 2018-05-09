@@ -13,5 +13,10 @@ namespace Ckype
         /// Event that's fired
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = (s, e) => { };
+
+        public void OnPropertyChanged(string name)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
     }
 }

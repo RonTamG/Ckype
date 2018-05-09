@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ckype.ViewModels
 {
-    class ChatPageViewModel : Conductor<object>
+    class ChatPageViewModel : BaseViewModel
     {
         #region Public Properties
 
@@ -38,5 +38,10 @@ namespace Ckype.ViewModels
         }
 
         #endregion
+
+        public void AddMessage()
+        {
+            ChatScreen.AddMessage(MessageText);
+        }
     }
 }

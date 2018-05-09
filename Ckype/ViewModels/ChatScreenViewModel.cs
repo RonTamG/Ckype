@@ -7,8 +7,19 @@ using System.Threading.Tasks;
 
 namespace Ckype.ViewModels
 {
-    public class ChatScreenViewModel : Conductor<object>
+    public class ChatScreenViewModel : BaseViewModel
     {
+        public MessageListControlViewModel MessageList { get; set; }
 
+        public ChatScreenViewModel()
+        {
+            MessageList = new MessageListControlViewModel();
+        }
+
+        public void AddMessage(string message)
+        {
+            MessageList.AddMessage(message);
+            
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +9,11 @@ namespace Ckype.ViewModels
 {
     public class ChatListControlViewModel
     {
-        public List<ChatListPersonControlViewModel> List { get; set; }
+        public ObservableCollection<ChatListPersonControlViewModel> List { get; set; }
 
         public ChatListControlViewModel()
         {
-            List = new List<ChatListPersonControlViewModel>
+            List = new ObservableCollection<ChatListPersonControlViewModel>
             {
                 new ChatListPersonControlViewModel
                 {
