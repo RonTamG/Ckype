@@ -24,41 +24,42 @@ namespace Server
                     //Send all connected clients information of the newly connected one.
                     Person person = new Person(packet);
                     person.ownSocket = clientSocket;
+                    serverSocket.ConnectedSockets(person);
+                    serverSocket.NewPersonOnlineOffline(person);
                     serverSocket.connected.Add(person);
-                    serverSocket.ConnectedSockets();
                     break;
                 case 2000:
                     MessagePacket msg = new MessagePacket(packet);
-                    Console.WriteLine(msg.Text);
+                    Console.WriteLine("Received message: " + msg.Text);
 
-                    string response = string.Empty;
+                    //string response = string.Empty;
 
                     if (msg.Text.ToLower() == "exit")
                     {
                         // Always Shutdown before closing
                         clientSocket.Shutdown(SocketShutdown.Both);
                         clientSocket.Close();
+                        Person disconnected = serverSocket.FindPersonBySocket(clientSocket);
+                        disconnected.SetDisconnectedType();
+                        serverSocket.NewPersonOnlineOffline(disconnected);
                         serverSocket.connected.Remove(serverSocket.FindPersonBySocket(clientSocket));
-                        serverSocket.ConnectedSockets();
+                        //                        serverSocket.ConnectedSockets();
                         Console.WriteLine("Client disconnected");
                         return "closed client";
                     }
-                    if (msg.Text.ToLower() != "get time")
-                    {
-                        response = "Invalid Request";
-                    }
                     else
                     {
-                        response = DateTime.Now.ToLongTimeString();
+                        MessagePacket ToSend = new MessagePacket(msg.Text, serverSocket.FindPersonBySocket(clientSocket));
+                        Person.FindPersonByIPandPort(msg.destClient, serverSocket.connected).ownSocket.Send(ToSend.Data);
+                        Console.WriteLine("Sent: " + msg.Text + " To: " + msg.destClient + " From: " + serverSocket.FindPersonBySocket(clientSocket));
                     }
-
-                    MessagePacket ToSend = new MessagePacket(response);
-                    clientSocket.Send(ToSend.Data);
-                    Console.WriteLine("Sent" + response);
                     break;
                 case 3000:
                     FilePacket file = new FilePacket(packet);
-                    Console.WriteLine(file.FileContents);
+                    Console.WriteLine("Received file called: '{0}' was sent to: {1}", file.Filename, file.destClient );
+ //                   Console.WriteLine(file.FileContents);
+                    Person.FindPersonByIPandPort(file.destClient, serverSocket.connected).ownSocket.Send(file.Data);
+                    Console.WriteLine("Sent!");
                     break;
             }
             return "OK";
