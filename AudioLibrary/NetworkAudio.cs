@@ -20,7 +20,7 @@ namespace AudioLibrary
         private WaveInEvent SoundIn = null;
         #endregion
         #region User
-        private bool connected = false;
+        public bool connected { get; set; } = false;
         private bool muted = false;
         #endregion
 

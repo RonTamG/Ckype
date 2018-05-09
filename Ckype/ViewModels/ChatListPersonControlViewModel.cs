@@ -19,6 +19,8 @@ namespace Ckype.ViewModels
 
         public MessageListControlViewModel MessagePage { get; set; }
 
+        public NetworkAudio Call { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -31,8 +33,12 @@ namespace Ckype.ViewModels
 
         public void CallPerson()
         {
-            var Call = new NetworkAudio(new IPEndPoint(IPAddress.Parse(Person.ip) , 7000));
-            Call.Start();
+            if (Call == null)
+                Call = new NetworkAudio(new IPEndPoint(IPAddress.Parse(Person.ip), 7000));
+            if (Call.connected)
+                Call.Disconnect();
+            else
+                Call.Start();
         }
 
         #endregion
