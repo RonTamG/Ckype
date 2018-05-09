@@ -42,6 +42,12 @@ namespace Client
                     string filename = Console.ReadLine();
                     clientSocket.SendFile(filename, destFriend);
                 }
+                else if (msg.ToLower() == "call")
+                {
+                    Console.WriteLine("You have chosen to call {0}", destFriend);
+                    CallPacket callP = new CallPacket(destFriend);
+                    clientSocket.Send(callP.Data);
+                }
                 else
                 {
                     Console.WriteLine("Sending: " + msg);

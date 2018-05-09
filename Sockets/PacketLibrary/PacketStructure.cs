@@ -49,6 +49,18 @@ namespace PacketLibrary
             Array.Copy(arr, 0, _buffer, offset, arr.Length);
         }
 
+        public void WriteBool(bool value, int offset)
+        {
+            byte[] tempBuf = new byte[1]; //bool = 1byte when in array
+            tempBuf = BitConverter.GetBytes(value);
+            Array.Copy(tempBuf, 0, _buffer, offset, 1);
+        }
+
+        public bool ReadBool(int offset)
+        {
+            return BitConverter.ToBoolean(_buffer, offset);
+        }
+
         public byte[] ReadByteArray(int offset, int length)
         {
             byte[] result = new byte[length];

@@ -26,7 +26,7 @@ namespace Client
                     break;
                 case 1500:
                     Person disconnected = new Person(packet);
-                    clientSocket.Friends.Remove(clientSocket.FindFriendByIPandPort(disconnected));
+                    clientSocket.Friends.Remove(Person.FindPersonByIPandPort(disconnected, clientSocket.Friends));
                     Console.WriteLine(disconnected + " Disconnected from the server");
                     break;
                 case 2000:
@@ -52,7 +52,21 @@ namespace Client
                         fs.Write(newFile.FileContents, 0, newFile.FileContents.Length);
                     }
                     Console.WriteLine("Saved!");
-                    break;              
+                    break;
+                case 4000:
+                    CallPacket callP = new CallPacket(packet);
+                    Console.WriteLine("Received a call request from: {0}", callP.destClient);
+                    Console.WriteLine("Declining request");
+                    callP.toCheckType();
+                    serverSocket.Send(callP.Data);
+                    break;
+                case 4500:
+                    CallPacket checkCallP = new CallPacket(packet);
+                    if(checkCallP.acceptedCall)
+                        Console.WriteLine("Your friend: {0} has accepted the call!", checkCallP.destClient);
+                    else
+                        Console.WriteLine("Your friend: {0} has declined the call.", checkCallP.destClient);
+                    break;
                 default:
                     Console.WriteLine(Encoding.UTF8.GetString(packet));
                     break;

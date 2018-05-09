@@ -43,7 +43,6 @@ namespace Server
                         disconnected.SetDisconnectedType();
                         serverSocket.NewPersonOnlineOffline(disconnected);
                         serverSocket.connected.Remove(serverSocket.FindPersonBySocket(clientSocket));
-                        //                        serverSocket.ConnectedSockets();
                         Console.WriteLine("Client disconnected");
                         return "closed client";
                     }
@@ -57,9 +56,20 @@ namespace Server
                 case 3000:
                     FilePacket file = new FilePacket(packet);
                     Console.WriteLine("Received file called: '{0}' was sent to: {1}", file.Filename, file.destClient );
- //                   Console.WriteLine(file.FileContents);
                     Person.FindPersonByIPandPort(file.destClient, serverSocket.connected).ownSocket.Send(file.Data);
                     Console.WriteLine("Sent!");
+                    break;
+                case 4000:
+                    CallPacket callRequest = new CallPacket(packet);
+                    Console.WriteLine("Received call request");
+                    CallPacket revRequest = new CallPacket(serverSocket.FindPersonBySocket(clientSocket));
+                    Person.FindPersonByIPandPort(callRequest.destClient, serverSocket.connected).ownSocket.Send(revRequest.Data);
+                    break;
+                case 4500:
+                    CallPacket callRequestBack = new CallPacket(packet);
+                    Console.WriteLine("Received call request");
+                    CallPacket revRequestBack = new CallPacket(serverSocket.FindPersonBySocket(clientSocket), 4500);
+                    Person.FindPersonByIPandPort(callRequestBack.destClient, serverSocket.connected).ownSocket.Send(revRequestBack.Data);
                     break;
             }
             return "OK";
