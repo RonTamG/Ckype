@@ -18,19 +18,24 @@ namespace Ckype.ViewModels
         /// </summary>
         public bool Selected { get; set; }
 
+        public MessageListControlViewModel MessagePage { get; set; }
+
         #endregion
 
         #region Public Methods
 
         public void OpenMessageBox()
         {
-
+            var chatScreen = IoC.Get<ChatScreenViewModel>();
+            chatScreen.ChangeScreen(MessagePage);
         }
 
         public void CallPerson()
         {
-            var Call = new NetworkAudio(new IPEndPoint(new IPAddress(new byte[4] { 127, 0, 0, 1}), 7000));
+            /* Temporary
+            var Call = new NetworkAudio(new IPEndPoint(new IPAddress(new byte[4] { 192, 168, 1, 20}), 7000));
             Call.Start();
+            */
         }
 
         #endregion
@@ -39,6 +44,7 @@ namespace Ckype.ViewModels
 
         public ChatListPersonControlViewModel()
         {
+            MessagePage = new MessageListControlViewModel();
         }
 
         /// <summary>
@@ -50,6 +56,7 @@ namespace Ckype.ViewModels
         {
             Nickname = nickname;
             Selected = selected;
+            MessagePage = new MessageListControlViewModel();
         } 
         #endregion
     }

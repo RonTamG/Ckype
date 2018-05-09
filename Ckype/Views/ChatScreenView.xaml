@@ -8,6 +8,6 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ContentControl x:Name="MessageList"/>
+        <ContentControl x:Name="CurrentMessageList"/>
     </Grid>
 </UserControl>

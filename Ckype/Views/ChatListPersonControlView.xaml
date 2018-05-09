@@ -12,8 +12,10 @@
              cal:Message.Attach="[Event MouseLeftButtonUp] = [Action OpenMessageBox]; [Event MouseDoubleClick] = [Action CallPerson]">
 
 
-    <Grid x:Name="container">
-        <TextBlock x:Name="Nickname" FontFamily="{StaticResource LatoRegular}" TextAlignment="Center" FontSize="24" Background="{StaticResource NormalBlueBrush}"/>
-    </Grid>
+    <Border BorderThickness="5" BorderBrush="{StaticResource NormalBlueBrush}">
+        <Grid x:Name="container">
+            <TextBlock  x:Name="Nickname" FontFamily="{StaticResource LatoRegular}" TextAlignment="Center" FontSize="24" Background="{StaticResource LightBlueBrush}"/>
+        </Grid>
+    </Border>
 
 </UserControl>

@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,17 +10,18 @@ namespace Ckype.ViewModels
 {
     public class ChatScreenViewModel : BaseViewModel
     {
-        public MessageListControlViewModel MessageList { get; set; }
+        //public ObservableCollection<MessageListControlViewModel> MessageLists { get; set; }
 
-        public ChatScreenViewModel()
+        public MessageListControlViewModel CurrentMessageList { get; set; }
+
+        public void ChangeScreen(MessageListControlViewModel messageList)
         {
-            MessageList = new MessageListControlViewModel();
+            CurrentMessageList = messageList;
         }
 
         public void AddMessage(string message)
         {
-            MessageList.AddMessage(message);
-            
+            CurrentMessageList.AddMessage(message);
         }
     }
 }

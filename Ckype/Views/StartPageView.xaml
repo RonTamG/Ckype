@@ -28,9 +28,9 @@
                                    Foreground="White"
                                    FontSize="20"/>
 
-                        <TextBox x:Name="ipTextBox"></TextBox>
-                        <TextBox x:Name="portTextBox"></TextBox>
-                        <TextBox x:Name="nicknameTextBox"></TextBox>
+                        <TextBox x:Name="IpTextBox"></TextBox>
+                        <TextBox x:Name="PortTextBox"></TextBox>
+                        <TextBox x:Name="NicknameTextBox"></TextBox>
 
                         <Button Content="Connect" x:Name="Connect"/>
 

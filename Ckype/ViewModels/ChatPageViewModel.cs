@@ -34,7 +34,7 @@ namespace Ckype.ViewModels
         public ChatPageViewModel()
         {
             ChatListControl = new ChatListControlViewModel();
-            ChatScreen = new ChatScreenViewModel();
+            ChatScreen = IoC.Get<ChatScreenViewModel>();
         }
 
         #endregion

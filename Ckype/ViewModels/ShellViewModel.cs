@@ -1,20 +1,20 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Ckype.ViewModels
 {
     public class ShellViewModel : Conductor<object>, IViewAware
     {
+        
         #region Constructor
         /// <summary>
         /// Default contructor
         /// </summary>
         public ShellViewModel()
         {
-            //ShowStartPage();
-            ShowChatPage();
+            ShowStartPage();
+            //ShowChatPage();
         }
 
         #endregion
@@ -26,7 +26,7 @@ namespace Ckype.ViewModels
         /// </summary>
         public void ShowStartPage()
         {
-            ActivateItem(new StartPageViewModel(this));
+            ActivateItem(new StartPageViewModel());
         }
 
         public void ShowChatPage()
@@ -66,8 +66,7 @@ namespace Ckype.ViewModels
         public void AttachView(object view, object context = null)
         {
             window = view as Window;
-            if (ViewAttached != null)
-                ViewAttached(this, new ViewAttachedEventArgs() { Context = context, View = view });
+            ViewAttached?.Invoke(this, new ViewAttachedEventArgs() { Context = context, View = view });
         }
 
         public object GetView(object context = null)
