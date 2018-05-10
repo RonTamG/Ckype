@@ -38,7 +38,12 @@ namespace Ckype.ViewModels
             if (Call.connected)
                 Call.Disconnect();
             else
+            {
                 Call.Start();
+                //if (!Call.connected) // if the call failed to connect
+                    // Ioc implementaion of a popup handler
+            }
+
         }
 
         #endregion
@@ -53,8 +58,7 @@ namespace Ckype.ViewModels
         /// <summary>
         /// Constructor with paramter input
         /// </summary>
-        /// <param name="nickname">Nickname of the client</param>
-        /// <param name="selected">If the current client is selected or the not Defaults to false</param>
+        /// <param name="person">The chat list person</param>
         public ChatListPersonControlViewModel(Person person)
         {
             Nickname = person.name;

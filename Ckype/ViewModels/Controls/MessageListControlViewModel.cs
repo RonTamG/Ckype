@@ -14,6 +14,7 @@ namespace Ckype.ViewModels
         public MessageListControlViewModel()
         {
             Messages = new ObservableCollection<MessageControlViewModel>();
+            AddMessage("paka");
         }
 
         /// <summary>

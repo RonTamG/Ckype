@@ -113,5 +113,12 @@ namespace Client
             _socket.Shutdown(SocketShutdown.Both);
             _socket.Close();
         }
+
+        public void Disconnect()
+        {
+            MessagePacket packet = new MessagePacket("exit");
+            this.Send(packet.Data);
+            this.Close();
+        }
     }
 }

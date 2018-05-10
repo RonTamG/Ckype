@@ -23,5 +23,6 @@ namespace Ckype.ViewModels
         {
             CurrentMessageList.AddMessage(message);
         }
+
     }
 }

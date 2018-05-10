@@ -23,7 +23,7 @@ namespace Client
             clientSocket = new ClientSocket();
             clientSocket.nickname = nickname;
 
-            clientSocket.Connect("127.0.0.1", 6556);
+            clientSocket.Connect("192.168.1.20", 6556);
 
             while (true)
             {
@@ -35,7 +35,10 @@ namespace Client
                 Console.WriteLine("You have chosen to send the message to: " + destFriend);
                 string msg = Console.ReadLine();
                 if (msg.ToLower() == "exit")
+                {
+                    clientSocket.Disconnect();
                     Exit();
+                }
 
                 if (msg.ToLower() == "send file")
                 {
@@ -64,9 +67,6 @@ namespace Client
         /// </summary>
         private static void Exit()
         {
-            MessagePacket packet = new MessagePacket("exit");
-            clientSocket.Send(packet.Data);
-            clientSocket.Close();
             Environment.Exit(0);
         }
     }

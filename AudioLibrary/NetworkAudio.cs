@@ -5,6 +5,7 @@ using System.Threading;
 
 namespace AudioLibrary
 {
+
     public class NetworkAudio
     {
         #region Variables
@@ -72,6 +73,8 @@ namespace AudioLibrary
         /// </summary>
         public void Start()
         {
+            if (WaveIn.DeviceCount < 1)
+                return;
             udpSender = new UdpClient();
             SoundIn = new WaveInEvent();
             SoundIn.DataAvailable += OnAudioCaptured;

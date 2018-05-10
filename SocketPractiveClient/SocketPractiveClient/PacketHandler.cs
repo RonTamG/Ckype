@@ -9,11 +9,12 @@ using System.IO;
 
 namespace Client
 {
-    public delegate void FriendAdded(Person person);
+    public delegate void FriendEvent(Person person);
 
     public static class PacketHandler
     {
-        public static FriendAdded FriendAddedEvent;
+        public static event FriendEvent FriendAddedEvent;
+        public static event FriendEvent FriendRemovedEvent;
 
         public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
         {
@@ -26,12 +27,13 @@ namespace Client
                 case 1000:
                     Person person = new Person(packet);
                     clientSocket.Friends.Add(person);
-                    FriendAddedEvent(person);
+                    FriendAddedEvent?.Invoke(person);
                     Console.WriteLine("name: " + person.name + " Connected from: " + person.ip + ":" + person.port);
                     break;
                 case 1500:
                     Person disconnected = new Person(packet);
                     clientSocket.Friends.Remove(Person.FindPersonByIPandPort(disconnected, clientSocket.Friends));
+                    FriendRemovedEvent?.Invoke(disconnected);
                     Console.WriteLine(disconnected + " Disconnected from the server");
                     break;
                 case 2000:

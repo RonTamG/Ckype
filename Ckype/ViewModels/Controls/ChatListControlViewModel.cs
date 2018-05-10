@@ -23,6 +23,7 @@ namespace Ckype.ViewModels
             List = new ObservableCollection<ChatListPersonControlViewModel>();
 
             PacketHandler.FriendAddedEvent += FriendAdded;
+            PacketHandler.FriendRemovedEvent += FriendRemoved;
 
             var client = IoC.Get<ClientSocket>();
             
@@ -42,6 +43,24 @@ namespace Ckype.ViewModels
             App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
             {
                 List.Add(new ChatListPersonControlViewModel(person));
+            });
+        }
+
+        public void FriendRemoved(Person person)
+        {
+            ChatListPersonControlViewModel toRemove = null;
+            foreach (var friend in List)
+            {
+                if (friend.Person.ip == person.ip && friend.Person.port == person.port)
+                {
+                    toRemove = friend;
+                    break;
+                }
+            }
+
+            App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            {
+                List.Remove(toRemove);
             });
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Client;
 using System;
 using System.Windows;
 
@@ -54,6 +55,8 @@ namespace Ckype.ViewModels
         /// </summary>
         public void Close()
         {
+            var client = IoC.Get<ClientSocket>();
+            client.Disconnect();
             window.Close();
         }
 
