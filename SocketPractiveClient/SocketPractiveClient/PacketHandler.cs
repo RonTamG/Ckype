@@ -63,8 +63,10 @@ namespace Client
                 case 4000:
                     CallPacket callP = new CallPacket(packet);
                     Console.WriteLine("Received a call request from: {0}", callP.destClient);
-                    Console.WriteLine("Declining request");
-                    callP.toCheckType();
+                    Console.WriteLine("Declining request"); // here need to check if the receiver wants to accept or decline. rn declines automatically.
+                    // if (receiver == accepted)
+                    //     callP.SetAcceptedCall(); // No need to add the else
+                    callP.SetCheckType(); // if the person declined or accepted this needs to be set anyways.
                     serverSocket.Send(callP.Data);
                     break;
                 case 4500:
@@ -73,6 +75,10 @@ namespace Client
                         Console.WriteLine("Your friend: {0} has accepted the call!", checkCallP.destClient);
                     else
                         Console.WriteLine("Your friend: {0} has declined the call.", checkCallP.destClient);
+                    break;
+                case 4750:
+                    CallPacket hangUp = new CallPacket(packet);
+                    Console.WriteLine("Need to disconnect now.");
                     break;
                 default:
                     Console.WriteLine(Encoding.UTF8.GetString(packet));

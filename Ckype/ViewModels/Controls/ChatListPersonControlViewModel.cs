@@ -36,9 +36,12 @@ namespace Ckype.ViewModels
             if (Call == null)
                 Call = new NetworkAudio(new IPEndPoint(IPAddress.Parse(Person.ip), 7000));
             if (Call.connected)
+                // clientSocket.EndCurrentCall(Person);
                 Call.Disconnect();
             else
             {
+                // clientSocket.CallPerson(Person); and then whenever this is received on the other side need to prompt the user and ask if he wants to accept or deny
+                // written in the client's PacketHandler.
                 Call.Start();
                 //if (!Call.connected) // if the call failed to connect
                     // Ioc implementaion of a popup handler

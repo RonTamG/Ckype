@@ -27,7 +27,12 @@ namespace PacketLibrary
             WriteBool(true, 4);
         }
 
-        public void toCheckType()
+        public void SetHangUp()
+        {
+            WriteUShort(4750, 2);
+        }
+
+        public void SetCheckType() // type which means that the person needs to check the answer
         {
             WriteUShort(4500, 2); // change type.
         }

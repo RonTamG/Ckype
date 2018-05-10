@@ -97,6 +97,21 @@ namespace Client
             }
         }
 
+        public void CallPerson(Person person)
+        {
+            Console.WriteLine("You have chosen to call {0}", person);
+            CallPacket callP = new CallPacket(person);
+            _socket.Send(callP.Data);
+        }
+
+        public void EndCurrentCall(Person person)
+        {
+            Console.WriteLine("You are hanging up now!");
+            CallPacket callP = new CallPacket(person);
+            callP.SetHangUp();
+            _socket.Send(callP.Data);
+        }
+
         public Person FindFriendByIPandPort(string ip, int port)
         {
             for (int i = 0; i < Friends.Count; i++)
@@ -116,7 +131,9 @@ namespace Client
 
         public void Disconnect()
         {
-            MessagePacket packet = new MessagePacket("exit");
+   //                     MessagePacket packet = new MessagePacket("exit");
+            Person packet = new Person(this._socket, nickname);
+            packet.SetDisconnectedType();
             this.Send(packet.Data);
             this.Close();
         }

@@ -28,30 +28,22 @@ namespace Server
                     serverSocket.NewPersonOnlineOffline(person);
                     serverSocket.connected.Add(person);
                     break;
+                case 1500:
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
+                    Person disconnected = new Person(packet);
+                    serverSocket.connected.Remove(serverSocket.FindPersonBySocket(clientSocket));
+                    serverSocket.NewPersonOnlineOffline(disconnected);
+                    Console.WriteLine("Client disconnected");
+                    return "closed client";
+                    break;
                 case 2000:
                     MessagePacket msg = new MessagePacket(packet);
                     Console.WriteLine("Received message: " + msg.Text);
 
-                    //string response = string.Empty;
-
-                    if (msg.Text.ToLower() == "exit")
-                    {
-                        // Always Shutdown before closing
-                        clientSocket.Shutdown(SocketShutdown.Both);
-                        clientSocket.Close();
-                        Person disconnected = serverSocket.FindPersonBySocket(clientSocket);
-                        disconnected.SetDisconnectedType();
-                        serverSocket.NewPersonOnlineOffline(disconnected);
-                        serverSocket.connected.Remove(serverSocket.FindPersonBySocket(clientSocket));
-                        Console.WriteLine("Client disconnected");
-                        return "closed client";
-                    }
-                    else
-                    {
-                        MessagePacket ToSend = new MessagePacket(msg.Text, serverSocket.FindPersonBySocket(clientSocket));
-                        Person.FindPersonByIPandPort(msg.destClient, serverSocket.connected).ownSocket.Send(ToSend.Data);
-                        Console.WriteLine("Sent: " + msg.Text + " To: " + msg.destClient + " From: " + serverSocket.FindPersonBySocket(clientSocket));
-                    }
+                    MessagePacket ToSend = new MessagePacket(msg.Text, serverSocket.FindPersonBySocket(clientSocket));
+                    Person.FindPersonByIPandPort(msg.destClient, serverSocket.connected).ownSocket.Send(ToSend.Data);
+                    Console.WriteLine("Sent: " + msg.Text + " To: " + msg.destClient + " From: " + serverSocket.FindPersonBySocket(clientSocket));
                     break;
                 case 3000:
                     FilePacket file = new FilePacket(packet);
@@ -70,6 +62,13 @@ namespace Server
                     Console.WriteLine("Received call request");
                     CallPacket revRequestBack = new CallPacket(serverSocket.FindPersonBySocket(clientSocket), 4500);
                     Person.FindPersonByIPandPort(callRequestBack.destClient, serverSocket.connected).ownSocket.Send(revRequestBack.Data);
+                    break;
+                case 4750:
+                    CallPacket hangUp = new CallPacket(packet);
+                    Console.WriteLine("Sending hangup request to: {0}", hangUp.destClient);
+                    CallPacket hangUpRequest = new CallPacket(serverSocket.FindPersonBySocket(clientSocket), 4750);
+                    Console.WriteLine("From: {0}", hangUpRequest.destClient);
+                    Person.FindPersonByIPandPort(hangUp.destClient, serverSocket.connected).ownSocket.Send(hangUpRequest.Data);
                     break;
             }
             return "OK";
