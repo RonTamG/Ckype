@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,10 +59,17 @@ namespace Ckype.ViewModels
                 }
             }
 
-            App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            // Remove item on the list from UI thread
+            System.Threading.SynchronizationContext.Current.Post((System.Threading.SendOrPostCallback)delegate
             {
                 List.Remove(toRemove);
-            });
+            }, null);
+
+            // This can also be used but is wpf specific !!
+            //App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            //{
+            //    List.Remove(toRemove);
+            //});
         }
     }
 }

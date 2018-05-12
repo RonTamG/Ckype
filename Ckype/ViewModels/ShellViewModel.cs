@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Ckype.Interfaces;
 using Client;
 using System;
 using System.Windows;
@@ -21,6 +22,12 @@ namespace Ckype.ViewModels
         #endregion
 
         #region Public Methods
+
+        public void TestPopup()
+        {
+            var UI = IoC.Get<IUIManager>();
+            UI.OpenMessageBox(new PopupMessageViewModel());
+        }
 
         /// <summary>
         /// Set active item to a new start page
@@ -56,7 +63,7 @@ namespace Ckype.ViewModels
         public void Close()
         {
             var client = IoC.Get<ClientSocket>();
-            client.Disconnect();
+            client?.Disconnect();
             window.Close();
         }
 

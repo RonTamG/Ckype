@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ckype.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Ckype.Interfaces
 {
     public interface IUIManager
     {
-         
+        Task OpenMessageBox(PopupMessageViewModel viewModel);
     }
 }

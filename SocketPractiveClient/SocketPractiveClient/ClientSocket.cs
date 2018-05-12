@@ -131,11 +131,14 @@ namespace Client
 
         public void Disconnect()
         {
-   //                     MessagePacket packet = new MessagePacket("exit");
-            Person packet = new Person(this._socket, nickname);
-            packet.SetDisconnectedType();
-            this.Send(packet.Data);
-            this.Close();
+            if (this._socket.Connected)
+            { 
+                //                     MessagePacket packet = new MessagePacket("exit");
+                Person packet = new Person(this._socket, nickname);
+                packet.SetDisconnectedType();
+                this.Send(packet.Data);
+                this.Close(); 
+            }
         }
     }
 }

@@ -40,8 +40,8 @@
             </StackPanel>
         </Grid>
 
+        <!-- Content -->
         <Frame Grid.Row="1" x:Name="ActiveItem" NavigationUIVisibility="Hidden"/>
-
     </Grid>
 
 </Window>

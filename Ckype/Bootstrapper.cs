@@ -1,4 +1,6 @@
 ﻿using Caliburn.Micro;
+using Ckype.Interfaces;
+using Ckype.IoCStuff;
 using Ckype.ViewModels;
 using Client;
 using System;
@@ -36,6 +38,7 @@ namespace Ckype
             _container.Singleton<ShellViewModel, ShellViewModel>();
             _container.Singleton<ChatScreenViewModel, ChatScreenViewModel>();
             _container.Singleton<ClientSocket>();
+            _container.Singleton<IUIManager, UIManager>();
         }
 
         public Bootstrapper()
