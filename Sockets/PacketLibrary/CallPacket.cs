@@ -9,7 +9,7 @@ namespace PacketLibrary
     public class CallPacket : PacketStructure
     {
 
-        public CallPacket(Person dest, ushort type = 4000)
+        public CallPacket(Person dest, ushort type = (ushort)type.CallRequest)
             :base((ushort)(5 + dest.Data.Length), type)
         {
             WriteBool(false, 4);
@@ -29,12 +29,12 @@ namespace PacketLibrary
 
         public void SetHangUp()
         {
-            WriteUShort(4750, 2);
+            WriteUShort((ushort)type.CallHangUp, 2);
         }
 
         public void SetCheckType() // type which means that the person needs to check the answer
         {
-            WriteUShort(4500, 2); // change type.
+            WriteUShort((ushort)type.CallResponse, 2); // change type.
         }
 
         public Person destClient

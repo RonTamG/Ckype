@@ -123,8 +123,9 @@ namespace Server
         /// </summary>
         public void CloseAllSockets()
         {
-            foreach (Person person in connected)
+            for(int i =  0; i<connected.Count; i++)
             {
+                Person person = connected[i];
                 MessagePacket packet = new MessagePacket("SecretDisconnectedServerMessage");
                 person.ownSocket.Send(packet.Data);
                 person.ownSocket.Shutdown(SocketShutdown.Both);

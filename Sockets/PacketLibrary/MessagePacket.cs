@@ -12,13 +12,13 @@ namespace PacketLibrary
         private string _message;
 
         public MessagePacket(string message)
-            : base((ushort)(6 + message.Length), 2000) // 4 = 2length + 2type // packet type 2000 = message/string
+            : base((ushort)(6 + message.Length), (ushort)type.Message) // 4 = 2length + 2type // packet type 2000 = message/string
         {
             Text = message;
         }
 
         public MessagePacket(string message, Person dest)
-    : base((ushort)(6 + message.Length + dest.Data.Length), 2000) // 4 = 2length + 2type + 2destlength packet type 2000 = message/string
+    : base((ushort)(6 + message.Length + dest.Data.Length), (ushort)type.Message) // 4 = 2length + 2type + 2destlength packet type 2000 = message/string
         {           
             WriteUShort((ushort)dest.Data.Length, 4);
             WriteByteArray(dest.Data, 6);

@@ -22,21 +22,21 @@ namespace Client
             ushort packetType = BitConverter.ToUInt16(packet, 2);
 
             Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
-            switch (packetType)
+            switch ((type)packetType)
             {
-                case 1000:
+                case type.PersonConnected:
                     Person person = new Person(packet);
                     clientSocket.Friends.Add(person);
                     FriendAddedEvent?.Invoke(person);
                     Console.WriteLine("name: " + person.name + " Connected from: " + person.ip + ":" + person.port);
                     break;
-                case 1500:
+                case type.PersonDisconnected:
                     Person disconnected = new Person(packet);
                     clientSocket.Friends.Remove(Person.FindPersonByIPandPort(disconnected, clientSocket.Friends));
                     FriendRemovedEvent?.Invoke(disconnected);
                     Console.WriteLine(disconnected + " Disconnected from the server");
                     break;
-                case 2000:
+                case type.Message:
                     MessagePacket msg = new MessagePacket(packet);
 
                     if (msg.Text == "SecretDisconnectedServerMessage")
@@ -51,7 +51,7 @@ namespace Client
                         Console.WriteLine(msg.destClient + " Sent: " + msg.Text);
                     }
                     break;
-                case 3000:
+                case type.File:
                     FilePacket newFile = new FilePacket(packet);
                     Console.WriteLine("Received a new file '{0}' from: {1}", newFile.Filename, newFile.destClient);
                     using (FileStream fs = new FileStream(Path.GetFileName(newFile.Filename), FileMode.Append))
@@ -60,7 +60,7 @@ namespace Client
                     }
                     Console.WriteLine("Saved!");
                     break;
-                case 4000:
+                case type.CallRequest:
                     CallPacket callP = new CallPacket(packet);
                     Console.WriteLine("Received a call request from: {0}", callP.destClient);
                     Console.WriteLine("Declining request"); // here need to check if the receiver wants to accept or decline. rn declines automatically.
@@ -69,14 +69,16 @@ namespace Client
                     callP.SetCheckType(); // if the person declined or accepted this needs to be set anyways.
                     serverSocket.Send(callP.Data);
                     break;
-                case 4500:
+                case type.CallResponse:
                     CallPacket checkCallP = new CallPacket(packet);
                     if(checkCallP.acceptedCall)
                         Console.WriteLine("Your friend: {0} has accepted the call!", checkCallP.destClient);
+                    //  call friend do the calling thing
                     else
                         Console.WriteLine("Your friend: {0} has declined the call.", checkCallP.destClient);
+                    //  dont call friend he declined. popup declined.
                     break;
-                case 4750:
+                case type.CallHangUp:
                     CallPacket hangUp = new CallPacket(packet);
                     Console.WriteLine("Need to disconnect now.");
                     break;

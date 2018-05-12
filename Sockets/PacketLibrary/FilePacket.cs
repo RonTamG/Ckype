@@ -13,7 +13,7 @@ namespace PacketLibrary
         private ushort _length;
 
         public FilePacket(string filename, ushort length, ushort startingPos, Person dest)
-            : base((ushort)(length), 3000) // 4 = 2length + 2type // packet type 3000 = file
+            : base((ushort)(length), (ushort)type.File) // 4 = 2length + 2type // packet type 3000 = file
         {
             _filename = filename;
             _startingPos = startingPos;
