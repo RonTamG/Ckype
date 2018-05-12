@@ -62,17 +62,20 @@ namespace Client
                 Console.WriteLine("Server disconnected");
                 serverSocket.Close();
                 return;
-            }          
-            byte[] packet = new byte[bufferLength];
-            Array.Copy(_buffer, packet, packet.Length);
+            }
+            if (bufferLength > 0)
+            {
+                byte[] packet = new byte[bufferLength];
+                Array.Copy(_buffer, packet, packet.Length);
 
-            // Handle Packet
-            string statusUpdate;
-            statusUpdate = PacketHandler.Handle(this, packet, serverSocket);
+                // Handle Packet
+                string statusUpdate;
+                statusUpdate = PacketHandler.Handle(this, packet, serverSocket);
 
-            if (_socket.Connected)
-                _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
-            else return;
+                if (_socket.Connected)
+                    _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
+                else return;
+            }
         }
         
         public void Send(byte[] data)
@@ -131,7 +134,6 @@ namespace Client
 
         public void Disconnect()
         {
-   //                     MessagePacket packet = new MessagePacket("exit");
             Person packet = new Person(this._socket, nickname);
             packet.SetDisconnectedType();
             this.Send(packet.Data);

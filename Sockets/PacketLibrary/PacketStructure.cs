@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace PacketLibrary
 {
+    public enum type { PersonConnected = 1000, PersonDisconnected = 1500, Message = 2000, File = 3000, CallRequest = 4000, CallResponse = 4500, CallHangUp = 4750};
+
     public abstract class PacketStructure
-    {
+    {        
         private byte[] _buffer;
 
         public PacketStructure(ushort length, ushort type) // Person NEEDS THIS ONE

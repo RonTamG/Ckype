@@ -12,7 +12,7 @@ namespace PacketLibrary
     {
         private Socket _socket;
        public Person(Socket s, string name)
-            : base((ushort)(18 + name.Length + 20), 1000)
+            : base((ushort)(18 + name.Length + 20), (ushort)type.PersonConnected)
         {
             string _ip = ((IPEndPoint)s.LocalEndPoint).Address.ToString();
             int _port = ((IPEndPoint)s.LocalEndPoint).Port;
@@ -56,7 +56,7 @@ namespace PacketLibrary
 
         public void SetDisconnectedType()
         {
-            WriteUShort(1500, 2);
+            WriteUShort((ushort)type.PersonDisconnected, 2);
         }
 
         public override string ToString()
