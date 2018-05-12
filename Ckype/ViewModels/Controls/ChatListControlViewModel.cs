@@ -27,8 +27,6 @@ namespace Ckype.ViewModels
             PacketHandler.FriendRemovedEvent += FriendRemoved;
 
             var client = IoC.Get<ClientSocket>();
-            
-            while(!client._socket.Connected) { }
 
             if (client.Friends.Count != 0)
             {

@@ -9,7 +9,7 @@
     <Color x:Key="DarkBlue">#013564</Color>
     <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlue}"/>
 
-    <Color x:Key="NormalBlue">#2d7ac0</Color>
+    <Color x:Key="NormalBlue">#004fa7</Color>
     <SolidColorBrush x:Key="NormalBlueBrush" Color="{StaticResource NormalBlue}"/>
 
     <Color x:Key="Turquoise">#06b6b6</Color>

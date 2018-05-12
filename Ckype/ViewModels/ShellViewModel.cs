@@ -63,7 +63,8 @@ namespace Ckype.ViewModels
         public void Close()
         {
             var client = IoC.Get<ClientSocket>();
-            client?.Disconnect();
+            if (client._socket.Connected)
+                client.Disconnect();
             window.Close();
         }
 

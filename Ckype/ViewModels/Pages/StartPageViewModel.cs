@@ -1,6 +1,8 @@
 ﻿using Caliburn.Micro;
 using Client;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ckype.ViewModels
 {
@@ -10,32 +12,30 @@ namespace Ckype.ViewModels
         public string PortTextBox { get; set; } = "6556";
         public string NicknameTextBox { get; set; } = "Ron";
 
+        public bool AttemptingConnection { get; set; } = false;
+
         /// <summary>
         /// Move to the next screen after connecting
         /// </summary>
-        public void Connect()
+        public async Task ConnectAsync()
         {
             var client = IoC.Get<ClientSocket>();
             client.nickname = NicknameTextBox;
 
-            try
+            var Connected = await Task<bool>.Run(() =>
             {
                 client.Connect(IpTextBox, int.Parse(PortTextBox));
+                return client._socket.Connected;
+            });
 
-            }
-            catch (System.Exception)
+            if (Connected)
+                IoC.Get<ShellViewModel>().ShowChatPage();
+            else
             {
-
-                PortTextBox = "Connection falied try again";
-                return;
+                // popup cant connect
+                PortTextBox = "Couldn't Connect";
             }
-
-            while (!client._socket.Connected)
-            {
-            }
-
-            ShellViewModel shellViewModel = IoC.Get<ShellViewModel>();
-            shellViewModel.ShowChatPage();
         }
+
     }
 }
