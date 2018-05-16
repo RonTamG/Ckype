@@ -50,5 +50,21 @@ namespace Ckype.ViewModels
             IoC.Get<ClientSocket>().Disconnect();
             IoC.Get<ShellViewModel>().ShowStartPage();
         }
+
+        public void Browse()
+        {
+            string filename;
+            // Create OpenFileDialog
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                // Open document 
+                filename = dlg.FileName;
+                ChatScreen.CurrentMessageList.SendFile(filename);
+            }
+        }
     }
 }

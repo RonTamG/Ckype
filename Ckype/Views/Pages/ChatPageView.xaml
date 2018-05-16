@@ -38,10 +38,12 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Margin="5" AcceptsReturn="True" AcceptsTab="True" x:Name="MessageText"/>
+                    <TextBox Style="{StaticResource BaseType}" Grid.Column="0" Margin="5" AcceptsReturn="True" AcceptsTab="True" x:Name="MessageText"/>
                     <Button Grid.Column="1" Content="Send" Margin="5" x:Name="AddMessage"/>
+                    <Button Grid.Column="2" Content="Browse" Margin="5" x:Name="Browse"/>
                 </Grid>
             </Border>
 

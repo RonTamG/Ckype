@@ -43,5 +43,10 @@ namespace Ckype.ViewModels
             var client = IoC.Get<ClientSocket>();
             client.Send(MessagePacket.Data);
         }
+
+        public void SendFile(string filename)
+        {
+            IoC.Get<ClientSocket>().SendFile(filename, Person);         
+        }
     }
 }

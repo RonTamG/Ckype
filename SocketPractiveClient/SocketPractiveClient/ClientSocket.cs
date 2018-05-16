@@ -113,6 +113,9 @@ namespace Client
                 fs.Read(packet.Data, packetStart, packetLength - packetStart);
                 _socket.Send(packet.Data);
             }
+
+            MessagePacket msgPacket = new MessagePacket($"Finished receiving the file: {filename}", destClient);
+            _socket.Send(msgPacket.Data);
         }
 
         public void CallPerson(Person person)

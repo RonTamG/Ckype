@@ -17,6 +17,7 @@ namespace Client
         public static event FriendEvent FriendAddedEvent;
         public static event FriendEvent FriendRemovedEvent;
         public static event MessageEvent FriendMessageReceivedEvent;
+        public static event MessageEvent FileReceivedEvent;
 
         public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
         {
@@ -61,6 +62,7 @@ namespace Client
                     {
                         fs.Write(newFile.FileContents, 0, newFile.FileContents.Length);
                     }
+                    
                     Console.WriteLine("Saved!");
                     break;
                 case type.CallRequest:
