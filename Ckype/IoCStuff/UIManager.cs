@@ -1,5 +1,6 @@
 ﻿using Ckype.Interfaces;
 using Ckype.ViewModels;
+using Ckype.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,10 @@ namespace Ckype.IoCStuff
     {
         public Task OpenMessageBox(PopupMessageViewModel viewModel)
         {
-            return Task.Run(() => MessageBox.Show("Test"));
+            return Task.Run(() => 
+            {
+                App.Current.Dispatcher.Invoke(() => new PopupMessageView(viewModel).ShowDialog());
+            });
         }
     }
 }

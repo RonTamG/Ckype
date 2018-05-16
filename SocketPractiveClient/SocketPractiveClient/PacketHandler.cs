@@ -10,11 +10,13 @@ using System.IO;
 namespace Client
 {
     public delegate void FriendEvent(Person person);
+    public delegate void MessageEvent(Person person, string message);
 
     public static class PacketHandler
     {
         public static event FriendEvent FriendAddedEvent;
         public static event FriendEvent FriendRemovedEvent;
+        public static event MessageEvent FriendMessageReceivedEvent;
 
         public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
         {
@@ -48,6 +50,7 @@ namespace Client
                     }
                     else
                     {
+                        FriendMessageReceivedEvent(msg.destClient, msg.Text);
                         Console.WriteLine(msg.destClient + " Sent: " + msg.Text);
                     }
                     break;

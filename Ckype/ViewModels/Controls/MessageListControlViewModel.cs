@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using Client;
+using PacketLibrary;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,11 +14,14 @@ namespace Ckype.ViewModels
     {
         public ObservableCollection<MessageControlViewModel> Messages { get; set; }
 
-        public MessageListControlViewModel()
+        public Person Person { get; set; }
+
+        public MessageListControlViewModel(Person person)
         {
             Messages = new ObservableCollection<MessageControlViewModel>();
-            AddMessage("paka");
+            Person = person;
         }
+
 
         /// <summary>
         /// Add string message to the message lists
@@ -30,6 +36,12 @@ namespace Ckype.ViewModels
             };
 
             Messages.Add(newMessage);
+
+
+            var MessagePacket = new MessagePacket(Message, Person);
+
+            var client = IoC.Get<ClientSocket>();
+            client.Send(MessagePacket.Data);
         }
     }
 }

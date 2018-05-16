@@ -1,4 +1,6 @@
 ﻿using Caliburn.Micro;
+using Client;
+using PacketLibrary;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

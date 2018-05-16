@@ -23,12 +23,6 @@ namespace Ckype.ViewModels
 
         #region Public Methods
 
-        public void TestPopup()
-        {
-            var UI = IoC.Get<IUIManager>();
-            UI.OpenMessageBox(new PopupMessageViewModel());
-        }
-
         /// <summary>
         /// Set active item to a new start page
         /// </summary>
@@ -64,7 +58,10 @@ namespace Ckype.ViewModels
         {
             var client = IoC.Get<ClientSocket>();
             if (client._socket.Connected)
+            {
                 client.Disconnect();
+                client.Close();
+            }
             window.Close();
         }
 

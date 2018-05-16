@@ -1,4 +1,7 @@
-﻿namespace Ckype.ViewModels
+﻿using System;
+using Caliburn.Micro;
+
+namespace Ckype.ViewModels
 {
     public class PopupMessageViewModel
     {

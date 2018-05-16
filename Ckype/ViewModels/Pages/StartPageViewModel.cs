@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Ckype.Interfaces;
 using Client;
 using System.Diagnostics;
 using System.Threading;
@@ -8,11 +9,9 @@ namespace Ckype.ViewModels
 {
     public class StartPageViewModel : Screen
     {
-        public string IpTextBox { get; set; } = "192.168.1.24";
+        public string IpTextBox { get; set; } = "127.0.0.1";
         public string PortTextBox { get; set; } = "6556";
         public string NicknameTextBox { get; set; } = "Ron";
-
-        public bool AttemptingConnection { get; set; } = false;
 
         /// <summary>
         /// Move to the next screen after connecting
@@ -21,19 +20,30 @@ namespace Ckype.ViewModels
         {
             var client = IoC.Get<ClientSocket>();
             client.nickname = NicknameTextBox;
-
-            var Connected = await Task<bool>.Run(() =>
+            bool Connected;
+            try
             {
-                client.Connect(IpTextBox, int.Parse(PortTextBox));
-                return client._socket.Connected;
-            });
 
+                Connected = await Task<bool>.Run(() =>
+                {
+                    client.Connect(IpTextBox, int.Parse(PortTextBox));
+                    return client._socket.Connected;
+                });
+
+            }
+            catch (System.Exception) { Connected = false; }
             if (Connected)
+            {
                 IoC.Get<ShellViewModel>().ShowChatPage();
+            }
             else
             {
+                //client.ResetSocket();
+                // Reset client
                 // popup cant connect
                 PortTextBox = "Couldn't Connect";
+
+                await IoC.Get<IUIManager>().OpenMessageBox(new PopupMessageViewModel() { Title = "Connection Issue", ConfirmationBoxText = "OK", Message = "Could not connect to server, Try Again" });
             }
         }
 

@@ -26,7 +26,22 @@ namespace Client
 
         public void Connect(string ipAddress, int port)
         {
-            _socket.BeginConnect(new IPEndPoint(IPAddress.Parse(ipAddress), port), ConnectCallback, null);
+            _socket.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+            if (_socket.Connected)
+            {
+                Console.WriteLine("Connected to the server!");
+                serverSocket = _socket;
+                _buffer = new byte[1024];
+                _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
+
+                #region Initial Packet
+
+                Person packet = new Person(_socket, nickname);
+                _socket.Send(packet.Data);
+
+                #endregion
+            }
+            else Console.WriteLine("Could not connect");
         }
 
         private void ConnectCallback(IAsyncResult ar)

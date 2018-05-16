@@ -126,6 +126,9 @@
     <Compile Include="Views\Controls\MessageListControlView.xaml.cs">
       <DependentUpon>MessageListControlView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PopupMessageView.xaml.cs">
+      <DependentUpon>PopupMessageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -238,6 +241,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Controls\MessageListControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PopupMessageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,5 +1,6 @@
 ﻿using AudioLibrary;
 using Caliburn.Micro;
+using Client;
 using PacketLibrary;
 using System.Diagnostics;
 using System.Net;
@@ -53,11 +54,6 @@ namespace Ckype.ViewModels
 
         #region Constructors
 
-        public ChatListPersonControlViewModel()
-        {
-            MessagePage = new MessageListControlViewModel();
-        }
-
         /// <summary>
         /// Constructor with paramter input
         /// </summary>
@@ -66,7 +62,7 @@ namespace Ckype.ViewModels
         {
             Nickname = person.name;
             Person = person;
-            MessagePage = new MessageListControlViewModel();
+            MessagePage = new MessageListControlViewModel(person);
         } 
         #endregion
     }

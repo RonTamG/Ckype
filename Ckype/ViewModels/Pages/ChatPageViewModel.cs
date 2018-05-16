@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,12 @@ namespace Ckype.ViewModels
         public void AddMessage()
         {
             ChatScreen.AddMessage(MessageText);
+        }
+
+        public void Disconnect()
+        {
+            IoC.Get<ClientSocket>().Disconnect();
+            IoC.Get<ShellViewModel>().ShowStartPage();
         }
     }
 }
