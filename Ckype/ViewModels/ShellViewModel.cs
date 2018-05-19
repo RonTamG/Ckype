@@ -60,7 +60,6 @@ namespace Ckype.ViewModels
             if (client._socket.Connected)
             {
                 client.Disconnect();
-                client.Close();
             }
             window.Close();
         }

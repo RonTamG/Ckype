@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server
@@ -95,17 +96,24 @@ namespace Server
             clientSocket.EndSend(ar);
         }
 
-        public void ConnectedSockets(Person newPerson)
-        {
-            for (int i =0;i<this.connected.Count;i++)           
-                 newPerson.ownSocket.Send(connected[i].Data);            
-        }
-
         public void NewPersonOnlineOffline(Person newPerson)
         {
             for (int i = 0; i < this.connected.Count; i++)
                 if(this.connected[i].ownSocket.Connected)
                     this.connected[i].ownSocket.Send(newPerson.Data);
+        }
+
+        public void SendConnections(Person SendTo)
+        {
+
+            //List without the person we will be sending the connections to.
+            List<Person> Connections = new List<Person>();
+            for (int i = 0; i < connected.Count; i++)
+                if (!(connected[i].port == SendTo.port && connected[i].ip == SendTo.ip))
+                    Connections.Add(connected[i]);
+
+            ConnectionsPacket ConPacket = new ConnectionsPacket((ushort)(ConnectionsPacket.PersonListByteLength(Connections) + 6), Connections);
+            SendTo.ownSocket.Send(ConPacket.Data);
         }
 
         public Person FindPersonBySocket(Socket clientS)
