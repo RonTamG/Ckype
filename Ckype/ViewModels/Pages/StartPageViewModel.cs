@@ -41,9 +41,8 @@ namespace Ckype.ViewModels
                 //client.ResetSocket();
                 // Reset client
                 // popup cant connect
-                PortTextBox = "Couldn't Connect";
 
-                await IoC.Get<IUIManager>().OpenMessageBox(new PopupMessageViewModel() { Title = "Connection Issue", ConfirmationBoxText = "OK", Message = "Could not connect to server, Try Again" });
+                await IoC.Get<IUIManager>().OpenMessageBox(new PopupMessageViewModel() { Title = "Connection Issue", ConfirmationBoxText = "OK", Message = "Could not connect to server, Try Again", Type = PopupType.Message });
             }
         }
 

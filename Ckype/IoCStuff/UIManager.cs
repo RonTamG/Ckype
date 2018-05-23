@@ -12,11 +12,11 @@ namespace Ckype.IoCStuff
 {
     class UIManager : IUIManager
     {
-        public Task OpenMessageBox(PopupMessageViewModel viewModel)
+        public Task OpenMessageBox(PopupDialogViewModelBase viewModel)
         {
             return Task.Run(() => 
             {
-                App.Current.Dispatcher.Invoke(() => new PopupMessageView(viewModel).ShowDialog());
+                App.Current.Dispatcher.Invoke(() => new PopupBaseView(viewModel).ShowDialog());
             });
         }
     }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ckype"
         xmlns:cal="http://www.caliburnproject.org"
+        Title="Ckype"
         mc:Ignorable="d"
         WindowStyle="None"
         AllowsTransparency="True"     

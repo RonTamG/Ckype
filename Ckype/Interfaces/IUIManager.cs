@@ -9,6 +9,6 @@ namespace Ckype.Interfaces
 {
     public interface IUIManager
     {
-        Task OpenMessageBox(PopupMessageViewModel viewModel);
+        Task OpenMessageBox(PopupDialogViewModelBase viewModel);
     }
 }
