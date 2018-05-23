@@ -47,8 +47,17 @@ namespace Ckype.ViewModels
 
         public void Disconnect()
         {
+//           var client = IoC.Get<ClientSocket>();
+//            client.Disconnect();
+//            client = new ClientSocket();
             IoC.Get<ClientSocket>().Disconnect();
             IoC.Get<ShellViewModel>().ShowStartPage();
+        }
+
+        public void Refresh()
+        {
+            ChatListControl.AllFriendsRemoved();
+            IoC.Get<ClientSocket>().RefreshRequest();
         }
 
         public void Browse()

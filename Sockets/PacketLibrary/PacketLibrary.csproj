@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CallPacket.cs" />
+    <Compile Include="ConnectionsPacket.cs" />
     <Compile Include="FilePacket.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="MessagePacket.cs" />

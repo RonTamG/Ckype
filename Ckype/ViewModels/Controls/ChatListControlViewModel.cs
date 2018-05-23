@@ -26,6 +26,7 @@ namespace Ckype.ViewModels
 
             PacketHandler.FriendAddedEvent += FriendAdded;
             PacketHandler.FriendRemovedEvent += FriendRemoved;
+            PacketHandler.FriendsReceivedEvent += FriendsReceived;
             PacketHandler.FriendMessageReceivedEvent += MessageReceived;
 
             var client = IoC.Get<ClientSocket>();
@@ -94,6 +95,25 @@ namespace Ckype.ViewModels
            {
                List.Remove(toRemove);
            });
+        }
+
+        public void AllFriendsRemoved()
+        {
+            App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            {
+                List.Clear();
+            });
+        }
+
+        public void FriendsReceived(List<Person> lst)
+        {
+            App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            {
+                for(int i = 0;i<lst.Count;i++)
+                {
+                    List.Add(new ChatListPersonControlViewModel(lst[i]));
+                }
+            });
         }
     }
 }

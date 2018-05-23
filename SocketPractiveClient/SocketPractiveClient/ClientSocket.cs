@@ -118,6 +118,13 @@ namespace Client
             _socket.Send(msgPacket.Data);
         }
 
+        public void RefreshRequest()
+        {
+            Friends.Clear();
+            ConnectionsPacket packet = new ConnectionsPacket();
+            _socket.Send(packet.Data);
+        }
+
         public void CallPerson(Person person)
         {
             Console.WriteLine("You have chosen to call {0}", person);
@@ -144,7 +151,7 @@ namespace Client
         /// <summary>
         /// Close socket
         /// </summary>
-        public void Close()
+        public void Close() // maybe should be made private
         {
             _socket.Shutdown(SocketShutdown.Both);
             _socket.Close();
