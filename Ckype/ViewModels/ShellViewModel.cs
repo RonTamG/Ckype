@@ -15,8 +15,8 @@ namespace Ckype.ViewModels
         /// </summary>
         public ShellViewModel()
         {
-            ShowStartPage();
-            //ShowChatPage();
+            //ShowStartPage();
+            ShowChatPage();
         }
 
         #endregion
@@ -33,6 +33,7 @@ namespace Ckype.ViewModels
 
         public void ShowChatPage()
         {
+            //ActivateItem(new ChatPageViewModel());
             ActivateItem(new ChatPageViewModel());
         }
         /// <summary>

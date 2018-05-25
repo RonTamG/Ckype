@@ -1,0 +1,104 @@
+﻿<UserControl x:Class="Ckype.Views.MessageControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ckype.Views"
+             xmlns:conv="clr-namespace:Ckype.Converters"
+             mc:Ignorable="d" 
+             d:DesignWidth="300">
+    <Border Padding="5" 
+            >
+        <Grid>
+            
+            
+            <!-- Sender name -->
+            <Border CornerRadius="7.5"
+                    Padding="7.5"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    Background="{StaticResource ForegroundLightBrush}"
+                    BorderBrush="{StaticResource DarkGrayBlueBrush}"
+                    BorderThickness="3"
+                    Panel.ZIndex="1"
+                    Visibility="{Binding SentByMe, Converter={conv:BoleanToVisibilityConverter}}"
+                        >
+
+                <!-- Message text -->
+                <TextBlock VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontFamily="{StaticResource LatoRegular}"
+                               Text="{Binding SenderName}"/>
+
+            </Border>
+
+            <!-- Chat message container-->
+            <Grid Margin="20 25 20 0" 
+                  HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToAlignmentConverter}}"
+                  >
+                  
+                <Grid.Triggers>
+
+                    <!-- Mouse over shows time -->
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetName="TimeSent" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation To="1" Duration="00:00:00.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                
+                    <!-- Mouse leave hides time -->               
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetName="TimeSent" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation To="0" Duration="00:00:00.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Speech bubble rectangle-->
+                <Border Grid.Row="0" CornerRadius="10"
+                        Padding="15"                        
+                        Background="{Binding SentByMe, Converter={conv:SentByMeToBackgroundConverter}}"
+                        >
+                
+                    <!-- Message text -->
+                    <TextBlock VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontFamily="{StaticResource LatoRegular}"
+                               Text="{Binding Content}"/>
+
+                </Border>
+                
+                <!-- Chat bubble triangle-->               
+                <!--Left: M 0,0 L 0,10 L 20,0 L 0,0" Right: "M 0,0 L 20,10 L 20,0 L 0,0"-->
+                <Path Grid.Row="1"
+                      Data="{Binding SentByMe, Converter={conv:SentByMeToTriangleConverter}}"
+                      HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToAlignmentConverter}}"       
+                      Margin="10, -1, 10, 0"
+                      StrokeThickness="0"
+                      Panel.ZIndex="1"
+                      Fill="{Binding SentByMe, Converter={conv:SentByMeToBackgroundConverter}}"
+                      
+                      />
+
+                <!-- Sent time of the message -->
+                <TextBlock Grid.Row="2" Name="TimeSent"
+                           Text="{Binding MessageSentTime,Converter={conv:TimeToDisplayTimeConverter}}"
+                           Foreground="{StaticResource ForegroundLightBrush}"
+                           HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToReverseAlignmentConverter}}"
+                           Opacity="0"
+                           />
+
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

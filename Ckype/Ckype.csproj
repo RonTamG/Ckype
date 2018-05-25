@@ -89,6 +89,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BaseValueConverter.cs" />
+    <Compile Include="Converters\BoleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\SentByMeToReverseAlignmentConverter.cs" />
+    <Compile Include="Converters\SentByMeToBackgroundConverter.cs" />
+    <Compile Include="Converters\SentByMeToTriangleConverter.cs" />
+    <Compile Include="Converters\SentByMeToAlignmentConverter.cs" />
+    <Compile Include="Converters\TimeToDisplayTimeConverter.cs" />
     <Compile Include="Enums\Enumerators.cs" />
     <Compile Include="Interfaces\IMessage.cs" />
     <Compile Include="Interfaces\IUIManager.cs" />
@@ -98,8 +105,8 @@
     <Compile Include="ViewModels\Controls\ChatListPersonControlViewModel.cs" />
     <Compile Include="ViewModels\Pages\ChatPageViewModel.cs" />
     <Compile Include="ViewModels\ChatScreenViewModel.cs" />
-    <Compile Include="ViewModels\Controls\MessageControlViewModel.cs" />
-    <Compile Include="ViewModels\Controls\MessageListControlViewModel.cs" />
+    <Compile Include="ViewModels\Controls\Messages\MessageControlViewModel.cs" />
+    <Compile Include="ViewModels\Controls\Messages\MessageListControlViewModel.cs" />
     <Compile Include="ViewModels\Popups\PopupMessageViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
@@ -120,10 +127,10 @@
     <Compile Include="Views\ChatScreenView.xaml.cs">
       <DependentUpon>ChatScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\MessageControlView.xaml.cs">
+    <Compile Include="Views\Controls\Message\MessageControlView.xaml.cs">
       <DependentUpon>MessageControlView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\MessageListControlView.xaml.cs">
+    <Compile Include="Views\Controls\Message\MessageListControlView.xaml.cs">
       <DependentUpon>MessageListControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PopupMessageView.xaml.cs">
@@ -236,11 +243,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\MessageControlView.xaml">
+    <Page Include="Views\Controls\Message\MessageControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\MessageListControlView.xaml">
+    <Page Include="Views\Controls\Message\MessageListControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

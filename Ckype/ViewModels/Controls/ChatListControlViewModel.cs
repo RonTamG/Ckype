@@ -40,6 +40,20 @@ namespace Ckype.ViewModels
             }
         }
 
+        public ChatListControlViewModel(object something)
+        {
+            List = new ObservableCollection<ChatListPersonControlViewModel>();
+
+            PacketHandler.FriendAddedEvent += FriendAdded;
+            PacketHandler.FriendRemovedEvent += FriendRemoved;
+            PacketHandler.FriendsReceivedEvent += FriendsReceived;
+            PacketHandler.FriendMessageReceivedEvent += MessageReceived;
+
+            var client = IoC.Get<ClientSocket>();
+
+            List.Add(new ChatListPersonControlViewModel(new Person("Ron", "168.192.9.24", 54238)));
+        }
+
         private void MessageReceived(Person person, string message)
         {
             ChatListPersonControlViewModel temp = null;

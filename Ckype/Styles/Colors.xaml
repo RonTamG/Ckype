@@ -15,10 +15,18 @@
     <Color x:Key="Turquoise">#06b6b6</Color>
     <SolidColorBrush x:Key="TurquoiseBrush" Color="{StaticResource Turquoise}"/>
 
+    <Color x:Key="GrayBlue">#71b6e3</Color>
+    <SolidColorBrush x:Key="GrayBlueBrush" Color="{StaticResource GrayBlue}"/>
+    
     <Color x:Key="DarkGrayBlue">#345368</Color>
     <SolidColorBrush x:Key="DarkGrayBlueBrush" Color="{StaticResource DarkGrayBlue}"/>
 
     <Color x:Key="ReallyLightBlue">#7df7ff</Color>
     <SolidColorBrush x:Key="ReallyLightBlueBrush" Color="{StaticResource ReallyLightBlue}"/>
+
+    <Color x:Key="ForegroundLight">#ffffff</Color>
+    <SolidColorBrush x:Key="ForegroundLightBrush" Color="{StaticResource ForegroundLight}"/>
+
+    
 
 </ResourceDictionary>

@@ -32,7 +32,7 @@
                 <ContentControl Margin="10" x:Name="ChatListControl"/>
             </Border>
 
-            <Border Margin="10" Grid.Column="1" Grid.Row="1" Background="{StaticResource DarkGrayBlueBrush}">
+            <Border Margin="10" Grid.Column="1" Grid.Row="1" Background="{StaticResource NormalBlueBrush}">
                 <!--To change Test-->
                 <ContentControl x:Name="ChatScreen"/>
             </Border>

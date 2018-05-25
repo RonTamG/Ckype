@@ -7,7 +7,9 @@
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         WindowStyle="None"
-        AllowsTransparency="True"     
+        AllowsTransparency="True"   
+        MinHeight="200"
+        MinWidth="200"
         >
 
     <WindowChrome.WindowChrome>
