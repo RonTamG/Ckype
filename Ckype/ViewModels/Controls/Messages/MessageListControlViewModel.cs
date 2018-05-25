@@ -19,31 +19,6 @@ namespace Ckype.ViewModels
         public MessageListControlViewModel(Person person)
         {
             Messages = new ObservableCollection<MessageControlViewModel>();
-            #region testing chat bubbles
-            Messages.Add(new MessageControlViewModel
-            {
-                SenderName = "Ron, The amazing spiderman",
-                MessageType = MessageType.Text,
-                Content = "Hello my name is max",
-                MessageSentTime=DateTimeOffset.UtcNow,
-            });
-            Messages.Add(new MessageControlViewModel
-            {
-                SenderName = "Ethay",
-                MessageType = MessageType.Text,
-                Content = "Hello my name is max too",
-                SentByMe = true,
-                MessageSentTime = DateTimeOffset.UtcNow,
-
-            });
-            Messages.Add(new MessageControlViewModel
-            {
-                SenderName = "Ron, The amazing spiderman",
-                MessageType = MessageType.Text,
-                Content = "Hello my name isn't max",
-                MessageSentTime = DateTimeOffset.UtcNow,
-            });
-            #endregion
             Person = person;
         }
 
@@ -55,6 +30,9 @@ namespace Ckype.ViewModels
         {
             var newMessage = new MessageControlViewModel
             {
+                SenderName = Person.name,
+                MessageSentTime = DateTimeOffset.UtcNow,
+                SentByMe=true,
                 MessageType = MessageType.Text,
                 Content = Message,
             };
