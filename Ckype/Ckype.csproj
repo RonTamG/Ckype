@@ -63,8 +63,8 @@
     <Reference Include="Microsoft.Windows.Shell, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Windows.Shell.3.0.1.0\lib\net40\Microsoft.Windows.Shell.dll</HintPath>
     </Reference>
-    <Reference Include="PropertyChanged, Version=2.5.5.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyChanged.Fody.2.5.5\lib\net452\PropertyChanged.dll</HintPath>
+    <Reference Include="PropertyChanged, Version=2.5.6.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.2.5.6\lib\net452\PropertyChanged.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -89,24 +89,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\BaseValueConverter.cs" />
-    <Compile Include="Converters\BoleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\SentByMeToReverseAlignmentConverter.cs" />
-    <Compile Include="Converters\SentByMeToBackgroundConverter.cs" />
-    <Compile Include="Converters\SentByMeToTriangleConverter.cs" />
-    <Compile Include="Converters\SentByMeToAlignmentConverter.cs" />
-    <Compile Include="Converters\TimeToDisplayTimeConverter.cs" />
     <Compile Include="Enums\Enumerators.cs" />
     <Compile Include="Interfaces\IMessage.cs" />
     <Compile Include="Interfaces\IUIManager.cs" />
     <Compile Include="IoCStuff\UIManager.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\BaseWindowViewModel.cs" />
     <Compile Include="ViewModels\Controls\ChatListControlViewModel.cs" />
     <Compile Include="ViewModels\Controls\ChatListPersonControlViewModel.cs" />
     <Compile Include="ViewModels\Pages\ChatPageViewModel.cs" />
     <Compile Include="ViewModels\ChatScreenViewModel.cs" />
-    <Compile Include="ViewModels\Controls\Messages\MessageControlViewModel.cs" />
-    <Compile Include="ViewModels\Controls\Messages\MessageListControlViewModel.cs" />
+    <Compile Include="ViewModels\Controls\MessageControlViewModel.cs" />
+    <Compile Include="ViewModels\Controls\MessageListControlViewModel.cs" />
+    <Compile Include="ViewModels\Popups\PopupBaseViewModel.cs" />
+    <Compile Include="ViewModels\Popups\PopupDialogViewModelBase.cs" />
     <Compile Include="ViewModels\Popups\PopupMessageViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
@@ -127,13 +124,16 @@
     <Compile Include="Views\ChatScreenView.xaml.cs">
       <DependentUpon>ChatScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\Message\MessageControlView.xaml.cs">
+    <Compile Include="Views\Controls\MessageControlView.xaml.cs">
       <DependentUpon>MessageControlView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\Message\MessageListControlView.xaml.cs">
+    <Compile Include="Views\Controls\MessageListControlView.xaml.cs">
       <DependentUpon>MessageListControlView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PopupMessageView.xaml.cs">
+    <Compile Include="Views\PopupBaseView.xaml.cs">
+      <DependentUpon>PopupBaseView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Popups\PopupMessageView.xaml.cs">
       <DependentUpon>PopupMessageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
@@ -243,15 +243,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\Message\MessageControlView.xaml">
+    <Page Include="Views\Controls\MessageControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\Message\MessageListControlView.xaml">
+    <Page Include="Views\Controls\MessageListControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PopupMessageView.xaml">
+    <Page Include="Views\PopupBaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Popups\PopupMessageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -280,9 +284,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Popups\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.0.3\build\Fody.targets" Condition="Exists('..\packages\Fody.3.0.3\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
