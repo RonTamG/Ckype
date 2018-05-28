@@ -8,9 +8,14 @@
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="700"
       Title="ChatPageView">
-    <Border Margin="20" Padding="30" Grid.Row="1" CornerRadius="50" Background="{StaticResource DarkBlueBrush}">
+    <Border Margin="20" Padding="30" Grid.Row="1" CornerRadius="50">
+        <Border.Background>
+            <ImageBrush ImageSource="/Ckype;component/Images/ChatBackground.png"/>
+        </Border.Background>
+
 
         <Grid>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="5*"/>
@@ -32,9 +37,11 @@
                 <ContentControl Margin="10" x:Name="ChatListControl"/>
             </Border>
 
-            <Border Margin="10" Grid.Column="1" Grid.Row="1" Background="{StaticResource NormalBlueBrush}">
+            <Border Margin="10" Grid.Column="1" Grid.Row="1" CornerRadius="15"  Background="{StaticResource NormalBlueBrush}">
                 <!--To change Test-->
-                <ContentControl x:Name="ChatScreen"/>
+                <Grid>
+                    <ContentControl x:Name="ChatScreen"/>
+                </Grid>
             </Border>
 
             <Border Grid.Column="1" Grid.Row="2" Background="Transparent">
