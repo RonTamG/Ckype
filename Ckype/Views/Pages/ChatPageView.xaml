@@ -30,7 +30,7 @@
             <Button Margin="10" Content="Disconnect" x:Name="Disconnect"/>
 
             <StackPanel Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Button x:Name="Refresh" FontSize="20">Refresh</Button>
+                <Button x:Name="Refresh" FontSize="30" FontFamily="{StaticResource FontAwesome}">&#xf021;</Button>
             </StackPanel>
 
             <Border Background="{StaticResource ReallyLightBlueBrush}" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
@@ -42,7 +42,7 @@
                 <Grid>
                     <ContentControl x:Name="ChatScreen"/>
                     <Grid.Background>
-                        <ImageBrush ImageSource="/Images/Headphone_Smiley2.png" Opacity="0.2" Stretch="Uniform"/>
+                        <ImageBrush ImageSource="/Images/HeadphoneSmileyTrans.png" Opacity="0.2" Stretch="Uniform"/>
                     </Grid.Background>
                 </Grid>
             </Border>
