@@ -41,6 +41,9 @@
                 <!--To change Test-->
                 <Grid>
                     <ContentControl x:Name="ChatScreen"/>
+                    <Grid.Background>
+                        <ImageBrush ImageSource="/Images/Headphone_Smiley2.png" Opacity="0.2" Stretch="Uniform"/>
+                    </Grid.Background>
                 </Grid>
             </Border>
 
