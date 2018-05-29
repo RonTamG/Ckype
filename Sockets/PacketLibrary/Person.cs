@@ -24,6 +24,18 @@ namespace PacketLibrary
             _socket = s;
         }
 
+        public Person(string name, string ip, int port)
+     : base((ushort)(18 + name.Length + 20), (ushort)type.PersonConnected)
+        {
+            string _ip = ip;
+            int _port = port;
+            WriteUShort((ushort)_port, 4);
+            WriteUShort((ushort)_ip.Length, 6);
+            WriteString(_ip, 8);
+            WriteUShort((ushort)name.Length, 8 + _ip.Length);
+            WriteString(name, 10 + _ip.Length);
+        }
+
         public Person(byte[] packet)
             : base(packet)
         {

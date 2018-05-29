@@ -22,7 +22,6 @@ namespace Ckype.ViewModels
             Person = person;
         }
 
-
         /// <summary>
         /// Add string message to the message lists
         /// </summary>
@@ -31,6 +30,9 @@ namespace Ckype.ViewModels
         {
             var newMessage = new MessageControlViewModel
             {
+                SenderName = Person.name,
+                MessageSentTime = DateTimeOffset.UtcNow,
+                SentByMe=true,
                 MessageType = MessageType.Text,
                 Content = Message,
             };

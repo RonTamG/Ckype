@@ -58,7 +58,7 @@ namespace Ckype.ViewModels
                     List.Add(new ChatListPersonControlViewModel(friend));
                 }
             }
-        }
+        }        
 
         private void FriendCalling(ref CallPacket packet)
         {
@@ -107,6 +107,9 @@ namespace Ckype.ViewModels
 
             var newMessage = new MessageControlViewModel
             {
+                SentByMe = false,
+                MessageSentTime = DateTimeOffset.UtcNow,
+                SenderName = person.name,
                 MessageType = MessageType.Text,
                 Content = message,
             };
