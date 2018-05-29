@@ -23,6 +23,7 @@ namespace Ckype.Views
             };
             DataContext = myVM;
             VM.CloseCommand = myVM.CloseCommand;
+            
 
             SetContent(VM);
         }
@@ -33,6 +34,11 @@ namespace Ckype.Views
                 case PopupType.Message:
                     {
                         myVM.Content = new PopupMessageView(VM);
+                    };
+                    break;
+                case PopupType.Call:
+                    {
+                        myVM.Content = new PopupCallingView(VM);
                     };
                     break;
             }

@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ckype.Interfaces;
+using Ckype.ViewModels.Popups;
 using Client;
 using System.Diagnostics;
 using System.Threading;

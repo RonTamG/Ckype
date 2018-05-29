@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
+using Ckype.Interfaces;
+using Ckype.ViewModels.Popups;
 using Client;
 using PacketLibrary;
 
@@ -18,6 +20,21 @@ namespace Ckype.ViewModels
     public class ChatListControlViewModel : BaseViewModel
     {
         public ObservableCollection<ChatListPersonControlViewModel> List { get; set; }
+
+        public ChatListPersonControlViewModel FindPersonControl(Person person)
+        {
+            ChatListPersonControlViewModel temp = null;
+            for (int i = 0; i < List.Count; i++)
+            {
+                if (List[i].Person.ip == person.ip && List[i].Person.port == person.port)
+                {
+                    temp = List[i];
+                    break;
+                }
+            }
+
+            return temp;
+        }
         
 
         public ChatListControlViewModel()
@@ -28,6 +45,9 @@ namespace Ckype.ViewModels
             PacketHandler.FriendRemovedEvent += FriendRemoved;
             PacketHandler.FriendsReceivedEvent += FriendsReceived;
             PacketHandler.FriendMessageReceivedEvent += MessageReceived;
+            PacketHandler.CallingEvent += FriendCalling;
+            PacketHandler.AcceptedCallEvent += FriendAnswered;
+            PacketHandler.DeclinedCallEvent += FriendDeclined;
 
             var client = IoC.Get<ClientSocket>();
 
@@ -40,17 +60,50 @@ namespace Ckype.ViewModels
             }
         }        
 
+        private void FriendCalling(ref CallPacket packet)
+        {
+            var Popup = IoC.Get<IUIManager>().OpenMessageBox(new PopupCallingViewModel()
+            {
+                Message = $"{packet.destClient.name} is calling...",
+                Title = $"{packet.destClient.name}",
+            });
+
+            Popup.Wait();
+            if (((PopupCallingViewModel)(Popup.Result)).AcceptedCall)
+            {
+                var PersonViewModel = this.FindPersonControl(packet.destClient);
+                packet.SetAcceptedCall();
+                packet.SetCheckType();
+                IoC.Get<ClientSocket>().Send(packet.Data);
+                PersonViewModel.Call.Start();
+            }
+        }
+
+        private void FriendAnswered(ref CallPacket packet)
+        {
+            var FriendToCall = this.FindPersonControl(packet.destClient);
+            FriendToCall.Call.Start();
+        }
+
+        private void FriendDeclined(ref CallPacket packet)
+        {
+            IoC.Get<IUIManager>().OpenMessageBox(new PopupMessageViewModel()
+            {
+                Message = $"{packet.destClient.name} Declined Call",
+                Title = $"{packet.destClient.name}",
+                ConfirmationBoxText = "Ok",
+            });
+        }
+
+        private void FriendEndedCall(ref CallPacket packet)
+        {
+            var FriendToEndCall = this.FindPersonControl(packet.destClient);
+            FriendToEndCall.Call.Disconnect();
+        }
+
         private void MessageReceived(Person person, string message)
         {
-            ChatListPersonControlViewModel temp = null;
-            for (int i = 0; i < List.Count; i++)
-            {
-                if (List[i].Person.ip == person.ip && List[i].Person.port == person.port)
-                {
-                    temp = List[i];
-                    break;
-                }
-            }
+            var temp = this.FindPersonControl(person);
 
             var newMessage = new MessageControlViewModel
             {

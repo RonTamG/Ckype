@@ -12,6 +12,7 @@ namespace Client
     public delegate void FriendEvent(Person person);
     public delegate void FriendsEvent(List<Person> people);
     public delegate void MessageEvent(Person person, string message);
+    public delegate void CallingEvent(ref CallPacket packet);
 
     public static class PacketHandler
     {
@@ -20,6 +21,10 @@ namespace Client
         public static event FriendsEvent FriendsReceivedEvent;
         public static event MessageEvent FriendMessageReceivedEvent;
         public static event MessageEvent FileReceivedEvent;
+        public static event CallingEvent CallingEvent;
+        public static event CallingEvent AcceptedCallEvent;
+        public static event CallingEvent DeclinedCallEvent;
+        public static event CallingEvent CancelledCallEvent;
 
         public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
         {
@@ -80,27 +85,32 @@ namespace Client
 
                 case type.CallRequest:
                     CallPacket callP = new CallPacket(packet);
+                    CallingEvent(ref callP); // event to get input from user
                     Console.WriteLine("Received a call request from: {0}", callP.destClient);
                     Console.WriteLine("Declining request"); // here need to check if the receiver wants to accept or decline. rn declines automatically.
-                    // if (receiver == accepted)
+                    // if (receiver == accepted)s
                     //     callP.SetAcceptedCall(); // No need to add the else
-                    callP.SetCheckType(); // if the person declined or accepted this needs to be set anyways.
-                    serverSocket.Send(callP.Data);
                     break;
 
                 case type.CallResponse:
                     CallPacket checkCallP = new CallPacket(packet);
-                    if(checkCallP.acceptedCall)
+                    if (checkCallP.acceptedCall)
+                    {
                         Console.WriteLine("Your friend: {0} has accepted the call!", checkCallP.destClient);
-                    //  call friend do the calling thing
+                        AcceptedCallEvent(ref checkCallP);
+                        //  call friend do the calling thing
+                    }
                     else
+                    {
                         Console.WriteLine("Your friend: {0} has declined the call.", checkCallP.destClient);
-                    //  dont call friend he declined. popup declined.
+                        DeclinedCallEvent(ref checkCallP);
+                    }
                     break;
 
                 case type.CallHangUp:
                     CallPacket hangUp = new CallPacket(packet);
                     Console.WriteLine("Need to disconnect now.");
+                    CancelledCallEvent(ref hangUp);
                     break;
 
                 default:

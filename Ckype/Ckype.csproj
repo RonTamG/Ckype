@@ -110,6 +110,7 @@
     <Compile Include="ViewModels\Pages\ChatPageViewModel.cs" />
     <Compile Include="ViewModels\ChatScreenViewModel.cs" />
     <Compile Include="ViewModels\Popups\PopupBaseViewModel.cs" />
+    <Compile Include="ViewModels\Popups\PopupCallingViewModel.cs" />
     <Compile Include="ViewModels\Popups\PopupDialogViewModelBase.cs" />
     <Compile Include="ViewModels\Popups\PopupMessageViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -139,6 +140,9 @@
     </Compile>
     <Compile Include="Views\PopupBaseView.xaml.cs">
       <DependentUpon>PopupBaseView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Popups\PopupCallingView.xaml.cs">
+      <DependentUpon>PopupCallingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Popups\PopupMessageView.xaml.cs">
       <DependentUpon>PopupMessageView.xaml</DependentUpon>
@@ -260,6 +264,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PopupBaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Popups\PopupCallingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
