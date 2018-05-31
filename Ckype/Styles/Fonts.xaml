@@ -4,12 +4,10 @@
 
     <FontFamily x:Key="LatoRegular">pack://application;,,,/Fonts/#Lato Regular</FontFamily>
     <FontFamily x:Key="LatoThin">pack://application;,,,/Fonts/#Lato Thin</FontFamily>
+    <FontFamily x:Key="FontAwesome">pack://application;,,,/Fonts/#FontAwesome</FontFamily>
 
     <Style TargetType="{x:Type Control}" x:Key="BaseType">
         <Setter Property="FontFamily" Value="{StaticResource LatoThin}"/>
     </Style>
-    
-    
-    
 
 </ResourceDictionary>
