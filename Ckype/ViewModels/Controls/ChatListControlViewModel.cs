@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using AudioLibrary;
 using Caliburn.Micro;
 using Ckype.Interfaces;
 using Ckype.ViewModels.Popups;
@@ -48,6 +50,7 @@ namespace Ckype.ViewModels
             PacketHandler.CallingEvent += FriendCalling;
             PacketHandler.AcceptedCallEvent += FriendAnswered;
             PacketHandler.DeclinedCallEvent += FriendDeclined;
+            PacketHandler.CancelledCallEvent += FriendEndedCall;
 
             var client = IoC.Get<ClientSocket>();
 
@@ -75,6 +78,8 @@ namespace Ckype.ViewModels
                 packet.SetAcceptedCall();
                 packet.SetCheckType();
                 IoC.Get<ClientSocket>().Send(packet.Data);
+                if (PersonViewModel.Call == null)
+                    PersonViewModel.Call = new NetworkAudio(new IPEndPoint(IPAddress.Parse(PersonViewModel.Person.ip), 7000));
                 PersonViewModel.Call.Start();
             }
         }
