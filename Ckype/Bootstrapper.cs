@@ -39,6 +39,7 @@ namespace Ckype
             _container.Singleton<ChatScreenViewModel, ChatScreenViewModel>();
             _container.Singleton<ClientSocket>();
             _container.Singleton<IUIManager, UIManager>();
+            _container.Singleton<ChatListControlViewModel, ChatListControlViewModel>();
         }
 
         public Bootstrapper()

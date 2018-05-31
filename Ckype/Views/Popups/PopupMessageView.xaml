@@ -15,6 +15,6 @@
         <Border Grid.Row="0" Background="{StaticResource LightBlueBrush}" CornerRadius="20" Margin="10">
             <TextBlock FontSize="12" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Message}"/>
         </Border>
-        <Button Command="{Binding CloseCommand}" Margin="10" Grid.Row="1" Content="{Binding ConfirmationBoxText}"/>
+        <Button IsDefault="True" Command="{Binding CloseCommand}" Margin="10" Grid.Row="1" Content="{Binding ConfirmationBoxText}"/>
     </Grid>
 </UserControl>

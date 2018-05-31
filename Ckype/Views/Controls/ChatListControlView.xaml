@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <Grid Background="{StaticResource ReallyLightBlueBrush}">
+    <Border CornerRadius="10" Background="{StaticResource ReallyLightBlueBrush}">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding List}">
                 <ItemsControl.ItemTemplate>
@@ -18,5 +18,5 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-    </Grid>
+    </Border>
 </UserControl>
