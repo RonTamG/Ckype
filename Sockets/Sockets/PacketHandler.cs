@@ -58,10 +58,19 @@ namespace Server
                 case type.File:
                     FilePacket file = new FilePacket(packet);
                     Console.WriteLine("Received file called: '{0}' was sent to: {1}", file.Filename, file.destClient);
+  //                  var newLength = (ushort)(file.Filename.Length + 12 + serverSocket.FindPersonBySocket(clientSocket).Data.Length);
+//                    FilePacket revFile = new FilePacket(file.Filename, newLength, newLength, serverSocket.FindPersonBySocket(clientSocket));
                     Person.FindPersonByIPandPort(file.destClient, serverSocket.connected).ownSocket.Send(file.Data);
                     Console.WriteLine("Sent!");
                     break;
-
+/*               
+                case type.FileFinished:
+                    FilePacket fileFin = new FilePacket(packet);
+                    FilePacket revFileFin = new FilePacket(fileFin.Filename, (ushort)(fileFin.Filename.Length + 12 + fileFin.destClient.Data.Length), (ushort)(fileFin.Filename.Length + 12 + fileFin.destClient.Data.Length), serverSocket.FindPersonBySocket(clientSocket)); // length should use the new destclients length
+                    revFileFin.SetFinishedType();
+                    Person.FindPersonByIPandPort(fileFin.destClient, serverSocket.connected).ownSocket.Send(revFileFin.Data);
+                    break;
+*/
                 case type.CallRequest:
                     CallPacket callRequest = new CallPacket(packet);
                     Console.WriteLine("Received call request");
@@ -83,6 +92,27 @@ namespace Server
                     Console.WriteLine("From: {0}", hangUpRequest.destClient);
                     Person.FindPersonByIPandPort(hangUp.destClient, serverSocket.connected).ownSocket.Send(hangUpRequest.Data);
                     break;
+
+                case type.LinkRequest:
+                    LinkPacket linkRequest = new LinkPacket(packet);
+                    LinkPacket revLinkRequest = new LinkPacket(serverSocket.FindPersonBySocket(clientSocket), linkRequest.port);
+                    Person.FindPersonByIPandPort(linkRequest.destClient, serverSocket.connected).ownSocket.Send(revLinkRequest.Data);
+                    break;
+
+                case type.LinkResponse:
+                    LinkPacket linkResponse = new LinkPacket(packet);
+                    LinkPacket revLinkResponse = new LinkPacket(serverSocket.FindPersonBySocket(clientSocket), (ushort)type.LinkResponse);
+                    if (linkResponse.AcceptedLink)
+                        revLinkResponse.SetAcceptedLink();
+                    Person.FindPersonByIPandPort(linkResponse.destClient, serverSocket.connected).ownSocket.Send(revLinkResponse.Data);
+                    break;
+
+                case type.LinkClose:
+                    LinkPacket linkClose = new LinkPacket(packet);
+                    LinkPacket revLinkClose = new LinkPacket(serverSocket.FindPersonBySocket(clientSocket), (ushort)type.LinkClose);
+                    Person.FindPersonByIPandPort(linkClose.destClient, serverSocket.connected).ownSocket.Send(revLinkClose.Data);
+                    break;
+
             }
             return "OK";
         }

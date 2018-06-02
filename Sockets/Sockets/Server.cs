@@ -1,6 +1,7 @@
 ﻿using PacketLibrary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -116,6 +117,32 @@ namespace Server
             SendTo.ownSocket.Send(ConPacket.Data);
         }
 
+        public void SendFile(string filename, Person destClient)
+        {
+            
+            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            while (fs.Position != fs.Length)
+            {
+                ushort packetLength;
+                ushort packetStart = (ushort)(filename.Length + 16 + destClient.Data.Length);
+
+                if (fs.Length - fs.Position < 1024 - packetStart)
+                {
+                    packetLength = (ushort)(packetStart + (fs.Length - fs.Position));
+                }
+                else
+                {
+                    packetLength = 1024;
+                }
+
+                FilePacket packet = new FilePacket(filename, packetLength, (uint)fs.Length, packetStart, destClient);
+                fs.Read(packet.Data, packetStart, packetLength - packetStart);
+                
+                connected[0].ownSocket.Send(packet.Data);
+            }
+            fs.Close();
+        }
+
         public Person FindPersonBySocket(Socket clientS)
         {
             for (int i = 0; i < connected.Count; i++)
@@ -141,7 +168,6 @@ namespace Server
             }
 
             _socket.Close();
-            Environment.Exit(0);
         }
     }
 

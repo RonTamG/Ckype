@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Client
@@ -18,6 +19,7 @@ namespace Client
         private byte[] _buffer;
         public string nickname { get; set; }
         public List<Person> Friends = new List<Person>();
+        public Person me;
 
         public ClientSocket()
         {
@@ -40,6 +42,8 @@ namespace Client
                 _socket.Send(packet.Data);
 
                 #endregion
+
+                me = new Person(nickname, ipAddress, port);
             }
             else Console.WriteLine("Could not connect");
         }
@@ -101,21 +105,25 @@ namespace Client
         public void SendFile(string filename, Person destClient)
         {
             FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            while(fs.Position != fs.Length)
+            while (fs.Position != fs.Length)
             {
                 ushort packetLength;
-                ushort packetStart = (ushort)(filename.Length + 12 + destClient.Data.Length);
+                ushort packetStart = (ushort)(filename.Length + 16 + destClient.Data.Length);
+
                 if (fs.Length - fs.Position < 1024 - packetStart)
+                {
                     packetLength = (ushort)(packetStart + (fs.Length - fs.Position));
+                }
                 else
+                {
                     packetLength = 1024;
-                FilePacket packet = new FilePacket(filename, packetLength, packetStart, destClient);
+                }
+
+                FilePacket packet = new FilePacket(filename, packetLength,(uint)fs.Length, packetStart, destClient);
                 fs.Read(packet.Data, packetStart, packetLength - packetStart);
                 _socket.Send(packet.Data);
             }
-
-            MessagePacket msgPacket = new MessagePacket($"Finished receiving the file: {filename}", destClient);
-            _socket.Send(msgPacket.Data);
+            fs.Close();
         }
 
         public void RefreshRequest()

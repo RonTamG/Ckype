@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using PacketLibrary;
 using System.IO;
+using System.Threading;
+using Server;
 
 namespace Client
 {
@@ -13,6 +15,7 @@ namespace Client
     public delegate void FriendsEvent(List<Person> people);
     public delegate void MessageEvent(Person person, string message);
     public delegate void CallingEvent(ref CallPacket packet);
+    public delegate void LinkEvent(Person person);
 
     public static class PacketHandler
     {
@@ -25,11 +28,17 @@ namespace Client
         public static event CallingEvent AcceptedCallEvent;
         public static event CallingEvent DeclinedCallEvent;
         public static event CallingEvent CancelledCallEvent;
+        public static event LinkEvent LinkStartEvent;
+        private static ClientSocket LinkedClient = new ClientSocket();
+        public static Person LinkedPerson;
 
         public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
         {
             ushort packetLength = BitConverter.ToUInt16(packet, 0);
             ushort packetType = BitConverter.ToUInt16(packet, 2);
+
+            //            ServerSocket LinkedServer = new ServerSocket();
+            
 
             Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
             switch ((type)packetType)
@@ -62,8 +71,7 @@ namespace Client
                     {
                         Console.WriteLine("Server has disconnected");
                         clientSocket.Close();
-                        Console.WriteLine("Program will exit now press any key to continue...");
-                        Environment.Exit(0);
+                        Console.WriteLine("Program will exit now press any key to continue...");                        
                     }
                     else
                     {
@@ -74,13 +82,26 @@ namespace Client
 
                 case type.File:
                     FilePacket newFile = new FilePacket(packet);
-                    Console.WriteLine("Received a new file '{0}' from: {1}", newFile.Filename, newFile.destClient);
+                    Console.WriteLine("Received a new file '{0}' from: {1} ", newFile.Filename, newFile.destClient);
                     using (FileStream fs = new FileStream(Path.GetFileName(newFile.Filename), FileMode.Append))
                     {
                         fs.Write(newFile.FileContents, 0, newFile.FileContents.Length);
+                        Console.WriteLine("Received {0} out of {1}", fs.Length, newFile.TotalFileLength);
+                        if (fs.Length == newFile.TotalFileLength)
+                        {
+                            FriendMessageReceivedEvent(LinkedPerson, newFile.Filename);
+//                            LinkedPerson = null;
+//                            LinkedClient = null;
+                        }
                     }
-                    
+
                     Console.WriteLine("Saved!");
+                    break;
+
+                case type.FileFinished:
+                    FilePacket newFileFinished = new FilePacket(packet);
+                    Console.WriteLine("Finished receiving {0}", newFileFinished.Filename);
+                    FriendMessageReceivedEvent(newFileFinished.destClient, newFileFinished.Filename);
                     break;
 
                 case type.CallRequest:
@@ -112,6 +133,53 @@ namespace Client
                     Console.WriteLine("Need to disconnect now.");
                     CancelledCallEvent(ref hangUp);
                     break;
+
+                case type.LinkRequest:
+                    LinkPacket linkRequest = new LinkPacket(packet);
+
+                    // if gonna change then build a server here then whenever people
+                    // want to send you a few files you can receive all of them.
+                    LinkedClient = new ClientSocket();
+                    LinkedClient.nickname = "Receiver";
+                    bool SuccessfulConnection = false;
+                    while (!SuccessfulConnection)
+                    {
+                        try
+                        {
+                            LinkedClient.Connect(linkRequest.destClient.ip, linkRequest.port);
+                            SuccessfulConnection = true;
+                            LinkedPerson = linkRequest.destClient;
+                        }
+                        catch (SocketException)
+                        {
+                            SuccessfulConnection = false;
+                            Thread.Sleep(1000);
+                        }
+                    }
+                    break;
+
+                case type.LinkResponse:
+                    LinkPacket linkResponse = new LinkPacket(packet);
+                    if (linkResponse.AcceptedLink)
+                    {
+                        LinkStartEvent(linkResponse.destClient);
+                    }
+                    else
+                    {
+                        // tell client he got declined.
+                    }
+                    break;
+
+                case type.LinkClose:
+                    LinkPacket linkClose = new LinkPacket(packet);
+
+                    if (LinkedClient._socket.Connected)
+                        LinkedClient.Close();
+                    LinkedClient = null;
+                    LinkedPerson = null;
+
+                    break;
+
 
                 default:
                     Console.WriteLine(Encoding.UTF8.GetString(packet));

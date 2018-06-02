@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ckype.ViewModels
@@ -40,6 +41,9 @@ namespace Ckype.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// Adds a message to the chat screen and sends it
+        /// </summary>
         public void AddMessage()
         {
             ChatScreen.AddMessage(MessageText);
