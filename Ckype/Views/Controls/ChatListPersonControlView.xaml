@@ -4,17 +4,87 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ckype.Views"
+             xmlns:conv="clr-namespace:Ckype.Converters"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              Height="60"
              Cursor="Hand"
              d:DesignHeight="60" d:DesignWidth="300"
-             cal:Message.Attach="[Event MouseLeftButtonUp] = [Action OpenMessageBox]; [Event MouseDoubleClick] = [Action CallPerson]">
+             cal:Message.Attach="[Event MouseLeftButtonUp] = [Action OpenMessageBox];"
+             >
 
+    <Border CornerRadius="10" BorderThickness="5" BorderBrush="{StaticResource NormalBlueBrush}"
+            Background="{StaticResource LightBlueBrush}">
+        <Border.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard Storyboard.TargetName="CallPerson" Storyboard.TargetProperty="Opacity">
+                        <DoubleAnimation To="1" Duration="0:0:1"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
 
-    <Border BorderThickness="5" BorderBrush="{StaticResource NormalBlueBrush}">
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard Storyboard.TargetName="CallPerson" Storyboard.TargetProperty="Opacity">
+                        <DoubleAnimation To="0" Duration="0:0:1"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Border.Triggers>
+
         <Grid x:Name="container">
-            <TextBlock  x:Name="Nickname" FontFamily="{StaticResource LatoRegular}" TextAlignment="Center" FontSize="24" Background="{StaticResource LightBlueBrush}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Canvas
+                Width="20"
+                Height="10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.Column="0">
+                <Ellipse
+                    Width="10"
+                    Height="10"
+                    Fill="{StaticResource DarkGreenBrush}"
+                    VerticalAlignment="Center"
+                    Canvas.Left="5"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding NoNewMessage, Converter={conv:BoleanToVisibilityConverter}}"
+                    />
+
+                <Ellipse 
+                    Width="5"
+                    Height="5"
+                    Fill="{StaticResource LightGreenBrush}"
+                    VerticalAlignment="Center"
+                    Canvas.Left="7.5"
+                    Canvas.Top="2.5"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding NoNewMessage, Converter={conv:BoleanToVisibilityConverter}}"
+                    />
+            </Canvas>
+            
+            <TextBlock Grid.Column="1"
+                    Text="Roncho"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    x:Name="Nickname"
+                    FontFamily="{StaticResource LatoRegular}"
+                    TextAlignment="Right"
+                    FontSize="24"/>
+            <Button 
+                Margin="5"
+                Grid.Column="3"
+                Style="{StaticResource CallButton}"
+                Opacity="0"
+                Width="40"
+                Height="40"
+                x:Name="CallPerson"/>
         </Grid>
     </Border>
 

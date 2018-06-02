@@ -33,7 +33,7 @@
                         <TextBox x:Name="PortTextBox"></TextBox>
                         <TextBox x:Name="NicknameTextBox"></TextBox>
 
-                        <Button Content="Connect" x:Name="Connect">
+                        <Button Content="Connect" x:Name="Connect" IsDefault="True">
                         </Button>
                     </StackPanel>
 

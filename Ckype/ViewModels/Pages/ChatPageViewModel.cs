@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Ckype.ViewModels
 {
@@ -35,7 +36,7 @@ namespace Ckype.ViewModels
         /// </summary>
         public ChatPageViewModel()
         {
-            ChatListControl = new ChatListControlViewModel();
+            ChatListControl = IoC.Get<ChatListControlViewModel>();
             ChatScreen = IoC.Get<ChatScreenViewModel>();
         }
 
@@ -47,6 +48,7 @@ namespace Ckype.ViewModels
         public void AddMessage()
         {
             ChatScreen.AddMessage(MessageText);
+            MessageText = String.Empty;
         }
 
         public void Disconnect()

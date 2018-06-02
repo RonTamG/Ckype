@@ -82,6 +82,8 @@ namespace Server
                     CallPacket callRequestBack = new CallPacket(packet);
                     Console.WriteLine("Received call request");
                     CallPacket revRequestBack = new CallPacket(serverSocket.FindPersonBySocket(clientSocket), (ushort)type.CallResponse);
+                    if (callRequestBack.acceptedCall)
+                        revRequestBack.SetAcceptedCall();
                     Person.FindPersonByIPandPort(callRequestBack.destClient, serverSocket.connected).ownSocket.Send(revRequestBack.Data);
                     break;
 

@@ -8,7 +8,7 @@ using System.Net;
 
 namespace Ckype.ViewModels
 {
-    public class ChatListPersonControlViewModel
+    public class ChatListPersonControlViewModel : BaseViewModel
     {
         #region Public Properties
 
@@ -21,7 +21,11 @@ namespace Ckype.ViewModels
 
         public MessageListControlViewModel MessagePage { get; set; }
 
+        public bool Selected { get; set; }
+
         public NetworkAudio Call { get; set; }
+
+        public bool NoNewMessage { get; set; }
 
         #endregion
 
@@ -29,6 +33,15 @@ namespace Ckype.ViewModels
 
         public void OpenMessageBox()
         {
+            // selected
+            var PeopleList = IoC.Get<ChatListControlViewModel>();
+            if (PeopleList.PersonSelected != null)
+                PeopleList.PersonSelected.Selected = false;
+            Selected = true;
+
+            NoNewMessage = true;
+
+            PeopleList.PersonSelected = this;
             var chatScreen = IoC.Get<ChatScreenViewModel>();
             chatScreen.ChangeScreen(MessagePage);
         }
@@ -68,6 +81,7 @@ namespace Ckype.ViewModels
             Nickname = person.name;
             Person = person;
             MessagePage = new MessageListControlViewModel(person);
+            NoNewMessage = true;
         } 
         #endregion
     }

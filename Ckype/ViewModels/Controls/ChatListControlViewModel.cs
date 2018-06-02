@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using AudioLibrary;
 using Caliburn.Micro;
 using Ckype.Interfaces;
 using Ckype.ViewModels.Popups;
@@ -20,6 +22,8 @@ namespace Ckype.ViewModels
     public class ChatListControlViewModel : BaseViewModel
     {
         public ObservableCollection<ChatListPersonControlViewModel> List { get; set; }
+
+        public ChatListPersonControlViewModel PersonSelected { get; set; }
 
         public ChatListPersonControlViewModel FindPersonControl(Person person)
         {
@@ -41,6 +45,8 @@ namespace Ckype.ViewModels
         {
             List = new ObservableCollection<ChatListPersonControlViewModel>();
 
+            #region PacketHandler Events
+
             PacketHandler.FriendAddedEvent += FriendAdded;
             PacketHandler.FriendRemovedEvent += FriendRemoved;
             PacketHandler.FriendsReceivedEvent += FriendsReceived;
@@ -48,6 +54,9 @@ namespace Ckype.ViewModels
             PacketHandler.CallingEvent += FriendCalling;
             PacketHandler.AcceptedCallEvent += FriendAnswered;
             PacketHandler.DeclinedCallEvent += FriendDeclined;
+            PacketHandler.CancelledCallEvent += FriendEndedCall;
+
+            #endregion
 
             var client = IoC.Get<ClientSocket>();
 
@@ -72,9 +81,11 @@ namespace Ckype.ViewModels
             if (((PopupCallingViewModel)(Popup.Result)).AcceptedCall)
             {
                 var PersonViewModel = this.FindPersonControl(packet.destClient);
-                packet.SetAcceptedCall();
                 packet.SetCheckType();
+                packet.SetAcceptedCall();
                 IoC.Get<ClientSocket>().Send(packet.Data);
+                if (PersonViewModel.Call == null)
+                    PersonViewModel.Call = new NetworkAudio(new IPEndPoint(IPAddress.Parse(PersonViewModel.Person.ip), 7000));
                 PersonViewModel.Call.Start();
             }
         }
@@ -104,6 +115,8 @@ namespace Ckype.ViewModels
         private void MessageReceived(Person person, string message)
         {
             var temp = this.FindPersonControl(person);
+            if (!temp.Selected)
+                temp.NoNewMessage = false;
 
             var newMessage = new MessageControlViewModel
             {

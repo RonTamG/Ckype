@@ -8,9 +8,7 @@
         Title="Ckype"
         mc:Ignorable="d"
         WindowStyle="None"
-        AllowsTransparency="True"   
-        MinHeight="200"
-        MinWidth="200"
+        AllowsTransparency="True"
         >
 
     <WindowChrome.WindowChrome>
