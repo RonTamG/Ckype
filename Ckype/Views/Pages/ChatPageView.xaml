@@ -13,7 +13,7 @@
             <ImageBrush ImageSource="/Ckype;component/Images/ChatBackground.png"/>
         </Border.Background>
 
-
+        
         <Grid>
 
             <Grid.ColumnDefinitions>
@@ -30,7 +30,7 @@
             <Button Margin="10" Content="Disconnect" x:Name="Disconnect"/>
 
             <StackPanel Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Button x:Name="Refresh" FontSize="30" FontFamily="{StaticResource FontAwesome}">&#xf021;</Button>
+                <Button x:Name="Refresh" FontSize="18" Width="30" Height="30" FontFamily="{StaticResource FontAwesome}">&#xf021;</Button>
             </StackPanel>
 
             <ContentControl Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="10" x:Name="ChatListControl"/>
@@ -53,11 +53,11 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Style="{StaticResource BaseType}" Grid.Column="0" Margin="5" AcceptsTab="True" x:Name="MessageText">
+                    <TextBox PreviewKeyDown="MessageText_PreviewKeyDown" Style="{StaticResource BaseType}" AcceptsReturn="True" FontSize="18" Grid.Column="0" Margin="5" AcceptsTab="True" x:Name="MessageText">
                     </TextBox>
-                    <Button Grid.Column="1" Content="Send" Margin="5" x:Name="AddMessage">
+                    <Button Focusable="False" Grid.Column="1" Content="Send" Margin="5" x:Name="AddMessage">
                     </Button>
-                    <Button Grid.Column="2" Content="Browse" Margin="5" x:Name="Browse"/>
+                    <Button Focusable="False" Grid.Column="2" Content="Browse" Margin="5" x:Name="Browse"/>
                 </Grid>
             </Border>
 

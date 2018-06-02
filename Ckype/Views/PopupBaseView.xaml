@@ -11,41 +11,34 @@
         MinWidth="100"
         Title="{Binding Title}"
         WindowStyle="None"
-        AllowsTransparency="True"     
+        AllowsTransparency="True" 
+        Background="Transparent"
         >
 
     <WindowChrome.WindowChrome>
         <WindowChrome 
-            CaptionHeight="20"
+            CaptionHeight="10"
             />
     </WindowChrome.WindowChrome>
 
 
 
-    <!-- Shell Grid-->
-    <Grid>
-        <Grid.Background>
+    <Border BorderBrush="Transparent" BorderThickness="7" CornerRadius="15">
+        <Border.Background>
             <ImageBrush ImageSource="/Images/BlueWallpaper.png"/>
-        </Grid.Background>
+        </Border.Background>
+    <!-- Shell Grid-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <!-- Content -->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Grid.RowDefinitions>
-            <!-- Toolbar -->
-            <RowDefinition Height="25"/>
             <!-- Content -->
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Toolbar grid -->
-        <Grid Grid.Row="0" Background="{StaticResource LightBlueBrush}">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" WindowChrome.IsHitTestVisibleInChrome="True">
-                <Button Content="_"  Command="{Binding MinimizeCommand}" Width="25" Style="{StaticResource SystemIconButton}"/>
-                <Button Content="X" Command="{Binding CloseCommand}" Width="25" Style="{StaticResource SystemIconButton}"/>
-            </StackPanel>
+            <Grid Grid.Row="0" Margin="10">
+                <ContentControl Grid.Row="1" Content="{Binding Content}"/>
+            </Grid>
         </Grid>
+    </Border>
 
-        <!-- Content -->
-        <Grid Grid.Row="1" Margin="10">
-            <ContentControl Grid.Row="1" Content="{Binding Content}"/>
-        </Grid>
-    </Grid>
 </Window>
