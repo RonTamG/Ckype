@@ -44,7 +44,6 @@ namespace Client
                 {
                     Console.WriteLine("Enter file path and name please");
                     string filename = Console.ReadLine();
-                    clientSocket.SendFile(filename, destFriend);
                 }
                 else if (msg.ToLower() == "call")
                 {

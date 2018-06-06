@@ -5,6 +5,10 @@ using System;
 using System.Collections.ObjectModel;
 using Client;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Net.Sockets;
+using System.IO;
+using System.Net;
 
 namespace Ckype.ViewModels
 {
@@ -45,32 +49,63 @@ namespace Ckype.ViewModels
         }
 
         public void SendFile(string filename)
-        {
+        {        
+            Task.Run(() =>
+            {
+                // Add if not accepted request
+                Random randInt = new Random();
+                int port = randInt.Next(1025, 65535);
 
-            // if gonna change then build a client here
-            // then whenever you send a file you are only a client
-            // so if people want to send multiple files to *you* you can use the same socket.
-            Random randInt = new Random();
-            int port = randInt.Next(1025, 65535);
+                var client = IoC.Get<ClientSocket>();
 
-            var client = IoC.Get<ClientSocket>();
+                LinkPacket linkRequest = new LinkPacket(Person, port, 5000);
+                client.Send(linkRequest.Data);
+                bool Accepted = true;
+                if (Accepted)
+                {
 
-            LinkPacket linkRequest = new LinkPacket(Person, port);
-            client.Send(linkRequest.Data);
+                    #region Build File Packet
 
-            ServerSocket LinkedServer = new ServerSocket();
-            LinkedServer.Bind(port);
-            LinkedServer.Listen(0);
-            LinkedServer.Accept();
-            while (LinkedServer.connected.Count < 1)
-                Thread.Sleep(1000);
-            LinkedServer.SendFile(filename, client.me);
-            LinkedServer.CloseAllSockets();
-/*
-            LinkPacket linkClose = new LinkPacket(Person, (ushort)(type.LinkClose));
-            client.Send(linkClose.Data);
+                    FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
 
-            LinkedServer = null;*/
+                    uint packetLength;
+                    ushort packetStart = (ushort)(filename.Length + 20 + client.me.Data.Length);
+
+                    packetLength = (uint)(packetStart + fs.Length);
+
+                    FilePacket packet = new FilePacket(filename, packetLength, (uint)fs.Length, packetStart, client.me);
+                    fs.Read(packet.Data, packetStart, (int)fs.Length);
+
+                    fs.Close();
+
+                    #endregion
+
+                    #region Create socket and send
+
+                    Socket FileSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                    bool NotConnected = true;
+                    while (NotConnected)
+                    {
+                        try
+                        {
+                            FileSocket.Connect(Person.ip, port);
+                            NotConnected = false;
+                        }
+                        catch (SocketException)
+                        {
+                            NotConnected = true;
+                        }
+                    }
+                    FileSocket.Send(packet.Data);
+                    FileSocket.Shutdown(SocketShutdown.Both);
+                    FileSocket.Close();
+
+                    #endregion
+                }
+                else
+                    return;
+          });
         }
     }
 }

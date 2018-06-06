@@ -20,6 +20,13 @@ namespace PacketLibrary
             WriteUShort(type, 2);
         }
 
+        public PacketStructure(uint length, ushort type) // FilePacket needs this one
+        {
+            _buffer = new byte[length];
+            WriteUInt(length, 0);
+            WriteUShort(type, 4);
+        }
+
         public PacketStructure(byte[] packet)
         {
             _buffer = packet;

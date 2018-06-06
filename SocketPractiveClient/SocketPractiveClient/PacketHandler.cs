@@ -8,6 +8,7 @@ using PacketLibrary;
 using System.IO;
 using System.Threading;
 using Server;
+using System.Net;
 
 namespace Client
 {
@@ -16,6 +17,7 @@ namespace Client
     public delegate void MessageEvent(Person person, string message);
     public delegate void CallingEvent(ref CallPacket packet);
     public delegate void LinkEvent(Person person);
+    public delegate void FileEvent(string filename, Person person);
 
     public static class PacketHandler
     {
@@ -23,7 +25,7 @@ namespace Client
         public static event FriendEvent FriendRemovedEvent;
         public static event FriendsEvent FriendsReceivedEvent;
         public static event MessageEvent FriendMessageReceivedEvent;
-        public static event MessageEvent FileReceivedEvent;
+        public static event FileEvent FileReceivedEvent;
         public static event CallingEvent CallingEvent;
         public static event CallingEvent AcceptedCallEvent;
         public static event CallingEvent DeclinedCallEvent;
@@ -71,37 +73,13 @@ namespace Client
                     {
                         Console.WriteLine("Server has disconnected");
                         clientSocket.Close();
-                        Console.WriteLine("Program will exit now press any key to continue...");                        
+                        Console.WriteLine("Program will exit now press any key to continue...");
                     }
                     else
                     {
                         FriendMessageReceivedEvent(msg.destClient, msg.Text);
                         Console.WriteLine(msg.destClient + " Sent: " + msg.Text);
                     }
-                    break;
-
-                case type.File:
-                    FilePacket newFile = new FilePacket(packet);
-                    Console.WriteLine("Received a new file '{0}' from: {1} ", newFile.Filename, newFile.destClient);
-                    using (FileStream fs = new FileStream(Path.GetFileName(newFile.Filename), FileMode.Append))
-                    {
-                        fs.Write(newFile.FileContents, 0, newFile.FileContents.Length);
-                        Console.WriteLine("Received {0} out of {1}", fs.Length, newFile.TotalFileLength);
-                        if (fs.Length == newFile.TotalFileLength)
-                        {
-                            FriendMessageReceivedEvent(LinkedPerson, newFile.Filename);
-//                            LinkedPerson = null;
-//                            LinkedClient = null;
-                        }
-                    }
-
-                    Console.WriteLine("Saved!");
-                    break;
-
-                case type.FileFinished:
-                    FilePacket newFileFinished = new FilePacket(packet);
-                    Console.WriteLine("Finished receiving {0}", newFileFinished.Filename);
-                    FriendMessageReceivedEvent(newFileFinished.destClient, newFileFinished.Filename);
                     break;
 
                 case type.CallRequest:
@@ -135,29 +113,51 @@ namespace Client
                     break;
 
                 case type.LinkRequest:
-                    LinkPacket linkRequest = new LinkPacket(packet);
+                    LinkPacket linkRequest = new LinkPacket(packet);                  
 
-                    // if gonna change then build a server here then whenever people
-                    // want to send you a few files you can receive all of them.
-                    LinkedClient = new ClientSocket();
-                    LinkedClient.nickname = "Receiver";
-                    bool SuccessfulConnection = false;
-                    while (!SuccessfulConnection)
+                    //if yes to request
+                    Task.Run(() =>
                     {
-                        try
-                        {
-                            LinkedClient.Connect(linkRequest.destClient.ip, linkRequest.port);
-                            SuccessfulConnection = true;
-                            LinkedPerson = linkRequest.destClient;
-                        }
-                        catch (SocketException)
-                        {
-                            SuccessfulConnection = false;
-                            Thread.Sleep(1000);
-                        }
-                    }
-                    break;
+                        Socket FileSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        FileSocket.Bind(new IPEndPoint(IPAddress.Parse(linkRequest.destClient.ip), linkRequest.port));
+                        FileSocket.Listen(1);
+                        Socket ClientFileSocket = FileSocket.Accept();
 
+                        const int buffer_length = 1024 * 5000; //5000kb
+                        bool ReceivedAllData = false;
+                        byte[] FileRecvBuffer = new byte[buffer_length];
+                        byte[] FileDataBuffer = new byte[buffer_length];
+                        int DataIndex = 0;
+                        FilePacket FileDataPacket = null;
+                        while (!ReceivedAllData)
+                        {
+                            int ReceivedLength = ClientFileSocket.Receive(FileRecvBuffer);
+                            if (ReceivedLength > 0)
+                            {
+                                Array.Copy(FileRecvBuffer, 0, FileDataBuffer, DataIndex, ReceivedLength);
+                                DataIndex += ReceivedLength;
+                                FileRecvBuffer = new byte[buffer_length];
+                            }
+                            else
+                            {
+                                byte[] FileData = new byte[DataIndex];
+                                Array.Copy(FileDataBuffer, FileData, DataIndex);
+                                FileDataPacket = new FilePacket(FileData);
+
+                                using (FileStream fs = new FileStream(Path.GetFileName(FileDataPacket.Filename), FileMode.Append))
+                                {
+                                    fs.Write(FileDataPacket.FileContents, 0, FileDataPacket.FileContents.Length);
+                                    Console.WriteLine("Received {0} out of {1}", fs.Length, FileDataPacket.TotalFileLength);
+                                };
+                                ReceivedAllData = true;
+                                FriendMessageReceivedEvent(FileDataPacket.destClient, FileDataPacket.Filename);
+                            }
+                        }
+                        FileSocket.Close();
+                    });
+
+                    break;
+                
                 case type.LinkResponse:
                     LinkPacket linkResponse = new LinkPacket(packet);
                     if (linkResponse.AcceptedLink)

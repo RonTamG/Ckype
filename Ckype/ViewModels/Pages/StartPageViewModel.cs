@@ -10,7 +10,7 @@ namespace Ckype.ViewModels
 {
     public class StartPageViewModel : Screen
     {
-        public string IpTextBox { get; set; } = "192.168.1.10";
+        public string IpTextBox { get; set; } = "192.168.1.25";
         public string PortTextBox { get; set; } = "6556";
         public string NicknameTextBox { get; set; } = "Ron";
 

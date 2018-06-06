@@ -43,7 +43,10 @@ namespace Client
 
                 #endregion
 
-                me = new Person(nickname, ipAddress, port);
+                IPEndPoint MyIpAddr = (IPEndPoint)_socket.LocalEndPoint;
+                string MyAddress = MyIpAddr.Address.ToString();
+                int MyPort = MyIpAddr.Port;
+                me = new Person(nickname, MyAddress, MyPort);
             }
             else Console.WriteLine("Could not connect");
         }
@@ -100,30 +103,6 @@ namespace Client
         public void Send(byte[] data)
         {
             _socket.Send(data);
-        }
-
-        public void SendFile(string filename, Person destClient)
-        {
-            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            while (fs.Position != fs.Length)
-            {
-                ushort packetLength;
-                ushort packetStart = (ushort)(filename.Length + 16 + destClient.Data.Length);
-
-                if (fs.Length - fs.Position < 1024 - packetStart)
-                {
-                    packetLength = (ushort)(packetStart + (fs.Length - fs.Position));
-                }
-                else
-                {
-                    packetLength = 1024;
-                }
-
-                FilePacket packet = new FilePacket(filename, packetLength,(uint)fs.Length, packetStart, destClient);
-                fs.Read(packet.Data, packetStart, packetLength - packetStart);
-                _socket.Send(packet.Data);
-            }
-            fs.Close();
         }
 
         public void RefreshRequest()
