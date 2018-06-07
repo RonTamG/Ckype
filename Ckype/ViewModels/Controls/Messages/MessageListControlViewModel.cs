@@ -28,15 +28,22 @@ namespace Ckype.ViewModels
         /// Add string message to the message lists
         /// </summary>
         /// <param name="Message">The text message to add</param>
-        public void AddMessage(string Message)
+        public void AddMessage(string Message, string FilePath = null)
         {
             var newMessage = new MessageControlViewModel
             {
                 SenderName = Person.name,
                 MessageSentTime = DateTimeOffset.UtcNow,
-                SentByMe=true,
+                SentByMe = true,
                 MessageType = MessageType.Text,
                 Content = Message,
+                // needs to change, first check if the filepath exists and then create the right attachment 
+                //be it an image or another type of file according to the ending of the file TESTTT
+                /*ImageAttachment = new MessageControlImageAttachmentViewModel
+                {
+                    LocalFilePath = @"C:\Users\Owner\Desktop\Poker.jpg",
+                    //LocalFilePath = FilePath,
+                },*/
             };
 
             Messages.Add(newMessage);

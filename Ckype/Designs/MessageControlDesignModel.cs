@@ -1,11 +1,25 @@
 ﻿
 using Ckype.Interfaces;
+using Ckype.ViewModels;
 using System;
 
-namespace Ckype.ViewModels
+namespace Ckype.Designs
 {
-    public class MessageControlViewModel : BaseViewModel, IMessage
+    public class MessageControlDesignModel : BaseViewModel, IMessage
     {
+
+        public static MessageControlDesignModel Instance = new MessageControlDesignModel()
+        {
+            SenderName = "Ron",
+            Content = "Hello bratha!, oh thats me too! right^^",
+            SentByMe = false,
+            MessageSentTime = DateTimeOffset.Parse("11:45 PM"),
+            ImageAttachment = new MessageControlImageAttachmentViewModel
+            {
+                LocalFilePath = @"C:\Users\Owner\Desktop\Poker.jpg",
+            }
+        };
+
         /// <summary>
         /// Name of the person who sent the message.
         /// </summary>
@@ -53,8 +67,6 @@ namespace Ckype.ViewModels
         /// </summary>
         public bool HasImageAttachment => ImageAttachment != null;
 
-        public bool HasFileAttachment = true; // change later.
-
-
+        public bool HasFileAttachment = false;
     }
 }
