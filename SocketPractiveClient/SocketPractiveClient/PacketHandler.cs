@@ -17,7 +17,7 @@ namespace Client
     public delegate void MessageEvent(Person person, string message);
     public delegate void CallingEvent(ref CallPacket packet);
     public delegate void LinkEvent(Person person);
-    public delegate void FileEvent(string filename, Person person);
+    public delegate void FileEvent(string filepath, Person person);
 
     public static class PacketHandler
     {
@@ -150,7 +150,8 @@ namespace Client
                                     Console.WriteLine("Received {0} out of {1}", fs.Length, FileDataPacket.TotalFileLength);
                                 };
                                 ReceivedAllData = true;
-                                FriendMessageReceivedEvent(FileDataPacket.destClient, FileDataPacket.Filename);
+                                //FriendMessageReceivedEvent(FileDataPacket.destClient, FileDataPacket.Filename);
+                                FileReceivedEvent(FileDataPacket.Filename, FileDataPacket.destClient);
                             }
                         }
                         FileSocket.Close();

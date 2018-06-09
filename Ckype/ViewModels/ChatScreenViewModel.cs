@@ -26,5 +26,9 @@ namespace Ckype.ViewModels
             CurrentMessageList.AddMessage(message);
         }
 
+        public void AddFile(string FilePath)
+        {
+            CurrentMessageList.AddFileMessage(FilePath);
+        }
     }
 }

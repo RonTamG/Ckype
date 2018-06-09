@@ -39,11 +39,6 @@ namespace Ckype.ViewModels
                 Content = Message,
                 // needs to change, first check if the filepath exists and then create the right attachment 
                 //be it an image or another type of file according to the ending of the file TESTTT
-                /*ImageAttachment = new MessageControlImageAttachmentViewModel
-                {
-                    LocalFilePath = @"C:\Users\Owner\Desktop\Poker.jpg",
-                    //LocalFilePath = FilePath,
-                },*/
             };
 
             Messages.Add(newMessage);
@@ -55,7 +50,30 @@ namespace Ckype.ViewModels
             client.Send(MessagePacket.Data);
         }
 
-        public void SendFile(string filename)
+        public void AddFileMessage(string FilePath)
+        {
+            string FileExt = Path.GetExtension(FilePath);
+            if (FileExt == ".jpg" || FileExt == ".jpeg" || FileExt == ".png")
+            {
+                var newMessage = new MessageControlViewModel
+                {
+                    SenderName = Person.name,
+                    MessageSentTime = DateTimeOffset.UtcNow,
+                    SentByMe = true,
+                    ImageAttachment = new MessageControlImageAttachmentViewModel
+                    {
+                        LocalFilePath = FilePath,
+                    },
+                };
+
+                Messages.Add(newMessage);
+
+                SendFile(FilePath);
+            }
+            
+        }
+
+        public void SendFile(string FilePath)
         {        
             Task.Run(() =>
             {
@@ -73,14 +91,14 @@ namespace Ckype.ViewModels
 
                     #region Build File Packet
 
-                    FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                    FileStream fs = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
 
                     uint packetLength;
-                    ushort packetStart = (ushort)(filename.Length + 20 + client.me.Data.Length);
+                    ushort packetStart = (ushort)(FilePath.Length + 20 + client.me.Data.Length);
 
                     packetLength = (uint)(packetStart + fs.Length);
 
-                    FilePacket packet = new FilePacket(filename, packetLength, (uint)fs.Length, packetStart, client.me);
+                    FilePacket packet = new FilePacket(FilePath, packetLength, (uint)fs.Length, packetStart, client.me);
                     fs.Read(packet.Data, packetStart, (int)fs.Length);
 
                     fs.Close();

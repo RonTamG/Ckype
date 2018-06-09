@@ -53,7 +53,7 @@ namespace Ckype.ViewModels
         /// </summary>
         public bool HasImageAttachment => ImageAttachment != null;
 
-        public bool HasFileAttachment = true; // change later.
+        public bool HasFileAttachment = false; // CHANGE LATER TESTTTTT
 
 
     }

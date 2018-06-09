@@ -108,6 +108,7 @@
     <Compile Include="ViewModels\BaseWindowViewModel.cs" />
     <Compile Include="ViewModels\Controls\ChatListControlViewModel.cs" />
     <Compile Include="ViewModels\Controls\ChatListPersonControlViewModel.cs" />
+    <Compile Include="ViewModels\Controls\Messages\MessageControlFileAttachmentViewModel.cs" />
     <Compile Include="ViewModels\Controls\Messages\MessageControlImageAttachmentViewModel.cs" />
     <Compile Include="ViewModels\Controls\Messages\MessageControlViewModel.cs" />
     <Compile Include="ViewModels\Controls\Messages\MessageListControlViewModel.cs" />

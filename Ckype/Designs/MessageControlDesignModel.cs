@@ -14,10 +14,6 @@ namespace Ckype.Designs
             Content = "Hello bratha!, oh thats me too! right^^",
             SentByMe = false,
             MessageSentTime = DateTimeOffset.Parse("11:45 PM"),
-            ImageAttachment = new MessageControlImageAttachmentViewModel
-            {
-                LocalFilePath = @"C:\Users\Owner\Desktop\Poker.jpg",
-            }
         };
 
         /// <summary>

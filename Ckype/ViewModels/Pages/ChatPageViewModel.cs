@@ -73,12 +73,12 @@ namespace Ckype.ViewModels
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             // Display OpenFileDialog by calling ShowDialog method 
             Nullable<bool> result = dlg.ShowDialog();
-            // Get the selected file name and display in a TextBox 
+            // Get the selected file name and display in a TextBox           
             if (result == true)
             {
                 // Open document 
                 filename = dlg.FileName;
-                ChatScreen.CurrentMessageList.SendFile(filename);
+                ChatScreen.AddFile(filename);
             }
         }
     }
