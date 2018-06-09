@@ -37,8 +37,6 @@ namespace Ckype.ViewModels
                 SentByMe = true,
                 MessageType = MessageType.Text,
                 Content = Message,
-                // needs to change, first check if the filepath exists and then create the right attachment 
-                //be it an image or another type of file according to the ending of the file TESTTT
             };
 
             Messages.Add(newMessage);
@@ -53,24 +51,20 @@ namespace Ckype.ViewModels
         public void AddFileMessage(string FilePath)
         {
             string FileExt = Path.GetExtension(FilePath);
-            if (FileExt == ".jpg" || FileExt == ".jpeg" || FileExt == ".png")
+            var newMessage = new MessageControlViewModel
             {
-                var newMessage = new MessageControlViewModel
+                SenderName = Person.name,
+                MessageSentTime = DateTimeOffset.UtcNow,
+                SentByMe = true,
+                FileAttachment = new MessageControlFileAttachmentViewModel
                 {
-                    SenderName = Person.name,
-                    MessageSentTime = DateTimeOffset.UtcNow,
-                    SentByMe = true,
-                    ImageAttachment = new MessageControlImageAttachmentViewModel
-                    {
-                        LocalFilePath = FilePath,
-                    },
-                };
+                    LocalFilePath = FilePath,
+                },
+            };
 
-                Messages.Add(newMessage);
+            Messages.Add(newMessage);
 
-                SendFile(FilePath);
-            }
-            
+            SendFile(FilePath);                      
         }
 
         public void SendFile(string FilePath)

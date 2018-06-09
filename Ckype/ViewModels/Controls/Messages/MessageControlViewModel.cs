@@ -34,14 +34,14 @@ namespace Ckype.ViewModels
 
 
         /// <summary>
-        /// The time at which the messave was sent.
+        /// The time at which the message was sent.
         /// </summary>
         public DateTimeOffset MessageSentTime { get; set; }
 
         /// <summary>
-        /// Image attachment
+        /// File attachment
         /// </summary>
-        public MessageControlImageAttachmentViewModel ImageAttachment { get; set; }
+        public MessageControlFileAttachmentViewModel FileAttachment { get; set; }
 
         /// <summary>
         /// True if the message contains text
@@ -51,10 +51,34 @@ namespace Ckype.ViewModels
         /// <summary>
         /// True if the message contains an image attachment
         /// </summary>
-        public bool HasImageAttachment => ImageAttachment != null;
+        public bool HasImageAttachment
+        {
+            get
+            {
+                return HasFileAttachment && (FileAttachment.Extension == ".jpg" || FileAttachment.Extension == ".jpeg" || FileAttachment.Extension == ".png");
+            }
+        }
 
-        public bool HasFileAttachment = false; // CHANGE LATER TESTTTTT
+        /// <summary>
+        /// True if the messsage contains a generic file, not an image.
+        /// </summary>
+        public bool HasGenericFileAttachment
+        {
+            get
+            {
+                return HasFileAttachment && !HasImageAttachment;
+            }
+        }
 
-
+        /// <summary>
+        /// True if the message contains any file
+        /// </summary>
+        public bool HasFileAttachment
+        {
+            get
+            {
+                return FileAttachment != null;
+            }
+        }
     }
 }

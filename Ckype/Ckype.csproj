@@ -68,6 +68,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -109,7 +110,6 @@
     <Compile Include="ViewModels\Controls\ChatListControlViewModel.cs" />
     <Compile Include="ViewModels\Controls\ChatListPersonControlViewModel.cs" />
     <Compile Include="ViewModels\Controls\Messages\MessageControlFileAttachmentViewModel.cs" />
-    <Compile Include="ViewModels\Controls\Messages\MessageControlImageAttachmentViewModel.cs" />
     <Compile Include="ViewModels\Controls\Messages\MessageControlViewModel.cs" />
     <Compile Include="ViewModels\Controls\Messages\MessageListControlViewModel.cs" />
     <Compile Include="ViewModels\Pages\ChatPageViewModel.cs" />

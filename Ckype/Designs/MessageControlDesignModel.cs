@@ -11,9 +11,12 @@ namespace Ckype.Designs
         public static MessageControlDesignModel Instance = new MessageControlDesignModel()
         {
             SenderName = "Ron",
-            Content = "Hello bratha!, oh thats me too! right^^",
             SentByMe = false,
             MessageSentTime = DateTimeOffset.Parse("11:45 PM"),
+            FileAttachment = new MessageControlFileAttachmentViewModel
+            {
+                LocalFilePath = @"C:\Users\Owner\Desktop\Alice.txt"
+            }
         };
 
         /// <summary>
@@ -49,9 +52,9 @@ namespace Ckype.Designs
         public DateTimeOffset MessageSentTime { get; set; }
 
         /// <summary>
-        /// Image attachment
+        /// File attachment
         /// </summary>
-        public MessageControlImageAttachmentViewModel ImageAttachment { get; set; }
+        public MessageControlFileAttachmentViewModel FileAttachment { get; set; }
 
         /// <summary>
         /// True if the message contains text
@@ -61,8 +64,34 @@ namespace Ckype.Designs
         /// <summary>
         /// True if the message contains an image attachment
         /// </summary>
-        public bool HasImageAttachment => ImageAttachment != null;
+        public bool HasImageAttachment
+        {
+            get
+            {
+                return HasFileAttachment && (FileAttachment.Extension == ".jpg" || FileAttachment.Extension == ".jpeg" || FileAttachment.Extension == ".png");
+            }
+        }
 
-        public bool HasFileAttachment = false;
+        /// <summary>
+        /// True if the messsage contains a generic file, not an image.
+        /// </summary>
+        public bool HasGenericFileAttachment
+        {
+            get
+            {
+                return HasFileAttachment && !HasImageAttachment;
+            }
+        }
+
+        /// <summary>
+        /// True if the message contains any file
+        /// </summary>
+        public bool HasFileAttachment
+        {
+            get
+            {
+                return FileAttachment != null;
+            }
+        }
     }
 }

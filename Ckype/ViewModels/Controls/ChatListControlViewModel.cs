@@ -79,24 +79,21 @@ namespace Ckype.ViewModels
 
             string FileExt = Path.GetExtension(filepath);
 
-            if (FileExt == ".jpg" || FileExt == ".jpeg" || FileExt == ".png")
+            var newMessage = new MessageControlViewModel
             {
-                var newMessage = new MessageControlViewModel
+                SenderName = person.name,
+                MessageSentTime = DateTimeOffset.UtcNow,
+                SentByMe = false,
+                FileAttachment = new MessageControlFileAttachmentViewModel
                 {
-                    SenderName = person.name,
-                    MessageSentTime = DateTimeOffset.UtcNow,
-                    SentByMe = true,
-                    ImageAttachment = new MessageControlImageAttachmentViewModel
-                    {
-                        LocalFilePath = filepath,
-                    },
-                };
+                    LocalFilePath = filepath,
+                },
+            };
 
-                App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
-                {
-                    temp?.MessagePage.Messages.Add(newMessage);
-                });
-            }
+            App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            {
+                temp?.MessagePage.Messages.Add(newMessage);
+            });          
         }
 
         private void FriendCalling(ref CallPacket packet)

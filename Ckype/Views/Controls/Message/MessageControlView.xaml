@@ -35,31 +35,11 @@
 
             </Border>
             
-            <!-- filename display -->
-            <Border CornerRadius="7.5"
-                    Padding="7.5"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Right"
-                    Background="{StaticResource ForegroundLightBrush}"
-                    BorderBrush="{StaticResource DarkGrayBlueBrush}"
-                    BorderThickness="3"
-                    Panel.ZIndex="1"
-                    Visibility="{Binding HasImageAttachment, Converter={conv:BoleanToVisibilityConverter}}"
-                        >
-
-                <!-- filename text -->
-                <TextBlock VerticalAlignment="Center"
-                               TextWrapping="Wrap"
-                               FontFamily="{StaticResource LatoRegular}"
-                               Text="{Binding ImageAttachment.FileName}"/>
-
-            </Border>
-
             <!-- Chat message container-->
             <Grid Margin="20 25 20 0" 
                   HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToAlignmentConverter}}"
                   >
-                  
+                                  
                 <Grid.Triggers>
 
                     <!-- Mouse over shows time -->
@@ -85,8 +65,28 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                
-                
+
+                <!-- filename display -->
+                <Border CornerRadius="7.5"
+                        Padding="7.5"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        Background="{StaticResource ForegroundLightBrush}"
+                        BorderBrush="{StaticResource DarkGrayBlueBrush}"
+                        BorderThickness="3"
+                        Panel.ZIndex="1"
+                        Visibility="{Binding HasFileAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                        Margin="-20 -25 -20 -0"
+                        >
+
+                    <!-- filename text -->
+                    <TextBlock VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontFamily="{StaticResource LatoRegular}"
+                               Text="{Binding FileAttachment.FileName}"/>
+
+                </Border>
+
                 <!-- Message text/Attachments grid -->
                 <Grid>
                     <Grid.RowDefinitions>
@@ -97,10 +97,17 @@
                     <!-- Generic File Background -->
                     <Border CornerRadius="10"
                             Margin="0 0 0 15"
-                            Background="{StaticResource BlackBrush}"
-                            BorderBrush="{StaticResource DarkGrayBlueBrush}"
-                            Visibility="{Binding HasImageAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                            Background="{StaticResource DarkGrayBlueBrush}"
+                            BorderThickness="15"
+                            BorderBrush="{StaticResource BlackBrush}"
+                            Visibility="{Binding HasGenericFileAttachment, Converter={conv:BoleanToVisibilityConverter}}"
                             >
+
+                        <Image DataContext="{Binding FileAttachment}"
+                               AtchPrpty:ClipFromBorderProperty.Value="True"
+                               Source="{Binding WinIcon}"                              
+                               MaxWidth="50"
+                               />
 
                     </Border>
                     
@@ -112,12 +119,12 @@
                             Visibility="{Binding HasImageAttachment, Converter={conv:BoleanToVisibilityConverter}}"
                             >
 
-                        <Image DataContext="{Binding ImageAttachment}"
+                        <Image DataContext="{Binding FileAttachment}"
                                AtchPrpty:ClipFromBorderProperty.Value="True"
-                               Source="{Binding LocalFilePath}"
+                               Source="{Binding LocalFilePath}"                              
                                MaxWidth="600"
                                />
-
+                        
                     </Border>
                     
                     <!-- Chat message text bubble -->
