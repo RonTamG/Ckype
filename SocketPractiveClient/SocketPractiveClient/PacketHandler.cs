@@ -110,7 +110,7 @@ namespace Client
                     Task.Run(() =>
                     {
                         Socket FileSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                        FileSocket.Bind(new IPEndPoint(IPAddress.Parse(linkRequest.destClient.ip), linkRequest.port));
+                        FileSocket.Bind(new IPEndPoint(IPAddress.Any, linkRequest.port));
                         FileSocket.Listen(1);
                         Socket ClientFileSocket = FileSocket.Accept();
 
