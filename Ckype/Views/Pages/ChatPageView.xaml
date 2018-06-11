@@ -40,7 +40,7 @@
                 <Grid>
                     <ContentControl x:Name="ChatScreen"/>
                     <Grid.Background>
-                        <ImageBrush ImageSource="/Images/HeadphoneSmileyTrans.png" Opacity="0.2" Stretch="Uniform"/>
+                        <ImageBrush ImageSource="/Ckype;component/Images/HeadphoneSmileyTrans.png" Opacity="0.2" Stretch="Uniform"/>
                     </Grid.Background>
                 </Grid>
             </Border>

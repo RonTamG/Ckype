@@ -59,6 +59,27 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
+
+                    <!-- Mouse over shows message -->
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetName="OpenFile" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation To="1" Duration="00:00:00.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+
+                    <!-- Mouse leave hides message -->
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetName="OpenFile" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation To="1" Duration="00:00:00.5"/>
+                                <!--change to 0 and target the message same with the enter trigger TESTT-->
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+
+
                 </Grid.Triggers>
 
                 <Grid.RowDefinitions>
@@ -94,38 +115,46 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
-                    <!-- Generic File Background -->
-                    <Border CornerRadius="10"
-                            Margin="0 0 0 15"
-                            Background="{StaticResource DarkGrayBlueBrush}"
-                            BorderThickness="15"
-                            BorderBrush="{StaticResource BlackBrush}"
-                            Visibility="{Binding HasGenericFileAttachment, Converter={conv:BoleanToVisibilityConverter}}"
-                            >
+                    <!-- Files -->
+                    <Button Style="{DynamicResource NoChromeButton}" 
+                            Visibility="{Binding HasFileAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                            Name="OpenFile">
 
-                        <Image DataContext="{Binding FileAttachment}"
-                               AtchPrpty:ClipFromBorderProperty.Value="True"
-                               Source="{Binding WinIcon}"                              
-                               MaxWidth="50"
-                               />
+                        <Grid>
+                            <!-- Generic File Background -->
+                            <Border CornerRadius="10"
+                                    Margin="0 0 0 15"
+                                    Padding="0 15 20 0"
+                                    Visibility="{Binding HasGenericFileAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                                    >
+                                <Image DataContext="{Binding FileAttachment}"
+                                        AtchPrpty:ClipFromBorderProperty.Value="True"
+                                        Source="{Binding WinIcon}"                              
+                                        MaxWidth="50"
+                                        />
+                            </Border>
+                   
+                            <!-- Image attachment -->
+                            <Border CornerRadius="10"
+                                    Margin="5 5 5 20"
+                                    Padding="5"
+                                    BorderThickness="10"
+                                    Background="{StaticResource ForegroundLightBrush}"
+                                    Visibility="{Binding HasImageAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                                    >
+                                <Border.BorderBrush>
+                                    <ImageBrush ImageSource="/Ckype;component\Images\WoodTexture1.jpg"  />
+                                </Border.BorderBrush>
 
-                    </Border>
-                    
-                    <!-- Image attachment -->
-                    <Border CornerRadius="10"
-                            Margin="5 5 5 20"
-                            Padding="7.5"
-                            Background="{StaticResource DarkGrayBrush}"                           
-                            Visibility="{Binding HasImageAttachment, Converter={conv:BoleanToVisibilityConverter}}"
-                            >
-
-                        <Image DataContext="{Binding FileAttachment}"
-                               AtchPrpty:ClipFromBorderProperty.Value="True"
-                               Source="{Binding LocalFilePath}"                              
-                               MaxWidth="600"
-                               />
+                                <Image DataContext="{Binding FileAttachment}"
+                                        AtchPrpty:ClipFromBorderProperty.Value="True"
+                                        Source="{Binding LocalFilePath}"                              
+                                        MaxWidth="600"
+                                        />
+                            </Border>
+                        </Grid>
                         
-                    </Border>
+                    </Button>
                     
                     <!-- Chat message text bubble -->
                     <Grid Grid.Row="1" Visibility="{Binding HasMessage, Converter={conv:BoleanToVisibilityConverter}}">

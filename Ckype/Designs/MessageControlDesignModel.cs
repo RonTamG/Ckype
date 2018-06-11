@@ -15,7 +15,7 @@ namespace Ckype.Designs
             MessageSentTime = DateTimeOffset.Parse("11:45 PM"),
             FileAttachment = new MessageControlFileAttachmentViewModel
             {
-                LocalFilePath = @"C:\Users\Owner\Desktop\Alice.txt"
+                LocalFilePath = @"C:\Users\Owner\Desktop\Poker.jpg"
             }
         };
 
