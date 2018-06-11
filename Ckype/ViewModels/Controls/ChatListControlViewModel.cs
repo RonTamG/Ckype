@@ -77,7 +77,7 @@ namespace Ckype.ViewModels
             if (!temp.Selected)
                 temp.NoNewMessage = false;
 
-            string FileExt = Path.GetExtension(filepath);
+            string RelativeFilePath = Path.GetFullPath(@"..\..\SavedFiles\" + filepath);
 
             var newMessage = new MessageControlViewModel
             {
@@ -86,7 +86,7 @@ namespace Ckype.ViewModels
                 SentByMe = false,
                 FileAttachment = new MessageControlFileAttachmentViewModel
                 {
-                    LocalFilePath = filepath,
+                    LocalFilePath = RelativeFilePath,
                 },
             };
 

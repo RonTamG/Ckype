@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PacketLibrary
 {
-    public enum type { PersonConnected = 1000, PersonDisconnected = 1500, PersonRefresh = 1750, Message = 2000, File = 3000, FileFinished=3500, CallRequest = 4000, CallResponse = 4500, CallHangUp = 4750, LinkRequest = 5000, LinkResponse = 5500, LinkClose = 5750};
+    public enum type { PersonConnected = 1000, PersonDisconnected = 1500, PersonRefresh = 1750, Message = 2000, File = 3000, FileFinished=3500, CallRequest = 4000, CallResponse = 4500, CallHangUp = 4750, LinkRequest = 5000};
 
     public abstract class PacketStructure
     {        

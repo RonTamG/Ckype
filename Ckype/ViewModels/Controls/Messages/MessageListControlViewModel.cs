@@ -71,7 +71,6 @@ namespace Ckype.ViewModels
         {        
             Task.Run(() =>
             {
-                // Add if not accepted request
                 Random randInt = new Random();
                 int port = randInt.Next(1025, 65535);
 
@@ -79,51 +78,45 @@ namespace Ckype.ViewModels
 
                 LinkPacket linkRequest = new LinkPacket(Person, port, 5000);
                 client.Send(linkRequest.Data);
-                bool Accepted = true;
-                if (Accepted)
+
+                #region Build File Packet
+
+                FileStream fs = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
+                string FileName = Path.GetFileName(FilePath);
+                uint packetLength;
+                ushort packetStart = (ushort)(FileName.Length + 20 + client.me.Data.Length);
+
+                packetLength = (uint)(packetStart + fs.Length);
+
+                FilePacket packet = new FilePacket(FileName, packetLength, (uint)fs.Length, packetStart, client.me);
+                fs.Read(packet.Data, packetStart, (int)fs.Length);
+
+                fs.Close();
+
+                #endregion
+
+                #region Create socket and send
+
+                Socket FileSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                bool NotConnected = true;
+                while (NotConnected)
                 {
-
-                    #region Build File Packet
-
-                    FileStream fs = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
-
-                    uint packetLength;
-                    ushort packetStart = (ushort)(FilePath.Length + 20 + client.me.Data.Length);
-
-                    packetLength = (uint)(packetStart + fs.Length);
-
-                    FilePacket packet = new FilePacket(FilePath, packetLength, (uint)fs.Length, packetStart, client.me);
-                    fs.Read(packet.Data, packetStart, (int)fs.Length);
-
-                    fs.Close();
-
-                    #endregion
-
-                    #region Create socket and send
-
-                    Socket FileSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                    bool NotConnected = true;
-                    while (NotConnected)
+                    try
                     {
-                        try
-                        {
-                            FileSocket.Connect(Person.ip, port);
-                            NotConnected = false;
-                        }
-                        catch (SocketException)
-                        {
-                            NotConnected = true;
-                        }
+                        FileSocket.Connect(Person.ip, port);
+                        NotConnected = false;
                     }
-                    FileSocket.Send(packet.Data);
-                    FileSocket.Shutdown(SocketShutdown.Both);
-                    FileSocket.Close();
-
-                    #endregion
+                    catch (SocketException)
+                    {
+                        NotConnected = true;
+                    }
                 }
-                else
-                    return;
+                FileSocket.Send(packet.Data);
+                FileSocket.Shutdown(SocketShutdown.Both);
+                FileSocket.Close();
+
+                #endregion
           });
         }
     }

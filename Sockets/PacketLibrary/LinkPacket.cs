@@ -23,21 +23,6 @@ namespace PacketLibrary
 
         }
 
-        public void SetAcceptedLink()
-        {
-            WriteBool(true, 4);
-        }
-
-        public void SetHangUp()
-        {
-            WriteUShort((ushort)type.LinkClose, 2);
-        }
-
-        public void SetCheckType() // type which means that the person needs to check the answer
-        {
-            WriteUShort((ushort)type.LinkResponse, 2); // change type.
-        }
-
         public Person destClient
         {
             get { return new Person(ReadByteArray(7, Data.Length - 7)); }

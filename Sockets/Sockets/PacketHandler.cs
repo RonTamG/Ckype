@@ -100,21 +100,6 @@ namespace Server
                     LinkPacket revLinkRequest = new LinkPacket(serverSocket.FindPersonBySocket(clientSocket), linkRequest.port);
                     Person.FindPersonByIPandPort(linkRequest.destClient, serverSocket.connected).ownSocket.Send(revLinkRequest.Data);
                     break;
-
-                case type.LinkResponse:
-                    LinkPacket linkResponse = new LinkPacket(packet);
-                    LinkPacket revLinkResponse = new LinkPacket(serverSocket.FindPersonBySocket(clientSocket), (ushort)type.LinkResponse);
-                    if (linkResponse.AcceptedLink)
-                        revLinkResponse.SetAcceptedLink();
-                    Person.FindPersonByIPandPort(linkResponse.destClient, serverSocket.connected).ownSocket.Send(revLinkResponse.Data);
-                    break;
-
-                case type.LinkClose:
-                    LinkPacket linkClose = new LinkPacket(packet);
-                    LinkPacket revLinkClose = new LinkPacket(serverSocket.FindPersonBySocket(clientSocket), (ushort)type.LinkClose);
-                    Person.FindPersonByIPandPort(linkClose.destClient, serverSocket.connected).ownSocket.Send(revLinkClose.Data);
-                    break;
-
             }
             return "OK";
         }

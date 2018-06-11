@@ -36,7 +36,6 @@
             <ContentControl Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="10" x:Name="ChatListControl"/>
 
             <Border Margin="10" Grid.Column="1" Grid.Row="1" CornerRadius="15"  Background="{StaticResource NormalBlueBrush}">
-                <!--To change Test-->
                 <Grid>
                     <ContentControl x:Name="ChatScreen"/>
                     <Grid.Background>

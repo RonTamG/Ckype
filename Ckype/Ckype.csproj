@@ -327,7 +327,10 @@
     <Resource Include="Images\‏‏HeadphoneSmileyTrans.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\WoodTexture1.jpg" />
+    <Resource Include="Images\WoodTexture.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SavedFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.0.3\build\Fody.targets" Condition="Exists('..\packages\Fody.3.0.3\build\Fody.targets')" />

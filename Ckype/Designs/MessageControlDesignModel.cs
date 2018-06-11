@@ -2,6 +2,8 @@
 using Ckype.Interfaces;
 using Ckype.ViewModels;
 using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace Ckype.Designs
 {
@@ -13,10 +15,7 @@ namespace Ckype.Designs
             SenderName = "Ron",
             SentByMe = false,
             MessageSentTime = DateTimeOffset.Parse("11:45 PM"),
-            FileAttachment = new MessageControlFileAttachmentViewModel
-            {
-                LocalFilePath = @"C:\Users\Owner\Desktop\Poker.jpg"
-            }
+            Content="Hello me!"
         };
 
         /// <summary>
@@ -92,6 +91,12 @@ namespace Ckype.Designs
             {
                 return FileAttachment != null;
             }
+        }
+
+        public void OpenFile()
+        {
+            if (FileAttachment != null)
+                Process.Start(FileAttachment.LocalFilePath);
         }
     }
 }

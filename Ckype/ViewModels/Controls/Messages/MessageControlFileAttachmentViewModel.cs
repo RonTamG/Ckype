@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Interop;
+using System.Diagnostics;
 
 namespace Ckype.ViewModels
 {
@@ -62,5 +63,6 @@ namespace Ckype.ViewModels
         /// the local path to the image file
         /// </summary>
         public string LocalFilePath { get; set; }
+
     }
 }

@@ -53,9 +53,6 @@ namespace Ckype.ViewModels
 
         public void Disconnect()
         {
-//           var client = IoC.Get<ClientSocket>();
-//            client.Disconnect();
-//            client = new ClientSocket();
             IoC.Get<ClientSocket>().Disconnect();
             IoC.Get<ShellViewModel>().ShowStartPage();
         }

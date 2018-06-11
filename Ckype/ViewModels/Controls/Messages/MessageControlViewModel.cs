@@ -1,6 +1,7 @@
 ﻿
 using Ckype.Interfaces;
 using System;
+using System.Diagnostics;
 
 namespace Ckype.ViewModels
 {
@@ -79,6 +80,15 @@ namespace Ckype.ViewModels
             {
                 return FileAttachment != null;
             }
+        }
+
+        /// <summary>
+        /// If a file is attached, opens the file
+        /// </summary>
+        public void OpenFile()
+        {
+            if (FileAttachment != null)
+                Process.Start(FileAttachment.LocalFilePath);
         }
     }
 }

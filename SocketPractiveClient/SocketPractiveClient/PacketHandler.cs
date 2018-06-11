@@ -30,22 +30,16 @@ namespace Client
         public static event CallingEvent AcceptedCallEvent;
         public static event CallingEvent DeclinedCallEvent;
         public static event CallingEvent CancelledCallEvent;
-        public static event LinkEvent LinkStartEvent;
-        private static ClientSocket LinkedClient = new ClientSocket();
-        public static Person LinkedPerson;
 
         public static string Handle(ClientSocket clientSocket, byte[] packet, Socket serverSocket)
         {
             ushort packetLength = BitConverter.ToUInt16(packet, 0);
             ushort packetType = BitConverter.ToUInt16(packet, 2);
-
-            //            ServerSocket LinkedServer = new ServerSocket();
             
-
             Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
             switch ((type)packetType)
             {
-                case type.PersonConnected: // might need to send the server a message when we received the info.
+                case type.PersonConnected:
                     Person person = new Person(packet);
                     clientSocket.Friends.Add(person);
                     FriendAddedEvent?.Invoke(person);
@@ -86,9 +80,6 @@ namespace Client
                     CallPacket callP = new CallPacket(packet);
                     CallingEvent(ref callP); // event to get input from user
                     Console.WriteLine("Received a call request from: {0}", callP.destClient);
-                    Console.WriteLine("Declining request"); // here need to check if the receiver wants to accept or decline. rn declines automatically.
-                    // if (receiver == accepted)s
-                    //     callP.SetAcceptedCall(); // No need to add the else
                     break;
 
                 case type.CallResponse:
@@ -96,12 +87,13 @@ namespace Client
                     if (checkCallP.acceptedCall)
                     {
                         Console.WriteLine("Your friend: {0} has accepted the call!", checkCallP.destClient);
+                        // Call friend
                         AcceptedCallEvent(ref checkCallP);
-                        //  call friend do the calling thing
                     }
                     else
                     {
                         Console.WriteLine("Your friend: {0} has declined the call.", checkCallP.destClient);
+                        // Decline call
                         DeclinedCallEvent(ref checkCallP);
                     }
                     break;
@@ -115,7 +107,6 @@ namespace Client
                 case type.LinkRequest:
                     LinkPacket linkRequest = new LinkPacket(packet);                  
 
-                    //if yes to request
                     Task.Run(() =>
                     {
                         Socket FileSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -143,44 +134,21 @@ namespace Client
                                 byte[] FileData = new byte[DataIndex];
                                 Array.Copy(FileDataBuffer, FileData, DataIndex);
                                 FileDataPacket = new FilePacket(FileData);
+                                string SavedFilesFolder = @"..\..\SavedFiles\";
 
-                                using (FileStream fs = new FileStream(Path.GetFileName(FileDataPacket.Filename), FileMode.Append))
+                                using (FileStream fs = new FileStream((SavedFilesFolder + Path.GetFileName(FileDataPacket.Filename)), FileMode.Append))
                                 {
                                     fs.Write(FileDataPacket.FileContents, 0, FileDataPacket.FileContents.Length);
                                     Console.WriteLine("Received {0} out of {1}", fs.Length, FileDataPacket.TotalFileLength);
                                 };
                                 ReceivedAllData = true;
-                                //FriendMessageReceivedEvent(FileDataPacket.destClient, FileDataPacket.Filename);
-                                FileReceivedEvent(FileDataPacket.Filename, FileDataPacket.destClient);
+                                FileReceivedEvent(Path.GetFileName(FileDataPacket.Filename), FileDataPacket.destClient);
                             }
                         }
                         FileSocket.Close();
                     });
 
                     break;
-                
-                case type.LinkResponse:
-                    LinkPacket linkResponse = new LinkPacket(packet);
-                    if (linkResponse.AcceptedLink)
-                    {
-                        LinkStartEvent(linkResponse.destClient);
-                    }
-                    else
-                    {
-                        // tell client he got declined.
-                    }
-                    break;
-
-                case type.LinkClose:
-                    LinkPacket linkClose = new LinkPacket(packet);
-
-                    if (LinkedClient._socket.Connected)
-                        LinkedClient.Close();
-                    LinkedClient = null;
-                    LinkedPerson = null;
-
-                    break;
-
 
                 default:
                     Console.WriteLine(Encoding.UTF8.GetString(packet));
