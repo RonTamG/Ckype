@@ -37,7 +37,6 @@ namespace AudioLibrary
         {
             connectionEndPoint = ConnectToEndPoint;
             connected = false;
-            ConnectedToPerson(connected);
         }
 
         #endregion
@@ -121,7 +120,13 @@ namespace AudioLibrary
                 while (true)
                 {
                     byte[] buffer = udpListener.Receive(ref endPointTemp);
-                    waveProvider?.AddSamples(buffer, 0, buffer.Length);
+
+                    var PlaceInBuffer = waveProvider.BufferLength - waveProvider.BufferedBytes;
+
+                    var BytesToAdd = PlaceInBuffer > buffer.Length ? buffer.Length : PlaceInBuffer;
+
+                    if (waveProvider.BufferedBytes < waveProvider.BufferLength)
+                        waveProvider?.AddSamples(buffer, 0, BytesToAdd);
                 }
             }
             catch (SocketException)

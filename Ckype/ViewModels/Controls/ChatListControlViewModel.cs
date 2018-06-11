@@ -137,6 +137,13 @@ namespace Ckype.ViewModels
         {
             var FriendToEndCall = this.FindPersonControl(packet.destClient);
             FriendToEndCall.Call.Disconnect();
+
+            IoC.Get<IUIManager>().OpenMessageBox(new PopupMessageViewModel()
+            {
+                Message = $"{packet.destClient.name} Ended the call",
+                Title = $"{packet.destClient.name}",
+                ConfirmationBoxText = "Ok",
+            });
         }
 
         private void MessageReceived(Person person, string message)
@@ -162,7 +169,7 @@ namespace Ckype.ViewModels
 
         public void FriendAdded(Person person)
         {
-            App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            Application.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
             {
                 List.Add(new ChatListPersonControlViewModel(person));
             });
@@ -203,7 +210,7 @@ namespace Ckype.ViewModels
 
         public void FriendsReceived(List<Person> lst)
         {
-            App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            Application.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
             {
                 for(int i = 0;i<lst.Count;i++)
                 {

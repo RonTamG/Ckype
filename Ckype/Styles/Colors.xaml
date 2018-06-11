@@ -42,4 +42,13 @@
     <Color x:Key="LightRed">#ff0000</Color>
     <SolidColorBrush x:Key="LightRedBrush" Color="{StaticResource LightRed}"/>
 
+    <Color x:Key="DarkRed">#500104</Color>
+    <SolidColorBrush x:Key="DarkRedBrush" Color="{StaticResource DarkRed}"/>
+
+    <Color x:Key="Purple">#7300ab</Color>
+    <SolidColorBrush x:Key="PurpleBrush" Color="{StaticResource Purple}"/>
+
+    <Color x:Key="DarkPurple">#32004a</Color>
+    <SolidColorBrush x:Key="DarkPurpleBrush" Color="{StaticResource DarkPurple}"/>
+
 </ResourceDictionary>

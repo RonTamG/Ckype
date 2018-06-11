@@ -70,7 +70,6 @@
             </Canvas>
             
             <TextBlock Grid.Column="1"
-                    Text="Roncho"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
                     x:Name="Nickname"
@@ -82,19 +81,20 @@
                 <!-- Mute Button -->
                 <Button
                     Margin="5"
-                    Style="{StaticResource CallButton}"
-                    Background="{StaticResource LightBlueBrush}"
-                    Visibility="Collapsed"
+                    Style="{StaticResource MuteButton}"
+                    FontFamily="{StaticResource FontAwesome}"
+                    Content="{Binding Muted, Converter={conv:BooleanToCharacter}}"
+                    Visibility="{Binding Connected, Converter={conv:BoleanToVisibilityConverter}}"
                     Width="30"
                     Height="30"
-                    x:Name="MuteButton"
+                    x:Name="ToggleMuteMicrophone"
                     />
                 <!-- Call Button-->
                 <Button 
                     Margin="5"
                     Background="{StaticResource LightGreenBrush}"
                     Style="{StaticResource CallButton}"
-                    Visibility="Visible"
+                    Visibility="{Binding Connected, Converter={conv:BoleanToVisibilityConverter}, ConverterParameter=true}"
                     Width="30"
                     Height="30"
                     x:Name="CallPerson"/>
@@ -103,11 +103,11 @@
                 <Button 
                     Margin="5"
                     Background="{StaticResource LightRedBrush}"
-                    Style="{StaticResource CallButton}"
-                    Visibility="{Binding Connected, Converter={conv:BoleanToVisibilityConverter}, ConverterParameter=true}"
+                    Style="{StaticResource EndCallButton}"
+                    Visibility="{Binding Connected, Converter={conv:BoleanToVisibilityConverter}}"
                     Width="30"
                     Height="30"
-                    x:Name="EndCall"/>
+                    cal:Message.Attach="CallPerson"/>
             </StackPanel>
         </Grid>
     </Border>

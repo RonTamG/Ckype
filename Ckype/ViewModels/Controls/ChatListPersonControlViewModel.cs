@@ -27,6 +27,8 @@ namespace Ckype.ViewModels
 
         public bool Connected { get; set; }
 
+        public bool Muted { get; set; }
+
         public bool NoNewMessage { get; set; }
 
         #endregion
@@ -50,8 +52,6 @@ namespace Ckype.ViewModels
 
         public void CallPerson()
         {
-            if (Call == null)
-                Call = new NetworkAudio(new IPEndPoint(IPAddress.Parse(Person.ip), 7000));
             if (Call != null && Call.connected)
             {
                 IoC.Get<ClientSocket>().EndCurrentCall(Person);
@@ -70,6 +70,12 @@ namespace Ckype.ViewModels
 
         }
 
+        public void ToggleMuteMicrophone()
+        {
+            Call.ToggleSelfMute();
+            Muted = !Muted;
+        }
+
 
         #endregion
 
@@ -86,6 +92,7 @@ namespace Ckype.ViewModels
             MessagePage = new MessageListControlViewModel(person);
             NoNewMessage = true;
             Connected = false;
+            Call = new NetworkAudio(new IPEndPoint(IPAddress.Parse(Person.ip), 7000));
             Call.ConnectedToPerson += ConnectionStatusChanged;
         } 
         #endregion
