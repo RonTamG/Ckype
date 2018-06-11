@@ -33,4 +33,7 @@
     <Color x:Key="DarkGreen">#087829</Color>
     <SolidColorBrush x:Key="DarkGreenBrush" Color="{StaticResource DarkGreen}"/>
 
+    <Color x:Key="LightRed">#ff0000</Color>
+    <SolidColorBrush x:Key="LightRedBrush" Color="{StaticResource LightRed}"/>
+
 </ResourceDictionary>

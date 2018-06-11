@@ -18,7 +18,7 @@
         <Border.Triggers>
             <EventTrigger RoutedEvent="MouseEnter">
                 <BeginStoryboard>
-                    <Storyboard Storyboard.TargetName="CallPerson" Storyboard.TargetProperty="Opacity">
+                    <Storyboard Storyboard.TargetName="Call" Storyboard.TargetProperty="Opacity">
                         <DoubleAnimation To="1" Duration="0:0:1"/>
                     </Storyboard>
                 </BeginStoryboard>
@@ -26,7 +26,7 @@
 
             <EventTrigger RoutedEvent="MouseLeave">
                 <BeginStoryboard>
-                    <Storyboard Storyboard.TargetName="CallPerson" Storyboard.TargetProperty="Opacity">
+                    <Storyboard Storyboard.TargetName="Call" Storyboard.TargetProperty="Opacity">
                         <DoubleAnimation To="0" Duration="0:0:1"/>
                     </Storyboard>
                 </BeginStoryboard>
@@ -77,14 +77,38 @@
                     FontFamily="{StaticResource LatoRegular}"
                     TextAlignment="Right"
                     FontSize="24"/>
-            <Button 
-                Margin="5"
-                Grid.Column="3"
-                Style="{StaticResource CallButton}"
-                Opacity="0"
-                Width="40"
-                Height="40"
-                x:Name="CallPerson"/>
+            <StackPanel Opacity="0" x:Name="Call" Grid.Column="3" Orientation="Horizontal" Margin="5">
+
+                <!-- Mute Button -->
+                <Button
+                    Margin="5"
+                    Style="{StaticResource CallButton}"
+                    Background="{StaticResource LightBlueBrush}"
+                    Visibility="Collapsed"
+                    Width="30"
+                    Height="30"
+                    x:Name="MuteButton"
+                    />
+                <!-- Call Button-->
+                <Button 
+                    Margin="5"
+                    Background="{StaticResource LightGreenBrush}"
+                    Style="{StaticResource CallButton}"
+                    Visibility="Visible"
+                    Width="30"
+                    Height="30"
+                    x:Name="CallPerson"/>
+
+                <!-- Hangup Button-->
+                <Button 
+                    Margin="5"
+                    Background="{StaticResource LightRedBrush}"
+                    Style="{StaticResource CallButton}"
+                    Visibility="{Binding Connected, Converter={conv:BoleanToVisibilityConverter}, ConverterParameter=true}"
+                    Width="30"
+                    Height="30"
+                    x:Name="EndCall"/>
+            </StackPanel>
         </Grid>
     </Border>
 

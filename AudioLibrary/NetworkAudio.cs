@@ -1,10 +1,12 @@
 ﻿using NAudio.Wave;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
 namespace AudioLibrary
 {
+    public delegate void ConnectedEvent(bool Value);
 
     public class NetworkAudio
     {
@@ -21,9 +23,11 @@ namespace AudioLibrary
         private WaveInEvent SoundIn = null;
         #endregion
         #region User
-        public bool connected { get; set; } = false;
+        public bool connected { get; set; }
         private bool muted = false;
         #endregion
+
+        public event ConnectedEvent ConnectedToPerson;
 
         #endregion
 
@@ -32,6 +36,8 @@ namespace AudioLibrary
         public NetworkAudio(IPEndPoint ConnectToEndPoint)
         {
             connectionEndPoint = ConnectToEndPoint;
+            connected = false;
+            ConnectedToPerson(connected);
         }
 
         #endregion
@@ -66,6 +72,7 @@ namespace AudioLibrary
                 udpSender = null;
             }
             connected = false;
+            ConnectedToPerson(connected);
         }
 
         /// <summary>
@@ -96,6 +103,7 @@ namespace AudioLibrary
             ThreadPool.QueueUserWorkItem(ListenerThread, EndPointListen);
 
             connected = true;
+            ConnectedToPerson(connected);
         } 
         #endregion
 

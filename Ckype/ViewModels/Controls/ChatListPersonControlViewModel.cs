@@ -25,6 +25,8 @@ namespace Ckype.ViewModels
 
         public NetworkAudio Call { get; set; }
 
+        public bool Connected { get; set; }
+
         public bool NoNewMessage { get; set; }
 
         #endregion
@@ -53,6 +55,7 @@ namespace Ckype.ViewModels
             if (Call != null && Call.connected)
             {
                 IoC.Get<ClientSocket>().EndCurrentCall(Person);
+                Connected = false;
                 Call.Disconnect();
             }
             else
@@ -82,7 +85,15 @@ namespace Ckype.ViewModels
             Person = person;
             MessagePage = new MessageListControlViewModel(person);
             NoNewMessage = true;
+            Connected = false;
+            Call.ConnectedToPerson += ConnectionStatusChanged;
         } 
         #endregion
+
+
+        public void ConnectionStatusChanged(bool Status)
+        {
+            Connected = Status;
+        }
     }
 }

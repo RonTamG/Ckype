@@ -91,6 +91,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BaseValueConverter.cs" />
     <Compile Include="Converters\BoleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\BooleanToColorConverter.cs" />
     <Compile Include="Converters\SentByMeToAlignmentConverter.cs" />
     <Compile Include="Converters\SentByMeToBackgroundConverter.cs" />
     <Compile Include="Converters\SentByMeToReverseAlignmentConverter.cs" />
