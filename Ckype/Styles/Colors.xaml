@@ -33,6 +33,12 @@
     <Color x:Key="DarkGreen">#087829</Color>
     <SolidColorBrush x:Key="DarkGreenBrush" Color="{StaticResource DarkGreen}"/>
 
+    <Color x:Key="DarkGray">#393939</Color>
+    <SolidColorBrush x:Key="DarkGrayBrush" Color="{StaticResource DarkGray}"/>
+
+    <Color x:Key="Black">#000000</Color>
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
+
     <Color x:Key="LightRed">#ff0000</Color>
     <SolidColorBrush x:Key="LightRedBrush" Color="{StaticResource LightRed}"/>
 

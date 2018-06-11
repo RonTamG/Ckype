@@ -4,39 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ckype.Views"
+             xmlns:Design="clr-namespace:Ckype.Designs"
+             xmlns:AtchPrpty="clr-namespace:Ckype.AttachedProperties"
              xmlns:conv="clr-namespace:Ckype.Converters"
              mc:Ignorable="d" 
+             d:DataContext="{x:Static Design:MessageControlDesignModel.Instance}"
              d:DesignWidth="300">
-    <Border Padding="5" 
+    <Border Padding="5"
             >
         <Grid>
             
-            
-            <!-- Sender name -->
-            <Border CornerRadius="7.5"
-                    Padding="7.5"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Left"
-                    Background="{StaticResource ForegroundLightBrush}"
-                    BorderBrush="{StaticResource DarkGrayBlueBrush}"
-                    BorderThickness="3"
-                    Panel.ZIndex="1"
-                    Visibility="{Binding SentByMe, Converter={conv:BoleanToVisibilityConverter}}"
-                        >
-
-                <!-- Message text -->
-                <TextBlock VerticalAlignment="Center"
-                               TextWrapping="Wrap"
-                               FontFamily="{StaticResource LatoRegular}"
-                               Text="{Binding SenderName}"/>
-
-            </Border>
-
             <!-- Chat message container-->
             <Grid Margin="20 25 20 0" 
                   HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToAlignmentConverter}}"
                   >
-                  
+                                  
                 <Grid.Triggers>
 
                     <!-- Mouse over shows time -->
@@ -56,42 +38,164 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
+
                 </Grid.Triggers>
-                
+
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                
-                <!-- Speech bubble rectangle-->
-                <Border Grid.Row="0" CornerRadius="10"
-                        Padding="15"                        
-                        Background="{Binding SentByMe, Converter={conv:SentByMeToBackgroundConverter}}"
+
+                <!-- Message text/Attachments grid -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                                        
+
+                    <!-- Files -->
+                    <Button Style="{DynamicResource NoChromeButton}" 
+                            Visibility="{Binding HasFileAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                            x:Name="OpenFile"
+                            >
+
+                        <Grid>
+                            <!-- Generic File Attachment -->
+                            <Border CornerRadius="10"
+                                    Margin="0 0 0 15"
+                                    Padding="0 15 20 0"
+                                    Visibility="{Binding HasGenericFileAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                                    >
+                                <Image DataContext="{Binding FileAttachment}"
+                                        AtchPrpty:ClipFromBorderProperty.Value="True"
+                                        Source="{Binding WinIcon}"                              
+                                        MaxWidth="50"
+                                        />
+                            </Border>
+
+                            <!-- Image attachment -->
+                            <Border CornerRadius="10"
+                                    Margin="5 5 5 20"
+                                    Padding="5"
+                                    BorderThickness="10"
+                                    Background="{StaticResource ForegroundLightBrush}"
+                                    Visibility="{Binding HasImageAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                                    >
+                                <Border.BorderBrush>
+                                    <ImageBrush ImageSource="/Ckype;component\Images\WoodTexture.jpg"  />
+                                </Border.BorderBrush>
+
+                                <Image DataContext="{Binding FileAttachment}"
+                                        AtchPrpty:ClipFromBorderProperty.Value="True"
+                                        Source="{Binding LocalFilePath}"                              
+                                        MaxWidth="600"
+                                        />
+                            </Border>
+
+                            <Rectangle Name="rect" Fill="Transparent" MouseMove="Rectangle_MouseMove" MouseLeave="Rectangle_MouseLeave" />
+
+                            <Popup Name="floatingTip" AllowsTransparency="True" Placement="Relative" PlacementTarget="{Binding ElementName=rect}">
+                                <Border CornerRadius="10" Background="{StaticResource ForegroundLightBrush}" BorderThickness="3" BorderBrush="{StaticResource DarkGreenBrush}">
+                                    <TextBlock Margin="5" Foreground="{StaticResource BlackBrush}">Click here to open file</TextBlock>
+                                </Border>
+                            </Popup>
+
+                        </Grid>
+
+                    </Button>
+
+                    <!-- Chat message text bubble -->
+                    <Grid Grid.Row="1" Visibility="{Binding HasMessage, Converter={conv:BoleanToVisibilityConverter}}">
+                        
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Speech bubble rectangle-->
+                        <Border Grid.Row="0" CornerRadius="10"
+                                Padding="15"
+                                Panel.ZIndex="0"
+                                HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToAlignmentConverter}}"
+                                Background="{Binding SentByMe, Converter={conv:SentByMeToBackgroundConverter}}"
+                                >
+
+                            <!-- Message text -->
+                            <TextBlock VerticalAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{StaticResource LatoRegular}"
+                                       Text="{Binding Content}"/>
+
+                        </Border>
+
+                        <!-- Chat bubble triangle-->
+                        <Path Grid.Row="1"
+                              Data="{Binding SentByMe, Converter={conv:SentByMeToTriangleConverter}}"
+                              HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToAlignmentConverter}}"       
+                              Margin="10, -1, 10, 0"
+                              StrokeThickness="0"
+                              Panel.ZIndex="1"
+                              Fill="{Binding SentByMe, Converter={conv:SentByMeToBackgroundConverter}}"                      
+                              />
+                    </Grid>
+             
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <!-- Sender name -->
+                    <Border CornerRadius="7.5"
+                        Padding="7.5"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left"
+                        Background="{StaticResource ForegroundLightBrush}"
+                        BorderBrush="{StaticResource DarkGrayBlueBrush}"
+                        BorderThickness="3"
+                        Panel.ZIndex="2"
+                        Margin="-20 -25 5 0"
+                        Visibility="{Binding SentByMe, Converter={conv:BoleanToVisibilityConverter}, ConverterParameter=true}"
+                        Grid.Column="0" 
                         >
-                
-                    <!-- Message text -->
-                    <TextBlock VerticalAlignment="Center"
+
+                        <!-- Message text -->
+                        <TextBlock VerticalAlignment="Center"
                                TextWrapping="Wrap"
                                FontFamily="{StaticResource LatoRegular}"
-                               Text="{Binding Content}"/>
+                               Text="{Binding SenderName}"/>
 
-                </Border>
-                
-                <!-- Chat bubble triangle-->               
-                <!--Left: M 0,0 L 0,10 L 20,0 L 0,0" Right: "M 0,0 L 20,10 L 20,0 L 0,0"-->
-                <Path Grid.Row="1"
-                      Data="{Binding SentByMe, Converter={conv:SentByMeToTriangleConverter}}"
-                      HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToAlignmentConverter}}"       
-                      Margin="10, -1, 10, 0"
-                      StrokeThickness="0"
-                      Panel.ZIndex="1"
-                      Fill="{Binding SentByMe, Converter={conv:SentByMeToBackgroundConverter}}"
-                      
-                      />
+                    </Border>
+
+                    <!-- filename display -->
+                    <Border CornerRadius="7.5"
+                        Padding="7.5"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        Background="{StaticResource ForegroundLightBrush}"
+                        BorderBrush="{StaticResource DarkGrayBlueBrush}"
+                        BorderThickness="3"
+                        Panel.ZIndex="2"
+                        Visibility="{Binding HasFileAttachment, Converter={conv:BoleanToVisibilityConverter}}"
+                        Margin="5 -25 -20 0"
+                        Grid.Column="1"
+                        >
+
+                        <!-- filename text -->
+                        <TextBlock VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontFamily="{StaticResource LatoRegular}"
+                               Text="{Binding FileAttachment.FileName}"/>
+                    </Border>
+
+                </Grid>
 
                 <!-- Sent time of the message -->
-                <TextBlock Grid.Row="2" Name="TimeSent"
+                <TextBlock Grid.Row="1" Name="TimeSent"
                            Text="{Binding MessageSentTime,Converter={conv:TimeToDisplayTimeConverter}}"
                            Foreground="{StaticResource ForegroundLightBrush}"
                            HorizontalAlignment="{Binding SentByMe, Converter={conv:SentByMeToReverseAlignmentConverter}}"

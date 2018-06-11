@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PacketLibrary
 {
-    public enum type { PersonConnected = 1000, PersonDisconnected = 1500, PersonRefresh = 1750, Message = 2000, File = 3000, CallRequest = 4000, CallResponse = 4500, CallHangUp = 4750};
+    public enum type { PersonConnected = 1000, PersonDisconnected = 1500, PersonRefresh = 1750, Message = 2000, File = 3000, FileFinished=3500, CallRequest = 4000, CallResponse = 4500, CallHangUp = 4750, LinkRequest = 5000};
 
     public abstract class PacketStructure
     {        
@@ -18,6 +18,13 @@ namespace PacketLibrary
             _buffer = new byte[length];
             WriteUShort(length, 0);
             WriteUShort(type, 2);
+        }
+
+        public PacketStructure(uint length, ushort type) // FilePacket needs this one
+        {
+            _buffer = new byte[length];
+            WriteUInt(length, 0);
+            WriteUShort(type, 4);
         }
 
         public PacketStructure(byte[] packet)
@@ -68,6 +75,11 @@ namespace PacketLibrary
             byte[] result = new byte[length];
             Array.Copy(_buffer, offset, result, 0, length);
             return result;
+        }
+
+        public uint ReadUInt(int offset)
+        {
+            return BitConverter.ToUInt32(_buffer, offset);
         }
 
         public ushort ReadUShort(int offset)

@@ -58,10 +58,19 @@ namespace Server
                 case type.File:
                     FilePacket file = new FilePacket(packet);
                     Console.WriteLine("Received file called: '{0}' was sent to: {1}", file.Filename, file.destClient);
+  //                  var newLength = (ushort)(file.Filename.Length + 12 + serverSocket.FindPersonBySocket(clientSocket).Data.Length);
+//                    FilePacket revFile = new FilePacket(file.Filename, newLength, newLength, serverSocket.FindPersonBySocket(clientSocket));
                     Person.FindPersonByIPandPort(file.destClient, serverSocket.connected).ownSocket.Send(file.Data);
                     Console.WriteLine("Sent!");
                     break;
-
+/*               
+                case type.FileFinished:
+                    FilePacket fileFin = new FilePacket(packet);
+                    FilePacket revFileFin = new FilePacket(fileFin.Filename, (ushort)(fileFin.Filename.Length + 12 + fileFin.destClient.Data.Length), (ushort)(fileFin.Filename.Length + 12 + fileFin.destClient.Data.Length), serverSocket.FindPersonBySocket(clientSocket)); // length should use the new destclients length
+                    revFileFin.SetFinishedType();
+                    Person.FindPersonByIPandPort(fileFin.destClient, serverSocket.connected).ownSocket.Send(revFileFin.Data);
+                    break;
+*/
                 case type.CallRequest:
                     CallPacket callRequest = new CallPacket(packet);
                     Console.WriteLine("Received call request");
@@ -84,6 +93,12 @@ namespace Server
                     CallPacket hangUpRequest = new CallPacket(serverSocket.FindPersonBySocket(clientSocket), (ushort)type.CallHangUp);
                     Console.WriteLine("From: {0}", hangUpRequest.destClient);
                     Person.FindPersonByIPandPort(hangUp.destClient, serverSocket.connected).ownSocket.Send(hangUpRequest.Data);
+                    break;
+
+                case type.LinkRequest:
+                    LinkPacket linkRequest = new LinkPacket(packet);
+                    LinkPacket revLinkRequest = new LinkPacket(serverSocket.FindPersonBySocket(clientSocket), linkRequest.port);
+                    Person.FindPersonByIPandPort(linkRequest.destClient, serverSocket.connected).ownSocket.Send(revLinkRequest.Data);
                     break;
             }
             return "OK";

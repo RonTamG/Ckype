@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using PacketLibrary;
 using System.IO;
+using System.Threading;
+using Server;
+using System.Net;
 
 namespace Client
 {
@@ -13,6 +16,8 @@ namespace Client
     public delegate void FriendsEvent(List<Person> people);
     public delegate void MessageEvent(Person person, string message);
     public delegate void CallingEvent(ref CallPacket packet);
+    public delegate void LinkEvent(Person person);
+    public delegate void FileEvent(string filepath, Person person);
 
     public static class PacketHandler
     {
@@ -20,7 +25,7 @@ namespace Client
         public static event FriendEvent FriendRemovedEvent;
         public static event FriendsEvent FriendsReceivedEvent;
         public static event MessageEvent FriendMessageReceivedEvent;
-        public static event MessageEvent FileReceivedEvent;
+        public static event FileEvent FileReceivedEvent;
         public static event CallingEvent CallingEvent;
         public static event CallingEvent AcceptedCallEvent;
         public static event CallingEvent DeclinedCallEvent;
@@ -30,11 +35,11 @@ namespace Client
         {
             ushort packetLength = BitConverter.ToUInt16(packet, 0);
             ushort packetType = BitConverter.ToUInt16(packet, 2);
-
+            
             Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
             switch ((type)packetType)
             {
-                case type.PersonConnected: // might need to send the server a message when we received the info.
+                case type.PersonConnected:
                     Person person = new Person(packet);
                     clientSocket.Friends.Add(person);
                     FriendAddedEvent?.Invoke(person);
@@ -63,7 +68,6 @@ namespace Client
                         Console.WriteLine("Server has disconnected");
                         clientSocket.Close();
                         Console.WriteLine("Program will exit now press any key to continue...");
-                        Environment.Exit(0);
                     }
                     else
                     {
@@ -72,24 +76,10 @@ namespace Client
                     }
                     break;
 
-                case type.File:
-                    FilePacket newFile = new FilePacket(packet);
-                    Console.WriteLine("Received a new file '{0}' from: {1}", newFile.Filename, newFile.destClient);
-                    using (FileStream fs = new FileStream(Path.GetFileName(newFile.Filename), FileMode.Append))
-                    {
-                        fs.Write(newFile.FileContents, 0, newFile.FileContents.Length);
-                    }
-                    
-                    Console.WriteLine("Saved!");
-                    break;
-
                 case type.CallRequest:
                     CallPacket callP = new CallPacket(packet);
                     CallingEvent(ref callP); // event to get input from user
                     Console.WriteLine("Received a call request from: {0}", callP.destClient);
-                    Console.WriteLine("Declining request"); // here need to check if the receiver wants to accept or decline. rn declines automatically.
-                    // if (receiver == accepted)s
-                    //     callP.SetAcceptedCall(); // No need to add the else
                     break;
 
                 case type.CallResponse:
@@ -97,12 +87,13 @@ namespace Client
                     if (checkCallP.acceptedCall)
                     {
                         Console.WriteLine("Your friend: {0} has accepted the call!", checkCallP.destClient);
+                        // Call friend
                         AcceptedCallEvent(ref checkCallP);
-                        //  call friend do the calling thing
                     }
                     else
                     {
                         Console.WriteLine("Your friend: {0} has declined the call.", checkCallP.destClient);
+                        // Decline call
                         DeclinedCallEvent(ref checkCallP);
                     }
                     break;
@@ -111,6 +102,52 @@ namespace Client
                     CallPacket hangUp = new CallPacket(packet);
                     Console.WriteLine("Need to disconnect now.");
                     CancelledCallEvent(ref hangUp);
+                    break;
+
+                case type.LinkRequest:
+                    LinkPacket linkRequest = new LinkPacket(packet);                  
+
+                    Task.Run(() =>
+                    {
+                        Socket FileSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        FileSocket.Bind(new IPEndPoint(IPAddress.Parse(linkRequest.destClient.ip), linkRequest.port));
+                        FileSocket.Listen(1);
+                        Socket ClientFileSocket = FileSocket.Accept();
+
+                        const int buffer_length = 1024 * 5000; //5000kb
+                        bool ReceivedAllData = false;
+                        byte[] FileRecvBuffer = new byte[buffer_length];
+                        byte[] FileDataBuffer = new byte[buffer_length];
+                        int DataIndex = 0;
+                        FilePacket FileDataPacket = null;
+                        while (!ReceivedAllData)
+                        {
+                            int ReceivedLength = ClientFileSocket.Receive(FileRecvBuffer);
+                            if (ReceivedLength > 0)
+                            {
+                                Array.Copy(FileRecvBuffer, 0, FileDataBuffer, DataIndex, ReceivedLength);
+                                DataIndex += ReceivedLength;
+                                FileRecvBuffer = new byte[buffer_length];
+                            }
+                            else
+                            {
+                                byte[] FileData = new byte[DataIndex];
+                                Array.Copy(FileDataBuffer, FileData, DataIndex);
+                                FileDataPacket = new FilePacket(FileData);
+                                string SavedFilesFolder = @"..\..\SavedFiles\";
+
+                                using (FileStream fs = new FileStream((SavedFilesFolder + Path.GetFileName(FileDataPacket.Filename)), FileMode.Append))
+                                {
+                                    fs.Write(FileDataPacket.FileContents, 0, FileDataPacket.FileContents.Length);
+                                    Console.WriteLine("Received {0} out of {1}", fs.Length, FileDataPacket.TotalFileLength);
+                                };
+                                ReceivedAllData = true;
+                                FileReceivedEvent(Path.GetFileName(FileDataPacket.Filename), FileDataPacket.destClient);
+                            }
+                        }
+                        FileSocket.Close();
+                    });
+
                     break;
 
                 default:

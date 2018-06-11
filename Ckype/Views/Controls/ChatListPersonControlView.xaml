@@ -54,7 +54,7 @@
                     VerticalAlignment="Center"
                     Canvas.Left="5"
                     HorizontalAlignment="Center"
-                    Visibility="{Binding NoNewMessage, Converter={conv:BoleanToVisibilityConverter}}"
+                    Visibility="{Binding NoNewMessage, Converter={conv:BoleanToVisibilityConverter}, ConverterParameter=true}"
                     />
 
                 <Ellipse 
@@ -65,7 +65,7 @@
                     Canvas.Left="7.5"
                     Canvas.Top="2.5"
                     HorizontalAlignment="Center"
-                    Visibility="{Binding NoNewMessage, Converter={conv:BoleanToVisibilityConverter}}"
+                    Visibility="{Binding NoNewMessage, Converter={conv:BoleanToVisibilityConverter}, ConverterParameter=true}"
                     />
             </Canvas>
             

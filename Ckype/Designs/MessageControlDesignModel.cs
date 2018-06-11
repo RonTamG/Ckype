@@ -1,12 +1,23 @@
 ﻿
 using Ckype.Interfaces;
+using Ckype.ViewModels;
 using System;
 using System.Diagnostics;
+using System.IO;
 
-namespace Ckype.ViewModels
+namespace Ckype.Designs
 {
-    public class MessageControlViewModel : BaseViewModel, IMessage
+    public class MessageControlDesignModel : BaseViewModel, IMessage
     {
+
+        public static MessageControlDesignModel Instance = new MessageControlDesignModel()
+        {
+            SenderName = "Ron",
+            SentByMe = false,
+            MessageSentTime = DateTimeOffset.Parse("11:45 PM"),
+            Content="Hello me!"
+        };
+
         /// <summary>
         /// Name of the person who sent the message.
         /// </summary>
@@ -35,7 +46,7 @@ namespace Ckype.ViewModels
 
 
         /// <summary>
-        /// The time at which the message was sent.
+        /// The time at which the messave was sent.
         /// </summary>
         public DateTimeOffset MessageSentTime { get; set; }
 
@@ -82,9 +93,6 @@ namespace Ckype.ViewModels
             }
         }
 
-        /// <summary>
-        /// If a file is attached, opens the file
-        /// </summary>
         public void OpenFile()
         {
             if (FileAttachment != null)

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -41,6 +42,9 @@ namespace Ckype.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// Adds a message to the chat screen and sends it
+        /// </summary>
         public void AddMessage()
         {
             ChatScreen.AddMessage(MessageText);
@@ -49,9 +53,6 @@ namespace Ckype.ViewModels
 
         public void Disconnect()
         {
-//           var client = IoC.Get<ClientSocket>();
-//            client.Disconnect();
-//            client = new ClientSocket();
             IoC.Get<ClientSocket>().Disconnect();
             IoC.Get<ShellViewModel>().ShowStartPage();
         }
@@ -69,12 +70,12 @@ namespace Ckype.ViewModels
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             // Display OpenFileDialog by calling ShowDialog method 
             Nullable<bool> result = dlg.ShowDialog();
-            // Get the selected file name and display in a TextBox 
+            // Get the selected file name and display in a TextBox           
             if (result == true)
             {
                 // Open document 
                 filename = dlg.FileName;
-                ChatScreen.CurrentMessageList.SendFile(filename);
+                ChatScreen.AddFile(filename);
             }
         }
     }

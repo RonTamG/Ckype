@@ -14,6 +14,7 @@ using Ckype.Interfaces;
 using Ckype.ViewModels.Popups;
 using Client;
 using PacketLibrary;
+using System.IO;
 
 namespace Ckype.ViewModels
 {
@@ -51,6 +52,7 @@ namespace Ckype.ViewModels
             PacketHandler.FriendRemovedEvent += FriendRemoved;
             PacketHandler.FriendsReceivedEvent += FriendsReceived;
             PacketHandler.FriendMessageReceivedEvent += MessageReceived;
+            PacketHandler.FileReceivedEvent += FileReceived;
             PacketHandler.CallingEvent += FriendCalling;
             PacketHandler.AcceptedCallEvent += FriendAnswered;
             PacketHandler.DeclinedCallEvent += FriendDeclined;
@@ -67,7 +69,32 @@ namespace Ckype.ViewModels
                     List.Add(new ChatListPersonControlViewModel(friend));
                 }
             }
-        }        
+        }
+
+        private void FileReceived(string filepath, Person person)
+        {
+            var temp = this.FindPersonControl(person);
+            if (!temp.Selected)
+                temp.NoNewMessage = false;
+
+            string RelativeFilePath = Path.GetFullPath(@"..\..\SavedFiles\" + filepath);
+
+            var newMessage = new MessageControlViewModel
+            {
+                SenderName = person.name,
+                MessageSentTime = DateTimeOffset.UtcNow,
+                SentByMe = false,
+                FileAttachment = new MessageControlFileAttachmentViewModel
+                {
+                    LocalFilePath = RelativeFilePath,
+                },
+            };
+
+            App.Current.Dispatcher.Invoke((System.Action)delegate // <--- HERE
+            {
+                temp?.MessagePage.Messages.Add(newMessage);
+            });          
+        }
 
         private void FriendCalling(ref CallPacket packet)
         {

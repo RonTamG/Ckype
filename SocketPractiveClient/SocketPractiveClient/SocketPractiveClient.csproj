@@ -86,6 +86,10 @@
       <Project>{1e393891-8ec8-415d-ac38-5ea2024ad101}</Project>
       <Name>PacketLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Sockets\Sockets\SocketPractice.csproj">
+      <Project>{F466BDFC-1F6A-4C26-B111-C238167C444C}</Project>
+      <Name>SocketPractice</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

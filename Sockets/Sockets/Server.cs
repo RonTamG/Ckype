@@ -1,6 +1,7 @@
 ﻿using PacketLibrary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -141,7 +142,6 @@ namespace Server
             }
 
             _socket.Close();
-            Environment.Exit(0);
         }
     }
 
