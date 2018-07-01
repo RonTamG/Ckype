@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ckype.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace Server
             serverSocket.Listen(1);
             serverSocket.Accept();
 
-            Console.WriteLine("Server started!");
+            Logger.LogMessage("Server started!");
 
             Console.ReadLine(); // When we press enter close everything
 

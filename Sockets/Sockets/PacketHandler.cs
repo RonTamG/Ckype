@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using PacketLibrary;
-using System.Net;
+using Ckype.Core;
 
 namespace Server
 {
@@ -16,15 +16,17 @@ namespace Server
             ushort packetLength = BitConverter.ToUInt16(packet, 0);
             ushort packetType = BitConverter.ToUInt16(packet, 2);
 
-            Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
+            Logger.LogMessage($"Received packet: Length: {packetLength} | Type: {packetType}");
 
             switch ((type)packetType)
             {
                 case type.PersonConnected:
-                    //Send all connected clients information of the newly connected one.
-                    Console.WriteLine("Client connected");
-                    Person person = new Person(packet);
-                    person.ownSocket = clientSocket;
+                    //Send to all connected clients the information of the newly connected one.
+                    Logger.LogMessage("Client connected");
+                    Person person = new Person(packet)
+                    {
+                        OwnSocket = clientSocket
+                    };
                     serverSocket.SendConnections(person);
                     serverSocket.NewPersonOnlineOffline(person);
                     serverSocket.connected.Add(person);
@@ -34,71 +36,62 @@ namespace Server
                     clientSocket.Shutdown(SocketShutdown.Both);
                     clientSocket.Close();
                     Person disconnected = new Person(packet);
-                    Console.WriteLine("Disconnected: " + disconnected);
+                    Logger.LogMessage("Disconnected: " + disconnected);
                     serverSocket.connected.Remove(serverSocket.FindPersonBySocket(clientSocket));
                     serverSocket.NewPersonOnlineOffline(disconnected);
-                    Console.WriteLine("Client disconnected");
-                    return "closed client";
+                    Logger.LogMessage("Client disconnected");
+                    return "Closed Client";
 
                 case type.PersonRefresh:
                     Person ConnectionsRequester = serverSocket.FindPersonBySocket(clientSocket);
-                    ConnectionsRequester.ownSocket = clientSocket;
+                    ConnectionsRequester.OwnSocket = clientSocket;
                     serverSocket.SendConnections(ConnectionsRequester);
                     break;
 
                 case type.Message:
                     MessagePacket msg = new MessagePacket(packet);
-                    Console.WriteLine("Received message: " + msg.Text);
+                    Logger.LogMessage("Received message: " + msg.Text);
 
                     MessagePacket ToSend = new MessagePacket(msg.Text, serverSocket.FindPersonBySocket(clientSocket));
-                    Person.FindPersonByIPandPort(msg.destClient, serverSocket.connected).ownSocket.Send(ToSend.Data);
-                    Console.WriteLine("Sent: " + msg.Text + " To: " + msg.destClient + " From: " + serverSocket.FindPersonBySocket(clientSocket));
+                    Person.FindPersonByIPandPort(msg.destClient, serverSocket.connected).OwnSocket.Send(ToSend.Data);
+                    Logger.LogMessage("Sent: " + msg.Text + " To: " + msg.destClient + " From: " + serverSocket.FindPersonBySocket(clientSocket));
                     break;
 
                 case type.File:
                     FilePacket file = new FilePacket(packet);
-                    Console.WriteLine("Received file called: '{0}' was sent to: {1}", file.Filename, file.destClient);
-  //                  var newLength = (ushort)(file.Filename.Length + 12 + serverSocket.FindPersonBySocket(clientSocket).Data.Length);
-//                    FilePacket revFile = new FilePacket(file.Filename, newLength, newLength, serverSocket.FindPersonBySocket(clientSocket));
-                    Person.FindPersonByIPandPort(file.destClient, serverSocket.connected).ownSocket.Send(file.Data);
-                    Console.WriteLine("Sent!");
+                    Logger.LogMessage($"Received file called: '{file.Filename}' was sent to: {file.destClient}");
+                    Person.FindPersonByIPandPort(file.destClient, serverSocket.connected).OwnSocket.Send(file.Data);
+                    Logger.LogMessage("Sent!");
                     break;
-/*               
-                case type.FileFinished:
-                    FilePacket fileFin = new FilePacket(packet);
-                    FilePacket revFileFin = new FilePacket(fileFin.Filename, (ushort)(fileFin.Filename.Length + 12 + fileFin.destClient.Data.Length), (ushort)(fileFin.Filename.Length + 12 + fileFin.destClient.Data.Length), serverSocket.FindPersonBySocket(clientSocket)); // length should use the new destclients length
-                    revFileFin.SetFinishedType();
-                    Person.FindPersonByIPandPort(fileFin.destClient, serverSocket.connected).ownSocket.Send(revFileFin.Data);
-                    break;
-*/
+
                 case type.CallRequest:
                     CallPacket callRequest = new CallPacket(packet);
-                    Console.WriteLine("Received call request");
+                    Logger.LogMessage("Received call request");
                     CallPacket revRequest = new CallPacket(serverSocket.FindPersonBySocket(clientSocket));
-                    Person.FindPersonByIPandPort(callRequest.destClient, serverSocket.connected).ownSocket.Send(revRequest.Data);
+                    Person.FindPersonByIPandPort(callRequest.destClient, serverSocket.connected).OwnSocket.Send(revRequest.Data);
                     break;
 
                 case type.CallResponse:
                     CallPacket callRequestBack = new CallPacket(packet);
-                    Console.WriteLine("Received call request");
+                    Logger.LogMessage("Received call request");
                     CallPacket revRequestBack = new CallPacket(serverSocket.FindPersonBySocket(clientSocket), (ushort)type.CallResponse);
                     if (callRequestBack.acceptedCall)
                         revRequestBack.SetAcceptedCall();
-                    Person.FindPersonByIPandPort(callRequestBack.destClient, serverSocket.connected).ownSocket.Send(revRequestBack.Data);
+                    Person.FindPersonByIPandPort(callRequestBack.destClient, serverSocket.connected).OwnSocket.Send(revRequestBack.Data);
                     break;
 
                 case type.CallHangUp:
                     CallPacket hangUp = new CallPacket(packet);
-                    Console.WriteLine("Sending hangup request to: {0}", hangUp.destClient);
+                    Logger.LogMessage($"Sending hangup request to: {hangUp.destClient}");
                     CallPacket hangUpRequest = new CallPacket(serverSocket.FindPersonBySocket(clientSocket), (ushort)type.CallHangUp);
-                    Console.WriteLine("From: {0}", hangUpRequest.destClient);
-                    Person.FindPersonByIPandPort(hangUp.destClient, serverSocket.connected).ownSocket.Send(hangUpRequest.Data);
+                    Logger.LogMessage($"From: {hangUpRequest.destClient}");
+                    Person.FindPersonByIPandPort(hangUp.destClient, serverSocket.connected).OwnSocket.Send(hangUpRequest.Data);
                     break;
 
                 case type.LinkRequest:
                     LinkPacket linkRequest = new LinkPacket(packet);
                     LinkPacket revLinkRequest = new LinkPacket(serverSocket.FindPersonBySocket(clientSocket), linkRequest.port);
-                    Person.FindPersonByIPandPort(linkRequest.destClient, serverSocket.connected).ownSocket.Send(revLinkRequest.Data);
+                    Person.FindPersonByIPandPort(linkRequest.destClient, serverSocket.connected).OwnSocket.Send(revLinkRequest.Data);
                     break;
             }
             return "OK";

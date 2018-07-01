@@ -1,88 +1,80 @@
-﻿using PacketLibrary;
+﻿using Ckype.Core;
+using PacketLibrary;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Client
 {
     public class ClientSocket
     {
-        public Socket serverSocket;
-        public Socket _socket { get; private set; }
+        public Socket Socket { get; private set; }
         private byte[] _buffer;
-        public string nickname { get; set; }
+        public string Nickname { get; set; }
         public List<Person> Friends = new List<Person>();
         public Person me;
 
         public ClientSocket()
         {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
 
         public void Connect(string ipAddress, int port)
         {
-            _socket.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
-            if (_socket.Connected)
+            Socket.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+            if (Socket.Connected)
             {
-                Console.WriteLine("Connected to the server!");
-                serverSocket = _socket;
+                Logger.LogMessage("Connected to the server!");
                 _buffer = new byte[1024];
-                _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
+                Socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
 
                 #region Initial Packet
 
-                Person packet = new Person(_socket, nickname);
-                _socket.Send(packet.Data);
+                Person packet = new Person(Socket, Nickname);
+                Socket.Send(packet.Data);
 
                 #endregion
 
-                IPEndPoint MyIpAddr = (IPEndPoint)_socket.LocalEndPoint;
+                IPEndPoint MyIpAddr = (IPEndPoint)Socket.LocalEndPoint;
                 string MyAddress = MyIpAddr.Address.ToString();
                 int MyPort = MyIpAddr.Port;
-                me = new Person(nickname, MyAddress, MyPort);
+                me = new Person(Nickname, MyAddress, MyPort);
             }
-            else Console.WriteLine("Could not connect");
+            else Logger.LogMessage("Could not connect");
         }
 
         private void ConnectCallback(IAsyncResult ar)
         {
-            if (_socket.Connected)
+            if (Socket.Connected)
             {
-                Console.WriteLine("Connected to the server!");
-                serverSocket = _socket;
+                Logger.LogMessage("Connected to the server!");
                 _buffer = new byte[1024];
-                _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
+                Socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
 
                 #region Initial Packet
 
-                Person packet = new Person(_socket, nickname);
-                _socket.Send(packet.Data);
+                Person packet = new Person(Socket, Nickname);
+                Socket.Send(packet.Data);
 
 
                 #endregion
 
             }
-            else Console.WriteLine("Could not connect");
+            else Logger.LogMessage("Could not connect");
         }
-        
+
         private void ReceivedCallback(IAsyncResult ar)
         {
             int bufferLength;
             try
             {
-                bufferLength = _socket.EndReceive(ar);
+                bufferLength = Socket.EndReceive(ar);
             }
             catch (ObjectDisposedException)
             {
-                Console.WriteLine("Server disconnected");
-                serverSocket.Close();
+                Logger.LogMessage("Server disconnected");
+                Socket.Close();
                 return;
             }
             if (bufferLength > 0)
@@ -92,39 +84,39 @@ namespace Client
 
                 // Handle Packet
                 string statusUpdate;
-                statusUpdate = PacketHandler.Handle(this, packet, serverSocket);
+                statusUpdate = PacketHandler.Handle(this, packet, Socket);
 
-                if (_socket.Connected)
-                    _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
+                if (Socket.Connected)
+                    Socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceivedCallback, null);
                 else return;
             }
         }
-        
+
         public void Send(byte[] data)
         {
-            _socket.Send(data);
+            Socket.Send(data);
         }
 
         public void RefreshRequest()
         {
             Friends.Clear();
             ConnectionsPacket packet = new ConnectionsPacket();
-            _socket.Send(packet.Data);
+            Socket.Send(packet.Data);
         }
 
         public void CallPerson(Person person)
         {
-            Console.WriteLine("You have chosen to call {0}", person);
+            Logger.LogMessage($"You have chosen to call {person}");
             CallPacket callP = new CallPacket(person);
-            _socket.Send(callP.Data);
+            Socket.Send(callP.Data);
         }
 
         public void EndCurrentCall(Person person)
         {
-            Console.WriteLine("You are hanging up now!");
+            Logger.LogMessage("You are hanging up now!");
             CallPacket callP = new CallPacket(person);
             callP.SetHangUp();
-            _socket.Send(callP.Data);
+            Socket.Send(callP.Data);
         }
 
         public Person FindFriendByIPandPort(string ip, int port)
@@ -140,13 +132,13 @@ namespace Client
         /// </summary>
         public void Close() // maybe should be made private
         {
-            _socket.Shutdown(SocketShutdown.Both);
-            _socket.Close();
+            Socket.Shutdown(SocketShutdown.Both);
+            Socket.Close();
         }
 
         public void Disconnect()
         {
-            Person packet = new Person(this._socket, nickname);
+            Person packet = new Person(this.Socket, Nickname);
             packet.SetDisconnectedType();
             this.Send(packet.Data);
             this.Close();

@@ -217,13 +217,13 @@
       <Project>{5f6f977f-e7aa-43ac-b2b6-3df2b3d89b31}</Project>
       <Name>AudioLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SocketPractiveClient\SocketPractiveClient\SocketPractiveClient.csproj">
+    <ProjectReference Include="..\SocketPractiveClient\SocketPractiveClient\SocketPracticeClient.csproj">
       <Project>{0433a3b8-2e9c-4815-82c9-0ae052aa490c}</Project>
-      <Name>SocketPractiveClient</Name>
+      <Name>SocketPracticeClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sockets\PacketLibrary\PacketLibrary.csproj">
+    <ProjectReference Include="..\Sockets\PacketLibrary\OldPacketLibrary.csproj">
       <Project>{1E393891-8EC8-415D-AC38-5EA2024AD101}</Project>
-      <Name>PacketLibrary</Name>
+      <Name>OldPacketLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sockets\Sockets\SocketPractice.csproj">
       <Project>{F466BDFC-1F6A-4C26-B111-C238167C444C}</Project>

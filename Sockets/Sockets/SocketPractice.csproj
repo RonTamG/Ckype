@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -55,9 +58,13 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PacketLibrary\PacketLibrary.csproj">
+    <ProjectReference Include="..\..\Ckype.Core\Ckype.Core.csproj">
+      <Project>{342A8074-4D73-469A-9015-BE60834E0A0D}</Project>
+      <Name>Ckype.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PacketLibrary\OldPacketLibrary.csproj">
       <Project>{1e393891-8ec8-415d-ac38-5ea2024ad101}</Project>
-      <Name>PacketLibrary</Name>
+      <Name>OldPacketLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

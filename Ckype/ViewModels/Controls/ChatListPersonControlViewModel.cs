@@ -1,9 +1,7 @@
 ﻿using AudioLibrary;
 using Caliburn.Micro;
-using Ckype.Interfaces;
 using Client;
 using PacketLibrary;
-using System.Diagnostics;
 using System.Net;
 
 namespace Ckype.ViewModels
@@ -61,11 +59,6 @@ namespace Ckype.ViewModels
             else
             {
                 IoC.Get<ClientSocket>().CallPerson(Person);
-                // clientSocket.CallPerson(Person); and then whenever this is received on the other side need to prompt the user and ask if he wants to accept or deny
-                // written in the client's PacketHandler.
-                // Call.Start();
-                //if (!Call.connected) // if the call failed to connect
-                // Ioc implementaion of a popup handler
             }
 
         }

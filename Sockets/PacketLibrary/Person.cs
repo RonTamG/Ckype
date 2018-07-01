@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PacketLibrary
 {
     public class Person : PacketStructure
     {
         private Socket _socket;
-       public Person(Socket s, string name)
+       public Person(Socket Socket, string name)
             : base((ushort)(18 + name.Length + 20), (ushort)type.PersonConnected)
         {
-            string _ip = ((IPEndPoint)s.LocalEndPoint).Address.ToString();
-            int _port = ((IPEndPoint)s.LocalEndPoint).Port;
+            string _ip = ((IPEndPoint)Socket.LocalEndPoint).Address.ToString();
+            int _port = ((IPEndPoint)Socket.LocalEndPoint).Port;
             WriteUShort((ushort)_port, 4);
             WriteUShort((ushort)_ip.Length, 6);
             WriteString(_ip, 8);
             WriteUShort((ushort)name.Length, 8 + _ip.Length);
             WriteString(name, 10 + _ip.Length);
-            _socket = s;
+            _socket = Socket;
         }
 
         public Person(string name, string ip, int port)
@@ -42,7 +38,7 @@ namespace PacketLibrary
 
         }
 
-        public Socket ownSocket
+        public Socket OwnSocket
         {
             get {return _socket; }
             set
@@ -84,5 +80,14 @@ namespace PacketLibrary
             return null;
         }
 
+        public static bool operator== (Person first, Person second)
+        {
+            return (first.ip == second.ip && first.port == second.port);
+        }
+
+        public static bool operator !=(Person first, Person second)
+        {
+            return !(first.ip == second.ip && first.port == second.port);
+        }
     }
 }

@@ -9,9 +9,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioLibrary", "AudioLibrar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketPractice", "Sockets\Sockets\SocketPractice.csproj", "{F466BDFC-1F6A-4C26-B111-C238167C444C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketLibrary", "Sockets\PacketLibrary\PacketLibrary.csproj", "{1E393891-8EC8-415D-AC38-5EA2024AD101}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OldPacketLibrary", "Sockets\PacketLibrary\OldPacketLibrary.csproj", "{1E393891-8EC8-415D-AC38-5EA2024AD101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketPractiveClient", "SocketPractiveClient\SocketPractiveClient\SocketPractiveClient.csproj", "{0433A3B8-2E9C-4815-82C9-0AE052AA490C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketPracticeClient", "SocketPractiveClient\SocketPractiveClient\SocketPracticeClient.csproj", "{0433A3B8-2E9C-4815-82C9-0AE052AA490C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ckype.Core", "Ckype.Core\Ckype.Core.csproj", "{342A8074-4D73-469A-9015-BE60834E0A0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{B766BE1F-5BE3-4727-B664-31580E22400B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{F364BE9D-BDA5-466F-A47D-1A4128A2AE5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerConsoleTest", "ServerConsoleTest\ServerConsoleTest.csproj", "{C7FE9865-CA57-4DAF-B2ED-87B373CEC37F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientConsoleTest", "ClientConsoleTest\ClientConsoleTest.csproj", "{B4A6E353-9992-40E3-A1ED-1C62454C9F98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +49,26 @@ Global
 		{0433A3B8-2E9C-4815-82C9-0AE052AA490C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0433A3B8-2E9C-4815-82C9-0AE052AA490C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0433A3B8-2E9C-4815-82C9-0AE052AA490C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{342A8074-4D73-469A-9015-BE60834E0A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{342A8074-4D73-469A-9015-BE60834E0A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{342A8074-4D73-469A-9015-BE60834E0A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{342A8074-4D73-469A-9015-BE60834E0A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B766BE1F-5BE3-4727-B664-31580E22400B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B766BE1F-5BE3-4727-B664-31580E22400B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B766BE1F-5BE3-4727-B664-31580E22400B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B766BE1F-5BE3-4727-B664-31580E22400B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F364BE9D-BDA5-466F-A47D-1A4128A2AE5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F364BE9D-BDA5-466F-A47D-1A4128A2AE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F364BE9D-BDA5-466F-A47D-1A4128A2AE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F364BE9D-BDA5-466F-A47D-1A4128A2AE5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7FE9865-CA57-4DAF-B2ED-87B373CEC37F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7FE9865-CA57-4DAF-B2ED-87B373CEC37F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7FE9865-CA57-4DAF-B2ED-87B373CEC37F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7FE9865-CA57-4DAF-B2ED-87B373CEC37F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4A6E353-9992-40E3-A1ED-1C62454C9F98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4A6E353-9992-40E3-A1ED-1C62454C9F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4A6E353-9992-40E3-A1ED-1C62454C9F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4A6E353-9992-40E3-A1ED-1C62454C9F98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

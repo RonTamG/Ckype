@@ -36,21 +36,21 @@ namespace Client
             ushort packetLength = BitConverter.ToUInt16(packet, 0);
             ushort packetType = BitConverter.ToUInt16(packet, 2);
             
-            Console.WriteLine("Received packet: Length: {0} | Type: {1}", packetLength, packetType);
+            Console.WriteLine($"Received packet: Length: {packetLength} | Type: {packetType}");
             switch ((type)packetType)
             {
                 case type.PersonConnected:
                     Person person = new Person(packet);
                     clientSocket.Friends.Add(person);
                     FriendAddedEvent?.Invoke(person);
-                    Console.WriteLine("name: " + person.name + " Connected from: " + person.ip + ":" + person.port);
+                    Console.WriteLine($"name: {person.name} Connected from: {person.ip} : {person.port}");
                     break;
 
                 case type.PersonDisconnected:
                     Person disconnected = new Person(packet);
                     clientSocket.Friends.Remove(Person.FindPersonByIPandPort(disconnected, clientSocket.Friends));
                     FriendRemovedEvent?.Invoke(disconnected);
-                    Console.WriteLine(disconnected + " Disconnected from the server");
+                    Console.WriteLine($"{disconnected} Disconnected from the server");
                     break;
 
                 case type.PersonRefresh:
@@ -72,27 +72,27 @@ namespace Client
                     else
                     {
                         FriendMessageReceivedEvent(msg.destClient, msg.Text);
-                        Console.WriteLine(msg.destClient + " Sent: " + msg.Text);
+                        Console.WriteLine($"{msg.destClient} Sent: { msg.Text}");
                     }
                     break;
 
                 case type.CallRequest:
                     CallPacket callP = new CallPacket(packet);
                     CallingEvent(ref callP); // event to get input from user
-                    Console.WriteLine("Received a call request from: {0}", callP.destClient);
+                    Console.WriteLine($"Received a call request from: {callP.destClient}");
                     break;
 
                 case type.CallResponse:
                     CallPacket checkCallP = new CallPacket(packet);
                     if (checkCallP.acceptedCall)
                     {
-                        Console.WriteLine("Your friend: {0} has accepted the call!", checkCallP.destClient);
+                        Console.WriteLine($"Your friend: {checkCallP.destClient} has accepted the call!");
                         // Call friend
                         AcceptedCallEvent(ref checkCallP);
                     }
                     else
                     {
-                        Console.WriteLine("Your friend: {0} has declined the call.", checkCallP.destClient);
+                        Console.WriteLine($"Your friend: {checkCallP.destClient} has declined the call.");
                         // Decline call
                         DeclinedCallEvent(ref checkCallP);
                     }
@@ -139,7 +139,7 @@ namespace Client
                                 using (FileStream fs = new FileStream((SavedFilesFolder + Path.GetFileName(FileDataPacket.Filename)), FileMode.Append))
                                 {
                                     fs.Write(FileDataPacket.FileContents, 0, FileDataPacket.FileContents.Length);
-                                    Console.WriteLine("Received {0} out of {1}", fs.Length, FileDataPacket.TotalFileLength);
+                                    Console.WriteLine($"Received {fs.Length} out of {FileDataPacket.TotalFileLength}");
                                 };
                                 ReceivedAllData = true;
                                 FileReceivedEvent(Path.GetFileName(FileDataPacket.Filename), FileDataPacket.destClient);

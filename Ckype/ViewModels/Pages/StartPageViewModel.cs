@@ -20,7 +20,7 @@ namespace Ckype.ViewModels
         public async Task ConnectAsync()
         {
             var client = IoC.Get<ClientSocket>();
-            client.nickname = NicknameTextBox;
+            client.Nickname = NicknameTextBox;
             bool Connected;
             try
             {
@@ -28,7 +28,7 @@ namespace Ckype.ViewModels
                 Connected = await Task<bool>.Run(() =>
                 {
                     client.Connect(IpTextBox, int.Parse(PortTextBox));
-                    return client._socket.Connected;
+                    return (bool)client.Socket.Connected;
                 });
 
             }
